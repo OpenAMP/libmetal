@@ -16,7 +16,9 @@ include (depends)
 enable_testing ()
 
 add_subdirectory (lib)
-add_subdirectory (test)
+if (WITH_TESTS)
+  add_subdirectory (test)
+endif (WITH_TESTS)
 add_subdirectory (doc)
 
 # vim: expandtab:ts=2:sw=2:smartindent
