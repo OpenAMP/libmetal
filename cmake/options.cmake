@@ -36,6 +36,6 @@ if (WITH_TESTS AND (${_host} STREQUAL ${_target}))
   option (WITH_TESTS_EXEC "Run test applications during build" ON)
 endif (WITH_TESTS AND (${_host} STREQUAL ${_target}))
 
-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -Wextra" CACHE STRING "")
+set (PROJECT_EC_FLAGS "-Wall -Werror -Wextra" CACHE STRING "")
 
 # vim: expandtab:ts=2:sw=2:smartindent

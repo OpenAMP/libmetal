@@ -51,6 +51,10 @@ if (WITH_SHARED_LIB)
   add_library (${_lib} SHARED ${_sources})
   target_link_libraries (${_lib} ${_deps})
   install (TARGETS ${_lib} LIBRARY DESTINATION lib)
+  if (PROJECT_EC_FLAGS)
+    string(REPLACE " " ";" _ec_flgs ${PROJECT_EC_FLAGS})
+    target_compile_options (${_lib} PUBLIC ${_ec_flgs})
+  endif (PROJECT_EC_FLAGS)
   set_target_properties (${_lib} PROPERTIES
     OUTPUT_NAME       "${PROJECT_NAME}"
     VERSION           "${PROJECT_VER}"
@@ -63,6 +67,10 @@ if (WITH_STATIC_LIB)
   set (_lib ${PROJECT_NAME}-static)
   add_library (${_lib} STATIC ${_sources})
   install (TARGETS ${_lib} ARCHIVE DESTINATION lib)
+  if (PROJECT_EC_FLAGS)
+    string(REPLACE " " ";" _ec_flgs ${PROJECT_EC_FLAGS})
+    target_compile_options (${_lib} PUBLIC ${_ec_flgs})
+  endif (PROJECT_EC_FLAGS)
   set_target_properties (${_lib} PROPERTIES
     OUTPUT_NAME       "${PROJECT_NAME}"
   )

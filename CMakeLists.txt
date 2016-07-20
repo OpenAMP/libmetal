@@ -13,6 +13,10 @@ include (collect)
 include (options)
 include (depends)
 
+foreach(_inc_path ${CMAKE_INCLUDE_PATH})
+  collect (PROJECT_INC_DIRS "${_inc_path}")
+endforeach()
+
 enable_testing ()
 
 add_subdirectory (lib)
@@ -20,5 +24,6 @@ if (WITH_TESTS)
   add_subdirectory (test)
 endif (WITH_TESTS)
 add_subdirectory (doc)
+
 
 # vim: expandtab:ts=2:sw=2:smartindent
