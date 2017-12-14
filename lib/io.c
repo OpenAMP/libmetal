@@ -30,6 +30,23 @@
 
 #include <errno.h>
 #include <metal/io.h>
+#include <metal/sys.h>
+
+void metal_io_init(struct metal_io_region *io, void *virt,
+	      const metal_phys_addr_t *physmap, size_t size,
+	      unsigned page_shift, unsigned int mem_flags,
+	      const struct metal_io_ops *ops)
+{
+	const struct metal_io_ops nops = {NULL, NULL, NULL, NULL, NULL, NULL};
+	io->virt = virt;
+	io->physmap = physmap;
+	io->size = size;
+	io->page_shift = page_shift;
+	io->page_mask = (1UL << page_shift) - 1UL;
+	io->mem_flags = mem_flags;
+	io->ops = ops ? *ops : nops;
+	metal_sys_io_mem_map(io);
+}
 
 int metal_io_block_read(struct metal_io_region *io, unsigned long offset,
 	       void *restrict dst, int len)

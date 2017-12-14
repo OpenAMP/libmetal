@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Xilinx Inc. and Contributors. All rights reserved.
+ * Copyright (c) 2015 - 2017, Xilinx Inc. and Contributors. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -107,21 +107,11 @@ struct metal_io_region {
  * @param[in]		mem_flags	Memory flags
  * @param[in]		ops			ops
  */
-static inline void
+void
 metal_io_init(struct metal_io_region *io, void *virt,
 	      const metal_phys_addr_t *physmap, size_t size,
 	      unsigned page_shift, unsigned int mem_flags,
-	      const struct metal_io_ops *ops)
-{
-	const struct metal_io_ops nops = {NULL, NULL, NULL, NULL, NULL, NULL};
-	io->virt = virt;
-	io->physmap = physmap;
-	io->size = size;
-	io->page_shift = page_shift;
-	io->page_mask = (1UL << page_shift) - 1UL;
-	io->mem_flags = mem_flags;
-	io->ops = ops ? *ops : nops;
-}
+	      const struct metal_io_ops *ops);
 
 /**
  * @brief	Close a libmetal shared memory segment.
@@ -365,6 +355,8 @@ int metal_io_block_write(struct metal_io_region *io, unsigned long offset,
  */
 int metal_io_block_set(struct metal_io_region *io, unsigned long offset,
 	       unsigned char value, int len);
+
+#include <metal/system/@PROJECT_SYSTEM@/io.h>
 
 /** @} */
 

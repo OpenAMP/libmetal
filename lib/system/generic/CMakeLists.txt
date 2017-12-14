@@ -1,5 +1,6 @@
 collect (PROJECT_LIB_HEADERS alloc.h)
 collect (PROJECT_LIB_HEADERS condition.h)
+collect (PROJECT_LIB_HEADERS io.h)
 collect (PROJECT_LIB_HEADERS irq.h)
 collect (PROJECT_LIB_HEADERS mutex.h)
 collect (PROJECT_LIB_HEADERS sys.h)
