@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Xilinx Inc. and Contributors. All rights reserved.
+ * Copyright (c) 2017, Xilinx Inc. and Contributors. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,16 +29,16 @@
  */
 
 /*
- * @file	linux/alloc.h
- * @brief	linux memory allocattion definitions.
+ * @file	linux/io.h
+ * @brief	Linux specific io definitions.
  */
 
-#ifndef __METAL_ALLOC__H__
-#error "Include metal/alloc.h instead of metal/linux/alloc.h"
+#ifndef __METAL_IO__H__
+#error "Include metal/io.h instead of metal/linux/io.h"
 #endif
 
-#ifndef __METAL_LINUX_ALLOC__H__
-#define __METAL_LINUX_ALLOC__H__
+#ifndef __METAL_LINUX_IO__H__
+#define __METAL_LINUX_IO__H__
 
 #include <stdlib.h>
 
@@ -46,18 +46,14 @@
 extern "C" {
 #endif
 
-static inline void *metal_allocate_memory(unsigned int size)
-{
-	return (malloc(size));
-}
+#ifdef METAL_INTERNAL
 
-static inline void metal_free_memory(void *ptr)
-{
-	free(ptr);
-}
+#define metal_sys_io_mem_map(...)
+
+#endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __METAL_LINUX_ALLOC__H__ */
+#endif /* __METAL_LINUX_IO__H__ */

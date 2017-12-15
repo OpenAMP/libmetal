@@ -29,7 +29,7 @@
  */
 
 /*
- * @file	generic/sys.c
+ * @file	generic/zynqmp_r5/sys.c
  * @brief	machine specific system primitives implementation.
  */
 

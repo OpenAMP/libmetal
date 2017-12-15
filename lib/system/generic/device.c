@@ -29,8 +29,8 @@
  */
 
 /*
- * @file	linux/bus.c
- * @brief	Linux libmetal bus definitions.
+ * @file	generic/device.c
+ * @brief	Generic libmetal device operations.
  */
 
 #include <metal/device.h>

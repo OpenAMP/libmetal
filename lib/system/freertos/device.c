@@ -29,8 +29,8 @@
  */
 
 /*
- * @file	linux/bus.c
- * @brief	Linux libmetal bus definitions.
+ * @file	freertos/device.c
+ * @brief	FreeRTOS device operations.
  */
 
 #include <metal/device.h>

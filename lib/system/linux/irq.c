@@ -30,7 +30,7 @@
 
 /**
  * @file	linux/irq.c
- * @brief	Linux libmetal irq definitions.
+ * @brief	Linux libmetal irq operations
  */
 
 #include <pthread.h>

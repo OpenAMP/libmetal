@@ -30,7 +30,7 @@
  */
 
 /*
- * @file	generic/sys.c
+ * @file	generic/zynq7/sys.c
  * @brief	machine specific system primitives implementation.
  */
 

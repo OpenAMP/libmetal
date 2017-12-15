@@ -29,7 +29,7 @@
  */
 
 /*
- * @file	freertos/sys.c
+ * @file	freertos/zynqmp_r5/sys.c
  * @brief	machine specific system primitives implementation.
  */
 

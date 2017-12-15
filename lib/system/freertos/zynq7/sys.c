@@ -30,7 +30,7 @@
  */
 
 /*
- * @file	freertos/sys.c
+ * @file	freertos/zynq7/sys.c
  * @brief	machine specific system primitives implementation.
  */
 
