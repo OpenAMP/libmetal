@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Xilinx Inc. and Contributors. All rights reserved.
+ * Copyright (c) 2018, Linaro Limited. and Contributors. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -11,7 +11,7 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Xilinx nor the names of its contributors may be used
+ * 3. Neither the name of Linaro nor the names of its contributors may be used
  *    to endorse or promote products derived from this software without
  *    specific prior written permission.
  *
@@ -29,28 +29,36 @@
  */
 
 /*
- * @file	linux/cache.c
- * @brief	Linux libmetal cache handling.
+ * @file	freertos/cache.h
+ * @brief	FreeRTOS cache operation primitives for libmetal.
  */
 
-#include <metal/cache.h>
+#ifndef __METAL_CACHE__H__
+#error "Include metal/cache.h instead of metal/freertos/cache.h"
+#endif
 
-void metal_cache_flush(void *addr, unsigned int len)
+#ifndef __METAL_FREERTOS_CACHE__H__
+#define __METAL_FREERTOS_CACHE__H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void metal_machine_cache_flush(void *addr, unsigned int len);
+extern void metal_machine_cache_invalidate(void *addr, unsigned int len);
+
+void __metal_cache_flush(void *addr, unsigned int len)
 {
-	/** Do nothing.
-	 *  Do not flush cache from Linux userspace.
-	 */
-	(void)addr;
-	(void)len;
-	return;
+	metal_machine_cache_flush(addr, len);
 }
 
-void metal_cache_invalidate(void *addr, unsigned int len)
+void __metal_cache_invalidate(void *addr, unsigned int len)
 {
-	/** Do nothing.
-	 * Do not invalidate cache from Linux userspace.
-	 */
-	(void)addr;
-	(void)len;
-	return;
+	metal_machine_cache_invalidate(addr, len);
 }
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __METAL_FREERTOS_CACHE__H__ */

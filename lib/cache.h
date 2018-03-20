@@ -36,9 +36,12 @@
 #ifndef __METAL_CACHE__H__
 #define __METAL_CACHE__H__
 
+#include <metal/system/@PROJECT_SYSTEM@/cache.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 
 /** \defgroup cache CACHE Interfaces
  *  @{ */
@@ -51,7 +54,10 @@ extern "C" {
  *                 If addr is NULL, and len is 0,
  *                 It will flush the whole data cache.
  */
-void metal_cache_flush(void *addr, unsigned int len);
+static inline void metal_cache_flush(void *addr, unsigned int len)
+{
+	return __metal_cache_flush(addr, len);
+}
 
 /**
  * @brief invalidate specified data cache
@@ -61,7 +67,10 @@ void metal_cache_flush(void *addr, unsigned int len);
  *                 If addr is NULL, and len is 0,
  *                 It will invalidate the whole data cache.
  */
-void metal_cache_invalidate(void *addr, unsigned int len);
+static inline void metal_cache_invalidate(void *addr, unsigned int len)
+{
+	return __metal_cache_invalidate(addr, len);
+}
 
 /** @} */
 

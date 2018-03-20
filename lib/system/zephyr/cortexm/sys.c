@@ -37,20 +37,6 @@
 #include <metal/sys.h>
 #include <stdint.h>
 
-void metal_machine_cache_flush(void *addr, unsigned int len)
-{
-	/* Fix me */
-	(void)addr;
-	(void)len;
-}
-
-void metal_machine_cache_invalidate(void *addr, unsigned int len)
-{
-	/* Fix me */
-	(void)addr;
-	(void)len;
-}
-
 /**
  * @brief poll function until some event happens
  */

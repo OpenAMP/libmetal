@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Linaro Limited. and Contributors. All rights reserved.
+ * Copyright (c) 2018, Linaro Limited. and Contributors. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,21 +29,39 @@
  */
 
 /*
- * @file	zephyr/cache.c
- * @brief	Zephyr libmetal cache handling.
+ * @file	zephyr/cache.h
+ * @brief	Zephyr cache operation primitives for libmetal.
  */
 
-#include <metal/cache.h>
+#ifndef __METAL_CACHE__H__
+#error "Include metal/cache.h instead of metal/zephyr/cache.h"
+#endif
 
-extern void metal_machine_cache_flush(void *addr, unsigned int len);
-extern void metal_machine_cache_invalidate(void *addr, unsigned int len);
+#ifndef __METAL_ZEPHYR_CACHE__H__
+#define __METAL_ZEPHYR_CACHE__H__
 
-void metal_cache_flush(void *addr, unsigned int len)
+#include <metal/utilities.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+static inline void __metal_cache_flush(void *addr, unsigned int len)
 {
-	metal_machine_cache_flush(addr, len);
+	metal_unused(addr);
+	metal_unused(len);
+	return;
 }
 
-void metal_cache_invalidate(void *addr, unsigned int len)
+static inline void __metal_cache_invalidate(void *addr, unsigned int len)
 {
-	metal_machine_cache_invalidate(addr, len);
+	metal_unused(addr);
+	metal_unused(len);
+	return;
 }
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __METAL_ZEPHYR_CACHE__H__ */
