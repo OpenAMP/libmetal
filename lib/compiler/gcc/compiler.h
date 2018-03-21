@@ -38,9 +38,9 @@
 
 #ifdef __cplusplus
 extern "C" {
-#define restrict __restrict__
 #endif
 
+#define restrict __restrict__
 #define metal_align(n) __attribute__((aligned(n)))
 
 #ifdef __cplusplus
