@@ -23,6 +23,8 @@ matrix:
       env: TARGET="zephyr"
     - os: linux
       env: TARGET="linux"
+    - os: linux
+      env: TARGET="generic"
 
 cache:
   directories:
@@ -39,6 +41,10 @@ before_install:
   - if [[ "$TARGET" == "linux" ]]; then
       sudo apt-get update -qq &&
       sudo apt-get install libsysfs-dev libhugetlbfs-dev make gcc;
+    fi
+  - if [[ "$TARGET" == "generic" ]]; then
+      wget http://ppa.launchpad.net/team-gcc-arm-embedded/ppa/ubuntu/pool/main/g/gcc-arm-none-eabi/gcc-arm-embedded_7-2017q4-1~trusty3_amd64.deb &&
+      sudo dpkg -i gcc-arm-embedded_7-2017q4-1~trusty3_amd64.deb;
     fi
 
 install: >
@@ -69,4 +75,10 @@ script:
        cd build-linux &&
        cmake .. -DWITH_TESTS_EXEC=on &&
        make VERBOSE=1 all test;
+    fi
+  - if [[ "$TARGET" == "generic" ]]; then
+       mkdir -p build-generic &&
+       cd build-generic &&
+       cmake .. -DCMAKE_TOOLCHAIN_FILE=template-generic &&
+       make VERBOSE=1;
     fi
