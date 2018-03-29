@@ -42,8 +42,8 @@ before_install:
       sudo apt-get update -qq &&
       sudo apt-get install libsysfs-dev libhugetlbfs-dev make gcc;
     fi
+# This is to kick start CI on generic platform. Will need to have a proper way to get the required packages
   - if [[ "$TARGET" == "generic" ]]; then
-      # This is to kick start CI on generic platform. Will need to have a proper way to get the required packages
       wget http://ppa.launchpad.net/team-gcc-arm-embedded/ppa/ubuntu/pool/main/g/gcc-arm-none-eabi/gcc-arm-embedded_7-2017q4-1~trusty3_amd64.deb &&
       sudo dpkg -i gcc-arm-embedded_7-2017q4-1~trusty3_amd64.deb;
     fi
