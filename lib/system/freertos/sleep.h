@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Linaro Limited. and Contributors. All rights reserved.
+ * Copyright (c) 2018, Linaro Limited. and Contributors. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,15 +29,35 @@
  */
 
 /*
- * @file	zephyr/sleep.c
- * @brief	Zephyr libmetal sleep handling.
+ * @file	freertos/sleep.h
+ * @brief	FreeRTOS sleep primitives for libmetal.
  */
 
-#include <metal/sleep.h>
+#ifndef __METAL_SLEEP__H__
+#error "Include metal/sleep.h instead of metal/freertos/sleep.h"
+#endif
 
-int metal_sleep_usec(unsigned int usec)
+#ifndef __METAL_FREERTOS_SLEEP__H__
+#define __METAL_FREERTOS_SLEEP__H__
+
+#include <FreeRTOS.h>
+#include <task.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+static inline int __metal_sleep_usec(unsigned int usec)
 {
-	/* Fix me */
+	const TickType_t xDelay = usec / portTICK_PERIOD_MS;
+	vTaskDelay(xDelay);
 	return 0;
 }
 
+/** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __METAL_FREERTOS_SLEEP__H__ */

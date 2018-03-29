@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Xilinx Inc. and Contributors. All rights reserved.
+ * Copyright (c) 2018, Linaro Limited. and Contributors. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -11,7 +11,7 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Xilinx nor the names of its contributors may be used
+ * 3. Neither the name of Linaro nor the names of its contributors may be used
  *    to endorse or promote products derived from this software without
  *    specific prior written permission.
  *
@@ -29,18 +29,32 @@
  */
 
 /*
- * @file	freertos/sleep.c
- * @brief	freertos libmetal sleep handling.
+ * @file	linux/sleep.h
+ * @brief	linux sleep primitives for libmetal.
  */
 
-#include <FreeRTOS.h>
-#include <task.h>
-#include <metal/sleep.h>
+#ifndef __METAL_SLEEP__H__
+#error "Include metal/sleep.h instead of metal/linux/sleep.h"
+#endif
 
-int metal_sleep_usec(unsigned int usec)
+#ifndef __METAL_LINUX_SLEEP__H__
+#define __METAL_LINUX_SLEEP__H__
+
+#include <unistd.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+static inline int __metal_sleep_usec(unsigned int usec)
 {
-	const TickType_t xDelay = usec / portTICK_PERIOD_MS;
-	vTaskDelay(xDelay);
-	return 0;
+	return usleep(usec);
 }
 
+/** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __METAL_LINUX_SLEEP__H__ */
