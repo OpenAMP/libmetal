@@ -111,12 +111,12 @@ static void sys_irq_change(unsigned int vector, int is_enable)
 #endif
 }
 
-void __attribute__((weak)) sys_irq_enable(unsigned int vector)
+void metal_weak sys_irq_enable(unsigned int vector)
 {
 	sys_irq_change(vector, 1);
 }
 
-void __attribute__((weak)) sys_irq_disable(unsigned int vector)
+void metal_weak sys_irq_disable(unsigned int vector)
 {
 	sys_irq_change(vector, 0);
 }
@@ -145,7 +145,7 @@ void metal_machine_cache_invalidate(void *addr, unsigned int len)
 /**
  * @brief make microblaze wait
  */
-void __attribute__((weak)) metal_generic_default_poll(void)
+void metal_weak metal_generic_default_poll(void)
 {
 	asm volatile("nop");
 }

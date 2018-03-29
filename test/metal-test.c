@@ -42,7 +42,7 @@ static METAL_DECLARE_LIST(test_cases);
  * Not every enviornment has strerror() implemented.
  */
 #ifdef NOT_HAVE_STRERROR
-char __attribute__((weak)) *strerror(int errnum)
+char metal_weak *strerror(int errnum)
 {
 	static char errstr[33];
 	int i, j;

@@ -54,7 +54,7 @@ void metal_machine_cache_invalidate(void *addr, unsigned int len)
 /**
  * @brief poll function until some event happens
  */
-void __attribute__((weak)) metal_generic_default_poll(void)
+void metal_weak metal_generic_default_poll(void)
 {
 	__asm__ __volatile__("wfi");
 }

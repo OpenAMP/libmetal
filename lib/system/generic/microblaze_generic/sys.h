@@ -46,9 +46,9 @@ extern "C" {
 
 #ifdef METAL_INTERNAL
 
-void __attribute__((weak)) sys_irq_enable(unsigned int vector);
+void metal_weak sys_irq_enable(unsigned int vector);
 
-void __attribute__((weak)) sys_irq_disable(unsigned int vector);
+void metal_weak sys_irq_disable(unsigned int vector);
 
 #endif /* METAL_INTERNAL */
 

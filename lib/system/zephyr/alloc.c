@@ -34,16 +34,17 @@
  */
 
 #include <metal/alloc.h>
+#include <metal/compiler.h>
 
 #if (CONFIG_HEAP_MEM_POOL_SIZE <= 0)
 
-void* __attribute__((weak)) metal_zephyr_allocate_memory(unsigned int size)
+void* metal_weak metal_zephyr_allocate_memory(unsigned int size)
 {
 	(void)size;
 	return NULL;
 }
 
-void __attribute__((weak)) metal_zephyr_free_memory(void *ptr)
+void metal_weak metal_zephyr_free_memory(void *ptr)
 {
 	(void)ptr;
 }
