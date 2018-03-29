@@ -41,6 +41,7 @@
 #define __METAL_ZEPHYR_IO__H__
 
 #include <stdlib.h>
+#include <metal/utilities.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,13 +52,23 @@ extern "C" {
 /**
  * @brief memory mapping for an I/O region
  */
-void metal_sys_io_mem_map(struct metal_io_region *io);
+static inline void metal_sys_io_mem_map(struct metal_io_region *io)
+{
+	metal_unused(io);
+}
 
 /**
  * @brief memory mapping
  */
-void *metal_machine_io_mem_map(void *va, metal_phys_addr_t pa,
-			       size_t size, unsigned int flags);
+static inline void *metal_machine_io_mem_map(void *va, metal_phys_addr_t pa,
+					     size_t size, unsigned int flags)
+{
+	metal_unused(pa);
+	metal_unused(size);
+	metal_unused(flags);
+
+	return va;
+}
 
 #endif
 

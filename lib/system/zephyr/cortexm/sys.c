@@ -58,15 +58,3 @@ void __attribute__((weak)) metal_generic_default_poll(void)
 {
 	__asm__ __volatile__("wfi");
 }
-
-void *metal_machine_io_mem_map(void *va, metal_phys_addr_t pa,
-			       size_t size, unsigned int flags)
-{
-	/* Fix me */
-	(void)pa;
-	(void)size;
-	(void)flags;
-
-	return va;
-}
-

@@ -59,16 +59,6 @@ struct metal_state {
 	struct metal_common_state common;
 };
 
-#ifdef METAL_INTERNAL
-
-/**
- * @brief memory mapping
- */
-void *metal_machine_io_mem_map(void *va, metal_phys_addr_t pa,
-			       size_t size, unsigned int flags);
-
-#endif /* METAL_INTERNAL */
-
 #ifdef __cplusplus
 }
 #endif
