@@ -15,6 +15,7 @@ env:
     - ZEPHYR_SDK_DOWNLOAD_FOLDER=https://github.com/zephyrproject-rtos/meta-zephyr-sdk/releases/download/$ZEPHYR_SDK_VERSION
     - ZEPHYR_SDK_SETUP_BINARY=zephyr-sdk-$ZEPHYR_SDK_VERSION-setup.run
     - ZEPHYR_SDK_DOWNLOAD_URL=$ZEPHYR_SDK_DOWNLOAD_FOLDER/$ZEPHYR_SDK_SETUP_BINARY
+    - FREERTOS_ZIP_URL=https://downloads.sourceforge.net/project/freertos/FreeRTOS/V10.0.1/FreeRTOSv10.0.1.zip
 
 matrix:
   fast_finish: true
@@ -25,6 +26,8 @@ matrix:
       env: TARGET="linux"
     - os: linux
       env: TARGET="generic"
+    - os: linux
+      env: TARGET="freertos"
 
 cache:
   directories:
@@ -43,9 +46,14 @@ before_install:
       sudo apt-get install libsysfs-dev libhugetlbfs-dev make gcc;
     fi
 # This is to kick start CI on generic platform. Will need to have a proper way to get the required packages
-  - if [[ "$TARGET" == "generic" ]]; then
+  - if [[ "$TARGET" == "generic" || "$TARGET" == "freertos" ]]; then
       wget http://ppa.launchpad.net/team-gcc-arm-embedded/ppa/ubuntu/pool/main/g/gcc-arm-none-eabi/gcc-arm-embedded_7-2017q4-1~trusty3_amd64.deb &&
       sudo dpkg -i gcc-arm-embedded_7-2017q4-1~trusty3_amd64.deb;
+    fi
+  - if [[ "$TARGET" == "freertos" ]]; then
+      wget $FREERTOS_ZIP_URL &&
+      pwd && ls &&
+      unzip FreeRTOSv10.0.1.zip > /dev/null;
     fi
 
 install: >
@@ -81,5 +89,12 @@ script:
        mkdir -p build-generic &&
        cd build-generic &&
        cmake .. -DCMAKE_TOOLCHAIN_FILE=template-generic &&
+       make VERBOSE=1;
+    fi
+  - if [[ "$TARGET" == "freertos" ]]; then
+       mkdir -p build-freertos &&
+       cd build-freertos &&
+       export &&
+       cmake .. -DCMAKE_TOOLCHAIN_FILE=template-freertos -DCMAKE_C_FLAGS="-I$PWD/../FreeRTOSv10.0.1/FreeRTOS/Source/include/ -I$PWD/../FreeRTOSv10.0.1/FreeRTOS/Demo/CORTEX_STM32F107_GCC_Rowley -I$PWD/../FreeRTOSv10.0.1/FreeRTOS/Source/portable/GCC/ARM_CM3" &&
        make VERBOSE=1;
     fi
