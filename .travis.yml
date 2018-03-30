@@ -76,7 +76,7 @@ script:
   - if [[ "$TARGET" == "zephyr" ]]; then
        mkdir -p ../libmetal/build-zephyr &&
        cd ../libmetal/build-zephyr &&
-       cmake .. -DWITH_ZEPHYR=on -DBOARD=qemu_cortex_m3 &&
+       cmake .. -DWITH_ZEPHYR=on -DBOARD=qemu_cortex_m3 -DWITH_TESTS=on &&
        make VERBOSE=1;
     fi
   - if [[ "$TARGET" == "linux" ]]; then
