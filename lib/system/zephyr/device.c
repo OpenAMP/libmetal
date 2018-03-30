@@ -39,17 +39,11 @@
 
 int metal_generic_dev_sys_open(struct metal_device *dev)
 {
-	struct metal_io_region *io;
-	unsigned i;
+	metal_unused(dev);
 
-	/* map I/O memory regions */
-	for (i = 0; i < dev->num_regions; i++) {
-		io = &dev->regions[i];
-		if (!io->size)
-			break;
-		metal_sys_io_mem_map(io);
-	}
-
+	/* Since Zephyr runs bare-metal there is no mapping that needs to be
+	 * done of IO regions
+	 */
 	return 0;
 }
 
