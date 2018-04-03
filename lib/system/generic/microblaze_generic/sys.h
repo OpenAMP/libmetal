@@ -40,6 +40,8 @@
 #ifndef __METAL_GENERIC_MICROBLAZE_SYS__H__
 #define __METAL_GENERIC_MICROBLAZE_SYS__H__
 
+#include <metal/compiler.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
