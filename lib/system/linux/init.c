@@ -37,11 +37,9 @@
 
 #include <metal/sys.h>
 #include <metal/utilities.h>
+#include <metal/irq.h>
 
 struct metal_state _metal;
-
-extern int metal_linux_irq_init();
-extern void metal_linux_irq_shutdown();
 
 /** Sort function for page size array. */
 static int metal_pagesize_compare(const void *_a, const void *_b)

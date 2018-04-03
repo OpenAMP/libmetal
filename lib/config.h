@@ -67,6 +67,8 @@ extern "C" {
 #cmakedefine HAVE_STDATOMIC_H
 #cmakedefine HAVE_FUTEX_H
 
+#cmakedefine HAS_METAL_IRQ_HANDLER
+
 #ifdef __cplusplus
 }
 #endif

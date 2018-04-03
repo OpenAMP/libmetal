@@ -53,4 +53,8 @@ option (WITH_DEFAULT_LOGGER "Build with default logger" ON)
 option (WITH_DOC "Build with documentation" ON)
 
 set (PROJECT_EC_FLAGS "-Wall -Werror -Wextra" CACHE STRING "")
+
+# Features Configuration
+option (WITH_IRQ_HANDLER "Build with IRQ handler" ON)
+
 # vim: expandtab:ts=2:sw=2:smartindent

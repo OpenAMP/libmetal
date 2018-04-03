@@ -45,6 +45,10 @@ extern "C" {
 
 #include <stdlib.h>
 
+#include <metal/config.h>
+
+#ifdef HAS_METAL_IRQ_HANDLER
+
 /** IRQ handled status */
 #define METAL_IRQ_NOT_HANDLED 0
 #define METAL_IRQ_HANDLED     1
@@ -98,6 +102,8 @@ int metal_irq_unregister(int irq,
 			metal_irq_handler irq_handler,
 			struct metal_device *dev,
 			void *drv_id);
+
+#endif /* HAS_METAL_IRQ_HANDLER */
 
 /**
  * @brief      disable interrupts

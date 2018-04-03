@@ -87,6 +87,10 @@ else (WITH_ZEPHYR)
   endif (WITH_STATIC_LIB)
 endif (WITH_ZEPHYR)
 
+if (WITH_IRQ_HANDLER)
+  option(HAS_METAL_IRQ_HANDLER "" ON)
+endif (WITH_IRQ_HANDLER)
+
 # Handle this last so any variables that might get set of changed in
 # system specific dirs are taken care of first
 foreach (f ${_headers})

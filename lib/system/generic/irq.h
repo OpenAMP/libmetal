@@ -50,6 +50,20 @@ extern "C" {
  */
 void metal_irq_isr(unsigned int vector);
 
+#ifdef HAS_METAL_IRQ_HANDLER
+extern int metal_irq_init(void);
+extern void metal_irq_deinit(void);
+#else
+static inline int metal_irq_init(void)
+{
+	return 0;
+}
+
+static inline void metal_irq_deinit(void)
+{
+
+}
+#endif
 
 #ifdef __cplusplus
 }
