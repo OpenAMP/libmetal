@@ -36,7 +36,6 @@
 #include <metal/device.h>
 #include <metal/sys.h>
 #include <metal/utilities.h>
-#include <metal/irq.h>
 
 #include "log.h"
 
@@ -48,11 +47,10 @@ int metal_sys_init(const struct metal_init_params *params)
 		metal_set_log_handler(metal_zephyr_log_handler);
 
 	metal_bus_register(&metal_generic_bus);
-	return metal_irq_init();
+	return 0;
 }
 
 void metal_sys_finish(void)
 {
-	metal_irq_deinit();
 	metal_bus_unregister(&metal_generic_bus);
 }

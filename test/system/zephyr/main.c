@@ -50,9 +50,6 @@ extern void metal_generic_default_poll(void);
 
 extern void metal_test_add_alloc();
 extern void metal_test_add_atomic();
-#ifdef HAS_METAL_IRQ_HANDLER
-extern void metal_test_add_irq();
-#endif
 extern void metal_test_add_mutex();
 
 extern void *metal_zephyr_allocate_memory(unsigned int size)
@@ -93,9 +90,6 @@ void metal_test_add_functions()
 {
 	metal_test_add_alloc();
 	metal_test_add_atomic();
-#ifdef HAS_METAL_IRQ_HANDLER
-	metal_test_add_irq();
-#endif
 	metal_test_add_mutex();
 }
 
