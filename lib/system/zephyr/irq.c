@@ -43,6 +43,26 @@
 #include <metal/alloc.h>
 #include <irq.h>
 
+unsigned int metal_irq_save_disable(void)
+{
+	return irq_lock();
+}
+
+void metal_irq_restore_enable(unsigned int flags)
+{
+	irq_unlock(flags);
+}
+
+void metal_irq_enable(unsigned int vector)
+{
+	irq_enable(vector);
+}
+
+void metal_irq_disable(unsigned int vector)
+{
+	irq_disable(vector);
+}
+
 /** IRQ handlers descriptor structure */
 struct metal_irq_hddesc {
 	metal_irq_handler hd;     /**< irq handler */
@@ -252,26 +272,6 @@ int metal_irq_unregister(int irq,
 
 	metal_mutex_release(&_irqs.irq_lock);
 	return -ENOENT;
-}
-
-unsigned int metal_irq_save_disable(void)
-{
-	return irq_lock();
-}
-
-void metal_irq_restore_enable(unsigned int flags)
-{
-	irq_unlock(flags);
-}
-
-void metal_irq_enable(unsigned int vector)
-{
-	irq_enable(vector);
-}
-
-void metal_irq_disable(unsigned int vector)
-{
-	irq_disable(vector);
 }
 
 /**
