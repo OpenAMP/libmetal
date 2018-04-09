@@ -25,8 +25,17 @@ struct metal_list {
 	struct metal_list *next, *prev;
 };
 
+/*
+ * METAL_INIT_LIST - used for initializing an list elmenet in a static struct
+ * or global
+ */
+#define METAL_INIT_LIST(name) { .next = &name, .prev = &name }
+/*
+ * METAL_DECLARE_LIST - used for defining and initializing a global or
+ * static singleton list
+ */
 #define METAL_DECLARE_LIST(name)			\
-	struct metal_list name = { .next = &name, .prev = &name }
+	struct metal_list name = METAL_INIT_LIST(name)
 
 static inline void metal_list_init(struct metal_list *list)
 {
