@@ -44,15 +44,6 @@ collector_list (_sources PROJECT_LIB_SOURCES)
 collector_list (_headers PROJECT_LIB_HEADERS)
 collector_list (_deps PROJECT_LIB_DEPS)
 
-foreach (f ${_headers})
-  configure_file (${f} include/${PROJECT_NAME}/${f} @ONLY)
-  install (FILES ${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/${f}
-           DESTINATION include RENAME ${PROJECT_NAME}/${f})
-  if (${f} MATCHES "^[^/]*\\.h")
-    collect (PROJECT_HDR_TESTS "metal/${f}")
-  endif (${f} MATCHES "^[^/]*\\.h")
-endforeach (f)
-
 include_directories (${_inc_dirs})
 add_definitions (-DMETAL_INTERNAL)
 
@@ -96,5 +87,20 @@ else (WITH_ZEPHYR)
     )
   endif (WITH_STATIC_LIB)
 endif (WITH_ZEPHYR)
+
+if (WITH_IRQ_HANDLER)
+  option(HAS_METAL_IRQ_HANDLER "" ON)
+endif (WITH_IRQ_HANDLER)
+
+# Handle this last so any variables that might get set of changed in
+# system specific dirs are taken care of first
+foreach (f ${_headers})
+  configure_file (${f} include/${PROJECT_NAME}/${f} @ONLY)
+  install (FILES ${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/${f}
+           DESTINATION include RENAME ${PROJECT_NAME}/${f})
+  if (${f} MATCHES "^[^/]*\\.h")
+    collect (PROJECT_HDR_TESTS "metal/${f}")
+  endif (${f} MATCHES "^[^/]*\\.h")
+endforeach (f)
 
 # vim: expandtab:ts=2:sw=2:smartindent

@@ -50,6 +50,8 @@
 #include <string.h>
 #include <poll.h>
 
+#ifdef HAS_METAL_IRQ_HANDLER
+
 #define MAX_IRQS           FD_SETSIZE  /**< maximum number of irqs */
 #define METAL_IRQ_STOP     0xFFFFFFFF  /**< stop interrupts handling thread */
 
@@ -221,28 +223,6 @@ out:
 	return 0;
 }
 
-unsigned int metal_irq_save_disable()
-{
-	metal_mutex_acquire(&_irqs.irq_lock);
-	return 0;
-}
-
-void metal_irq_restore_enable(unsigned flags)
-{
-	(void)flags;
-	metal_mutex_release(&_irqs.irq_lock);
-}
-
-void metal_irq_enable(unsigned int vector)
-{
-	(void)vector;
-}
-
-void metal_irq_disable(unsigned int vector)
-{
-	(void)vector;
-}
-
 /**
   * @brief       IRQ handler
   * @param[in]   args  not used. required for pthread.
@@ -395,4 +375,31 @@ void metal_linux_irq_shutdown()
 	}
 	close(_irqs.irq_reg_fd);
 	metal_mutex_deinit(&_irqs.irq_lock);
+}
+#endif /* HAS_METAL_IRQ_HANDLER */
+
+unsigned int metal_irq_save_disable()
+{
+#ifdef HAS_METAL_IRQ_HANDLER
+	metal_mutex_acquire(&_irqs.irq_lock);
+#endif
+	return 0;
+}
+
+void metal_irq_restore_enable(unsigned flags)
+{
+	(void)flags;
+#ifdef HAS_METAL_IRQ_HANDLER
+	metal_mutex_release(&_irqs.irq_lock);
+#endif
+}
+
+void metal_irq_enable(unsigned int vector)
+{
+	(void)vector;
+}
+
+void metal_irq_disable(unsigned int vector)
+{
+	(void)vector;
 }
