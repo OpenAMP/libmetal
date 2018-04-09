@@ -41,7 +41,10 @@ struct metal_irqs_state {
 	metal_mutex_t irq_lock;   /**< access lock */
 };
 
-static struct metal_irqs_state _irqs;
+static struct metal_irqs_state _irqs = {
+	.irqs = METAL_INIT_LIST(_irqs.irqs),
+	.irq_lock = METAL_MUTEX_INIT(_irqs.irq_lock),
+};
 
 int metal_irq_register(int irq,
                        metal_irq_handler hd,
@@ -274,18 +277,4 @@ void metal_irq_isr(unsigned int vector)
 			}
 		}
 	}
-}
-
-int metal_irq_init(void)
-{
-	/* list of interrupt having at least one handler registered */
-	metal_list_init(&_irqs.irqs);
-	/* mutex to manage concurrent access to shared irq data */
-	metal_mutex_init(&_irqs.irq_lock);
-	return 0;
-}
-
-void metal_irq_deinit(void)
-{
-	metal_mutex_deinit(&_irqs.irq_lock);
 }
