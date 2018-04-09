@@ -30,6 +30,15 @@ typedef struct {
 	atomic_int v;
 } metal_mutex_t;
 
+/*
+ * METAL_MUTEX_INIT - used for initializing an mutex elmenet in a static struct
+ * or global
+ */
+#define METAL_MUTEX_INIT(m) { ATOMIC_VAR_INIT(0) }
+/*
+ * METAL_MUTEX_DEFINE - used for defining and initializing a global or
+ * static singleton mutex
+ */
 #define METAL_MUTEX_DEFINE(m) metal_mutex_t m = { ATOMIC_VAR_INIT(0) }
 
 static inline int __metal_mutex_cmpxchg(metal_mutex_t *mutex,
