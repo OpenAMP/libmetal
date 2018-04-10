@@ -25,6 +25,15 @@ extern "C" {
 
 typedef struct k_sem metal_mutex_t;
 
+/*
+ * METAL_MUTEX_INIT - used for initializing an mutex elmenet in a static struct
+ * or global
+ */
+#define METAL_MUTEX_INIT(m) _K_SEM_INITIALIZER(m, 1, 1)
+/*
+ * METAL_MUTEX_DEFINE - used for defining and initializing a global or
+ * static singleton mutex
+ */
 #define METAL_MUTEX_DEFINE(m) K_SEM_DEFINE(m, 1, 1)
 
 static inline void __metal_mutex_init(metal_mutex_t *m)
