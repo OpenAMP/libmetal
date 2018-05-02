@@ -29,14 +29,6 @@ int metal_bus_register(struct metal_bus *bus)
 
 int metal_bus_unregister(struct metal_bus *bus)
 {
-	struct metal_list *node;
-	struct metal_device *device;
-
-	while ((node = metal_list_first(&bus->devices)) != NULL) {
-		device = metal_container_of(node, struct metal_device, node);
-		metal_device_close(device);
-	}
-
 	metal_list_del(&bus->node);
 	if (bus->ops.bus_close)
 		bus->ops.bus_close(bus);
