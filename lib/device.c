@@ -74,17 +74,12 @@ int metal_device_open(const char *bus_name, const char *dev_name,
 	if (error)
 		return error;
 
-	if (bus != &metal_generic_bus)
-		metal_list_add_tail(&bus->devices, &(*device)->node);
-
 	return 0;
 }
 
 void metal_device_close(struct metal_device *device)
 {
 	metal_assert(device && device->bus);
-	if (device->bus != &metal_generic_bus)
-		metal_list_del(&device->node);
 	if (device->bus->ops.dev_close)
 		device->bus->ops.dev_close(device->bus, device);
 }

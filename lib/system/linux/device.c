@@ -445,6 +445,7 @@ static int metal_linux_dev_open(struct metal_bus *bus,
 		*device = &ldev->device;
 		(*device)->name = ldev->dev_name;
 
+		metal_list_add_tail(&bus->devices, &(*device)->node);
 		return 0;
 	}
 
@@ -461,6 +462,7 @@ static void metal_linux_dev_close(struct metal_bus *bus,
 	struct linux_bus *lbus = to_linux_bus(bus);
 
 	ldev->ldrv->dev_close(lbus, ldev);
+	metal_list_del(&device->node);
 	free(ldev);
 }
 
