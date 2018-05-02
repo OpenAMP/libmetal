@@ -96,8 +96,8 @@ int metal_register_generic_device(struct metal_device *device)
 	return 0;
 }
 
-static int metal_generic_dev_open(struct metal_bus *bus, const char *dev_name,
-				  struct metal_device **device)
+int metal_generic_dev_open(struct metal_bus *bus, const char *dev_name,
+			   struct metal_device **device)
 {
 	struct metal_list *node;
 	struct metal_device *dev;
@@ -115,7 +115,7 @@ static int metal_generic_dev_open(struct metal_bus *bus, const char *dev_name,
 	return -ENODEV;
 }
 
-static int metal_generic_dev_dma_map(struct metal_bus *bus,
+int metal_generic_dev_dma_map(struct metal_bus *bus,
 			     struct metal_device *device,
 			     uint32_t dir,
 			     struct metal_sg *sg_in,
@@ -139,10 +139,10 @@ static int metal_generic_dev_dma_map(struct metal_bus *bus,
 }
 
 void metal_generic_dev_dma_unmap(struct metal_bus *bus,
-		  struct metal_device *device,
-		  uint32_t dir,
-		  struct metal_sg *sg,
-		  int nents)
+				 struct metal_device *device,
+				 uint32_t dir,
+				 struct metal_sg *sg,
+				 int nents)
 {
 	(void)bus;
 	(void)device;
@@ -154,7 +154,7 @@ void metal_generic_dev_dma_unmap(struct metal_bus *bus,
 	}
 }
 
-struct metal_bus metal_generic_bus = {
+struct metal_bus metal_weak metal_generic_bus = {
 	.name = "generic",
 	.ops  = {
 		.bus_close = NULL,

@@ -154,6 +154,19 @@ metal_device_io_region(struct metal_device *device, unsigned index)
 
 #ifdef METAL_INTERNAL
 extern int metal_generic_dev_sys_open(struct metal_device *dev);
+extern int metal_generic_dev_open(struct metal_bus *bus, const char *dev_name,
+				  struct metal_device **device);
+extern int metal_generic_dev_dma_map(struct metal_bus *bus,
+				     struct metal_device *device,
+				     uint32_t dir,
+				     struct metal_sg *sg_in,
+				     int nents_in,
+				     struct metal_sg *sg_out);
+extern void metal_generic_dev_dma_unmap(struct metal_bus *bus,
+					struct metal_device *device,
+					uint32_t dir,
+					struct metal_sg *sg,
+					int nents);
 #endif /* METAL_INTERNAL */
 
 #ifdef __cplusplus
