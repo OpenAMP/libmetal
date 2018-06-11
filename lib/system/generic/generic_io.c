@@ -15,7 +15,7 @@ void metal_sys_io_mem_map(struct metal_io_region *io)
 {
 	unsigned long p;
 	size_t psize;
-	void *va;
+	char *va;
 
 	va = io->virt;
 	psize = io->size;
