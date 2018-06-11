@@ -23,7 +23,10 @@ extern "C" {
 #endif
 
 typedef struct {
-	atomic_int v;
+	union{
+		atomic_int v;
+		atomic_flag w;
+	};
 } metal_mutex_t;
 
 /*
@@ -49,19 +52,19 @@ static inline void __metal_mutex_deinit(metal_mutex_t *mutex)
 
 static inline int __metal_mutex_try_acquire(metal_mutex_t *mutex)
 {
-	return 1 - atomic_flag_test_and_set(&mutex->v);
+	return 1 - atomic_flag_test_and_set(&mutex->w);
 }
 
 static inline void __metal_mutex_acquire(metal_mutex_t *mutex)
 {
-	while (atomic_flag_test_and_set(&mutex->v)) {
+	while (atomic_flag_test_and_set(&mutex->w)) {
 		;
 	}
 }
 
 static inline void __metal_mutex_release(metal_mutex_t *mutex)
 {
-	atomic_flag_clear(&mutex->v);
+	atomic_flag_clear(&mutex->w);
 }
 
 static inline int __metal_mutex_is_acquired(metal_mutex_t *mutex)

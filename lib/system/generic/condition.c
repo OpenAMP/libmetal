@@ -25,7 +25,7 @@ int metal_condition_wait(struct metal_condition *cv,
 	if (!cv || !m || !metal_mutex_is_acquired(m))
 		return -EINVAL;
 
-	if (!atomic_compare_exchange_strong(&cv->m, &tmpm, m)) {
+	if (!atomic_compare_exchange_strong(&cv->m->v, &tmpm->v, m->v)) {
 		if (m != tmpm)
 			return -EINVAL;
 	}

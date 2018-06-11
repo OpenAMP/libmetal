@@ -22,7 +22,10 @@ extern "C" {
 /** \defgroup spinlock Spinlock Interfaces
  *  @{ */
 struct metal_spinlock {
-	atomic_int v;
+	union{
+		atomic_int v;
+		atomic_flag w;
+	};
 };
 
 /** Static metal spinlock initialization. */
@@ -44,7 +47,7 @@ static inline void metal_spinlock_init(struct metal_spinlock *slock)
  */
 static inline void metal_spinlock_acquire(struct metal_spinlock *slock)
 {
-	while (atomic_flag_test_and_set(&slock->v)) {
+	while (atomic_flag_test_and_set(&slock->w)) {
 		metal_cpu_yield();
 	}
 }
@@ -56,7 +59,7 @@ static inline void metal_spinlock_acquire(struct metal_spinlock *slock)
  */
 static inline void metal_spinlock_release(struct metal_spinlock *slock)
 {
-	atomic_flag_clear(&slock->v);
+	atomic_flag_clear(&slock->w);
 }
 
 /** @} */
