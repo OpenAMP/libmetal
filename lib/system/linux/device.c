@@ -636,3 +636,32 @@ int metal_generic_dev_sys_open(struct metal_device *dev)
 	return 0;
 }
 
+/**
+ * @brief	Read device tree property from sys filesystem.
+ * @param[in]	device	metal_device of the intended DT node
+ * @param[in]	property_name	name of the property to be read
+ * @param[out]	output	output buffer to store read data
+ * @param[in]	len	number of bytes to be read
+ * @return	0 on success, or -errno on error.
+ */
+
+int metal_linux_get_device_property(struct metal_device *device,
+		const char *property_name, void *output, int len)
+{
+	int fd = 0;
+	int status = 0;
+	const int flags = O_RDONLY;
+	const int mode = S_IRUSR | S_IRGRP | S_IROTH;
+	struct linux_device *ldev = to_linux_device(device);
+	char path[PATH_MAX];
+
+	snprintf(path, sizeof(path), "%s/of_node/%s",
+			 ldev->sdev->path, property_name);
+	fd = open(path, flags, mode);
+	if (fd < 0)
+		return -errno;
+	status = read(fd, output, len);
+
+	return status < 0 ? -errno : 0;
+}
+
