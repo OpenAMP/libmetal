@@ -156,6 +156,7 @@ static int metal_uio_dev_open(struct linux_bus *lbus, struct linux_device *ldev)
 
 
 	ldev->fd = -1;
+	ldev->device.irq_info = (void *)-1;
 
 	ldev->sdev = sysfs_open_device(lbus->bus_name, ldev->dev_name);
 	if (!ldev->sdev) {
