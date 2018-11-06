@@ -586,34 +586,32 @@ static int metal_linux_probe_driver(struct linux_bus *lbus,
 	return ldrv->sdrv ? 0 : -ENODEV;
 }
 
+static void metal_linux_bus_close(struct metal_bus *bus);
+
 static int metal_linux_probe_bus(struct linux_bus *lbus)
 {
 	struct linux_driver *ldrv;
-	int error = -ENODEV;
+	int ret, error = -ENODEV;
 
 	lbus->sbus = sysfs_open_bus(lbus->bus_name);
 	if (!lbus->sbus)
 		return -ENODEV;
 
 	for_each_linux_driver(lbus, ldrv) {
-		error = metal_linux_probe_driver(lbus, ldrv);
-		if (!error)
-			break;
+		ret = metal_linux_probe_driver(lbus, ldrv);
+		/* Clear the error if any driver is available */
+		if (!ret)
+			error = ret;
 	}
 
 	if (error) {
-		sysfs_close_bus(lbus->sbus);
-		lbus->sbus = NULL;
+		metal_linux_bus_close(&lbus->bus);
 		return error;
 	}
 
 	error = metal_linux_register_bus(lbus);
-	if (error) {
-		sysfs_close_driver(ldrv->sdrv);
-		ldrv->sdrv = NULL;
-		sysfs_close_bus(lbus->sbus);
-		lbus->sbus = NULL;
-	}
+	if (error)
+		metal_linux_bus_close(&lbus->bus);
 
 	return error;
 }
