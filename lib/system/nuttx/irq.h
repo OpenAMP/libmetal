@@ -20,6 +20,10 @@
 extern "C" {
 #endif
 
+#ifdef METAL_INTERNAL
+int metal_cntr_irq_init(void);
+#endif
+
 #ifdef __cplusplus
 }
 #endif
