@@ -36,8 +36,16 @@ cache:
   directories:
     - $ZEPHYR_SDK_INSTALL_DIR
     - /usr/local/bin
+    - $HOME/bin/cmake
 
 before_install:
+  - if [ ! -f $HOME/bin/cmake/cmake-3.13.1-Linux-x86_64/bin/cmake ]; then
+      mkdir -p $HOME/bin/cmake && cd $HOME/bin/cmake &&
+      wget https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1-Linux-x86_64.sh &&
+      yes | sh cmake-3.13.1-Linux-x86_64.sh | cat &&
+      cd -;
+    fi &&
+    export PATH=$HOME/bin/cmake/cmake-3.13.1-Linux-x86_64/bin:$PATH
   - if [[ "$TARGET" == "zephyr" ]]; then
       sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test &&
       sudo apt-get update -qq &&
