@@ -20,11 +20,11 @@
 
 unsigned int metal_irq_save_disable(void)
 {
-	return sys_irq_save_disable();
+	return irq_lock();
 }
 
 void metal_irq_restore_enable(unsigned int flags)
 {
-	sys_irq_restore_enable(flags);
+	irq_unlock(flags);
 }
 
