@@ -122,9 +122,9 @@ int metal_generic_dev_dma_map(struct metal_bus *bus,
 			     int nents_in,
 			     struct metal_sg *sg_out)
 {
+	int i;
 	(void)bus;
 	(void)device;
-	int i;
 
 	if (sg_out != sg_in)
 		memcpy(sg_out, sg_in, nents_in*(sizeof(struct metal_sg)));
@@ -144,10 +144,10 @@ void metal_generic_dev_dma_unmap(struct metal_bus *bus,
 				 struct metal_sg *sg,
 				 int nents)
 {
+	int i;
 	(void)bus;
 	(void)device;
 	(void)dir;
-	int i;
 
 	for (i = 0; i < nents; i++) {
 		metal_cache_invalidate(sg[i].virt, sg[i].len);
