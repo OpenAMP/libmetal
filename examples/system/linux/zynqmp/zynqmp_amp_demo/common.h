@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2017, Xilinx Inc. and Contributors. All rights reserved.
- * Copyright (C) 2022, Advanced Micro Devices, Inc.
+ * Copyright (c) 2017-2022, Xilinx Inc. and Contributors. All rights reserved.
+ * Copyright (c) 2022-2023, Advanced Micro Devices, Inc.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -195,5 +195,40 @@ static inline void print_demo(char *name)
 {
 	LPRINTF("****** libmetal demo: %s ******\n", name);
 }
+
+/**
+ * @brief ipi_kick_register_handler() - register for IPI kick handler
+ *
+ * @param[in] hd - handler function
+ * @param[in] priv - private data will be passed to the handler
+ */
+void ipi_kick_register_handler(metal_irq_handler hd, void *priv);
+
+/**
+ * @brief init_ipi() - Initialize IPI
+ *
+ * @return return 0 for success, negative value for failure.
+ */
+int init_ipi(void);
+
+/**
+ * @brief deinit_ipi() - Deinitialize IPI
+ */
+void deinit_ipi(void);
+
+/**
+ * @brief kick_ipi() - kick remote with IPI
+ */
+void kick_ipi(void *msg);
+
+/**
+ * @brief disable_ipi_kick() - disable IPI interrupt from remote kick
+ */
+void disable_ipi_kick(void);
+
+/**
+ * @brief enable_ipi_kick() - enable IPI interrupt from remote kick
+ */
+void enable_ipi_kick(void);
 
 #endif /* __COMMON_H__ */
