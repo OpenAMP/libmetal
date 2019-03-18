@@ -58,13 +58,10 @@
 #define PKG_SIZE_MAX 1024
 
 struct channel_s {
-	struct metal_device *ipi_dev; /* IPI metal device */
-	struct metal_io_region *ipi_io; /* IPI metal i/o region */
 	struct metal_device *shm_dev; /* Shared memory metal device */
 	struct metal_io_region *shm_io; /* Shared memory metal i/o region */
 	struct metal_device *ttc_dev; /* TTC metal device */
 	struct metal_io_region *ttc_io; /* TTC metal i/o region */
-	uint32_t ipi_mask; /* RPU IPI mask */
 	atomic_flag remote_nkicked; /* 0 - kicked from remote */
 };
 
@@ -141,18 +138,12 @@ static inline void stop_timer(struct metal_io_region *ttc_io,
 static int ipi_irq_handler (int vect_id, void *priv)
 {
 	struct channel_s *ch = (struct channel_s *)priv;
-	uint32_t val;
 
 	(void)vect_id;
 
 	if (ch) {
-		val = metal_io_read32(ch->ipi_io, IPI_ISR_OFFSET);
-		if (val & ch->ipi_mask) {
-			metal_io_write32(ch->ipi_io, IPI_ISR_OFFSET,
-					ch->ipi_mask);
-			atomic_flag_clear(&ch->remote_nkicked);
-			return METAL_IRQ_HANDLED;
-		}
+		atomic_flag_clear(&ch->remote_nkicked);
+		return METAL_IRQ_HANDLED;
 	}
 	return METAL_IRQ_NOT_HANDLED;
 }
@@ -212,8 +203,7 @@ static int measure_shmem_latency(struct channel_s *ch)
 				goto out;
 			}
 			/* Kick IPI to notify the remote */
-			metal_io_write32(ch->ipi_io, IPI_TRIG_OFFSET,
-					ch->ipi_mask);
+			kick_ipi(NULL);
 			/* irq handler stops timer for rpu->apu irq */
 			wait_for_notified(&ch->remote_nkicked);
 			/* Read message */
@@ -247,7 +237,7 @@ static int measure_shmem_latency(struct channel_s *ch)
 	/* write to shared memory to indicate demo has finished */
 	metal_io_write32(ch->shm_io, SHM_DEMO_CNTRL_OFFSET, 0);
 	/* Kick IPI to notify the remote */
-	metal_io_write32(ch->ipi_io, IPI_TRIG_OFFSET, ch->ipi_mask);
+	kick_ipi(NULL);
 
 	LPRINTF("Finished shared memory latency task\n");
 
@@ -261,7 +251,6 @@ int shmem_latency_demo()
 	struct metal_device *dev;
 	struct metal_io_region *io;
 	struct channel_s ch;
-	int ipi_irq;
 	int ret = 0;
 
 	print_demo("shared memory latency");
@@ -301,56 +290,29 @@ int shmem_latency_demo()
 	ch.ttc_dev = dev;
 	ch.ttc_io = io;
 
-	/* Open IPI device */
-	ret = metal_device_open(BUS_NAME, IPI_DEV_NAME, &dev);
-	if (ret) {
-		LPERROR("Failed to open device %s.\n", IPI_DEV_NAME);
-		goto out;
-	}
-
-	/* Get IPI device IO region */
-	io = metal_device_io_region(dev, 0);
-	if (!io) {
-		LPERROR("Failed to map io region for %s.\n", dev->name);
-		ret = -ENODEV;
-		goto out;
-	}
-	ch.ipi_dev = dev;
-	ch.ipi_io = io;
-
-	/* Get the IPI IRQ from the opened IPI device */
-	ipi_irq = (intptr_t)ch.ipi_dev->irq_info;
-
-	/* disable IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_IDR_OFFSET, IPI_MASK);
-	/* clear old IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_ISR_OFFSET, IPI_MASK);
 	/* initialize remote_nkicked */
 	ch.remote_nkicked = (atomic_flag)ATOMIC_FLAG_INIT;
 	atomic_flag_test_and_set(&ch.remote_nkicked);
-	ch.ipi_mask = IPI_MASK;
-	/* Register IPI irq handler */
-	metal_irq_register(ipi_irq, ipi_irq_handler, &ch);
-	metal_irq_enable(ipi_irq);
-	/* Enable IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_IER_OFFSET, IPI_MASK);
+
+	ret = init_ipi();
+	if (ret) {
+		goto out;
+	}
+	ipi_kick_register_handler(ipi_irq_handler, &ch);
+	enable_ipi_kick();
 
 	/* Run atomic operation demo */
 	ret = measure_shmem_latency(&ch);
 
 	/* disable IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_IDR_OFFSET, IPI_MASK);
-	/* unregister IPI irq handler by setting the handler to 0 */
-	metal_irq_disable(ipi_irq);
-	metal_irq_unregister(ipi_irq);
+	disable_ipi_kick();
+	deinit_ipi();
 
 out:
 	if (ch.ttc_dev)
 		metal_device_close(ch.ttc_dev);
 	if (ch.shm_dev)
 		metal_device_close(ch.shm_dev);
-	if (ch.ipi_dev)
-		metal_device_close(ch.ipi_dev);
 	return ret;
 
 }

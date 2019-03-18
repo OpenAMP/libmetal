@@ -76,13 +76,10 @@
 #define MB (1024 * 1024) /* Mega Bytes */
 
 struct channel_s {
-	struct metal_device *ipi_dev; /* IPI metal device */
-	struct metal_io_region *ipi_io; /* IPI metal i/o region */
 	struct metal_device *shm_dev; /* Shared memory metal device */
 	struct metal_io_region *shm_io; /* Shared memory metal i/o region */
 	struct metal_device *ttc_dev; /* TTC metal device */
 	struct metal_io_region *ttc_io; /* TTC metal i/o region */
-	uint32_t ipi_mask; /* RPU IPI mask */
 	atomic_flag remote_nkicked; /* 0 - kicked from remote */
 };
 
@@ -154,18 +151,12 @@ static inline void stop_timer(struct metal_io_region *ttc_io,
 static int ipi_irq_handler (int vect_id, void *priv)
 {
 	struct channel_s *ch = (struct channel_s *)priv;
-	uint32_t val;
 
 	(void)vect_id;
 
 	if (ch) {
-		val = metal_io_read32(ch->ipi_io, IPI_ISR_OFFSET);
-		if (val & ch->ipi_mask) {
-			metal_io_write32(ch->ipi_io, IPI_ISR_OFFSET,
-					ch->ipi_mask);
-			atomic_flag_clear(&ch->remote_nkicked);
-			return METAL_IRQ_HANDLED;
-		}
+		atomic_flag_clear(&ch->remote_nkicked);
+		return METAL_IRQ_HANDLED;
 	}
 	return METAL_IRQ_NOT_HANDLED;
 }
@@ -264,8 +255,7 @@ static int measure_shmem_throughput(struct channel_s* ch)
 					tx_count);
 			/* Kick IPI to notify RPU data is ready in
 			 * the shared memory */
-			metal_io_write32(ch->ipi_io, IPI_TRIG_OFFSET,
-					ch->ipi_mask);
+			kick_ipi(NULL);
 		}
 		/* Stop RPU TTC counter */
 		stop_timer(ch->ttc_io, TTC_CNT_APU_TO_RPU);
@@ -279,7 +269,7 @@ static int measure_shmem_throughput(struct channel_s* ch)
 
 	/* Kick IPI to notify RPU that APU has read the RPU RX TTC counter
 	 * value */
-	metal_io_write32(ch->ipi_io, IPI_TRIG_OFFSET, ch->ipi_mask);
+	kick_ipi(NULL);
 
 	/* for each data size, meaasure block read throughput */
 	for (s = PKG_SIZE_MIN, i = 0; s <= PKG_SIZE_MAX; s <<= 1, i++) {
@@ -332,7 +322,7 @@ static int measure_shmem_throughput(struct channel_s* ch)
 		atomic_flag_clear(&ch->remote_nkicked);
 		atomic_flag_test_and_set(&ch->remote_nkicked);
 		/* Kick IPI to notify remote it is ready to read data */
-		metal_io_write32(ch->ipi_io, IPI_TRIG_OFFSET, ch->ipi_mask);
+		kick_ipi(NULL);
 		/* Wait for RPU to signal RPU TX TTC counter is ready to
 		 * read */
 		wait_for_notified(&ch->remote_nkicked);
@@ -341,7 +331,7 @@ static int measure_shmem_throughput(struct channel_s* ch)
 		rpu_tx_count[i] = read_timer(ch->ttc_io, TTC_CNT_RPU_TO_APU);
 		/* Kick IPI to notify RPU APU has read the RPU TX TTC counter
 		 * value */
-		metal_io_write32(ch->ipi_io, IPI_TRIG_OFFSET, ch->ipi_mask);
+		kick_ipi(NULL);
 	}
 
 	/* Print the measurement result */
@@ -378,7 +368,6 @@ int shmem_throughput_demo()
 	struct metal_device *dev;
 	struct metal_io_region *io;
 	struct channel_s ch;
-	int ipi_irq;
 	int ret = 0;
 
 	print_demo("shared memory throughput");
@@ -418,56 +407,29 @@ int shmem_throughput_demo()
 	ch.ttc_dev = dev;
 	ch.ttc_io = io;
 
-	/* Open IPI device */
-	ret = metal_device_open(BUS_NAME, IPI_DEV_NAME, &dev);
-	if (ret) {
-		LPERROR("Failed to open device %s.\n", IPI_DEV_NAME);
-		goto out;
-	}
-
-	/* Get IPI device IO region */
-	io = metal_device_io_region(dev, 0);
-	if (!io) {
-		LPERROR("Failed to map io region for %s.\n", dev->name);
-		ret = -ENODEV;
-		goto out;
-	}
-	ch.ipi_dev = dev;
-	ch.ipi_io = io;
-
-	/* Get the IPI IRQ from the opened IPI device */
-	ipi_irq = (intptr_t)ch.ipi_dev->irq_info;
-
-	/* disable IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_IDR_OFFSET, IPI_MASK);
-	/* clear old IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_ISR_OFFSET, IPI_MASK);
 	/* initialize remote_nkicked */
 	ch.remote_nkicked = (atomic_flag)ATOMIC_FLAG_INIT;
 	atomic_flag_test_and_set(&ch.remote_nkicked);
-	ch.ipi_mask = IPI_MASK;
-	/* Register IPI irq handler */
-	metal_irq_register(ipi_irq, ipi_irq_handler, &ch);
-	metal_irq_enable(ipi_irq);
-	/* Enable IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_IER_OFFSET, IPI_MASK);
+
+	ret = init_ipi();
+	if (ret) {
+		goto out;
+	}
+	ipi_kick_register_handler(ipi_irq_handler, &ch);
+	enable_ipi_kick();
 
 	/* Run atomic operation demo */
 	ret = measure_shmem_throughput(&ch);
 
 	/* disable IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_IDR_OFFSET, IPI_MASK);
-	/* unregister IPI irq handler by setting the handler to 0 */
-	metal_irq_disable(ipi_irq);
-	metal_irq_unregister(ipi_irq);
+	disable_ipi_kick();
+	deinit_ipi();
 
 out:
 	if (ch.ttc_dev)
 		metal_device_close(ch.ttc_dev);
 	if (ch.shm_dev)
 		metal_device_close(ch.shm_dev);
-	if (ch.ipi_dev)
-		metal_device_close(ch.ipi_dev);
 	return ret;
 
 }
