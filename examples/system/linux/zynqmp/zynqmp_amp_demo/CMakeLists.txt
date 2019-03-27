@@ -70,3 +70,13 @@ foreach (_app libmetal_amp_mb_shmem)
   endif (WITH_STATIC_LIB)
 endforeach (_app)
 
+if (SOC_FAMILY STREQUAL "zynqmp")
+  add_definitions(-DCONFIG_IPI_DEV_NAME="ff340000.ipi")
+  add_definitions(-DCONFIG_TTC_DEV_NAME="ff110000.timer")
+  add_definitions(-DCONFIG_IPI_MASK=0x100)
+elseif (SOC_FAMILY STREQUAL "versal")
+  add_definitions(-DCONFIG_IPI_DEV_NAME="ff360000.ipi")
+  add_definitions(-DCONFIG_TTC_DEV_NAME="ff0e0000.ttc0")
+  add_definitions(-DCONFIG_IPI_MASK=0x08)
+endif (SOC_FAMILY STREQUAL "zynqmp")
+

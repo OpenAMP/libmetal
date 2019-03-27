@@ -15,9 +15,9 @@
 #include <stdio.h>
 
 #define BUS_NAME        "platform"
-#define IPI_DEV_NAME    "ff340000.ipi"
+#define IPI_DEV_NAME	CONFIG_IPI_DEV_NAME
 #define SHM_DEV_NAME    "3ed80000.shm"
-#define TTC_DEV_NAME    "ff110000.timer"
+#define TTC_DEV_NAME	CONFIG_TTC_DEV_NAME
 
 /* Apply this snippet to the device tree in an overlay so that
  * Linux userspace can see and use TTC0:
@@ -36,7 +36,7 @@
 #define IPI_IER_OFFSET  0x18 /* IPI interrupt enable reg offset */
 #define IPI_IDR_OFFSET  0x1C /* IPI interrupt disable reg offset */
 
-#define IPI_MASK        0x100 /* IPI mask for kick from RPU. */
+#define IPI_MASK	CONFIG_IPI_MASK /* IPI mask for kick from RPU. */
 
 /* TTC counter offsets */
 #define XTTCPS_CLK_CNTRL_OFFSET 0x0  /* TTC counter clock control reg offset */
