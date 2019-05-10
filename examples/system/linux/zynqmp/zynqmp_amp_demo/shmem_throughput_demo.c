@@ -41,7 +41,7 @@
  */
 
 #include <unistd.h>
-#include <error.h>
+#include <errno.h>
 #include <metal/atomic.h>
 #include <metal/io.h>
 #include <metal/device.h>
