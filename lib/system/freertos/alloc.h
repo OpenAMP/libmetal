@@ -16,7 +16,7 @@
 #ifndef __METAL_FREERTOS_ALLOC__H__
 #define __METAL_FREERTOS_ALLOC__H__
 
-#include "FreeRTOS.h"
+#include <FreeRTOS.h>
 
 #ifdef __cplusplus
 extern "C" {

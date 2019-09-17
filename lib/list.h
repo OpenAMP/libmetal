@@ -93,6 +93,7 @@ static inline struct metal_list *metal_list_first(struct metal_list *list)
 	for ((node) = (list)->next;		\
 	     (node) != (list);			\
 	     (node) = (node)->next)
+
 /** @} */
 
 #ifdef __cplusplus
