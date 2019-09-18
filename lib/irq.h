@@ -12,15 +12,15 @@
 #ifndef __METAL_IRQ__H__
 #define __METAL_IRQ__H__
 
+#include <metal/list.h>
+#include <stdlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /** \defgroup irq Interrupt Handling Interfaces
  *  @{ */
-
-#include <metal/list.h>
-#include <stdlib.h>
 
 /** IRQ handled status */
 #define METAL_IRQ_NOT_HANDLED 0
@@ -92,12 +92,12 @@ void metal_irq_enable(unsigned int vector);
  */
 void metal_irq_disable(unsigned int vector);
 
-#include <metal/system/@PROJECT_SYSTEM@/irq.h>
-
 /** @} */
 
 #ifdef __cplusplus
 }
 #endif
+
+#include <metal/system/@PROJECT_SYSTEM@/irq.h>
 
 #endif /* __METAL_IRQ__H__ */

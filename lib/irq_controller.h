@@ -12,16 +12,16 @@
 #ifndef __METAL_IRQ_CONTROLLER__H__
 #define __METAL_IRQ_CONTROLLER__H__
 
+#include <metal/irq.h>
+#include <metal/list.h>
+#include <stdlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /** \defgroup irq Interrupt Handling Interfaces
  *  @{ */
-
-#include <metal/irq.h>
-#include <metal/list.h>
-#include <stdlib.h>
 
 /** IRQ ANY ID */
 #define METAL_IRQ_ANY         (-1)
