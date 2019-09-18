@@ -17,13 +17,14 @@
 #define __METAL_GENERIC_MUTEX__H__
 
 #include <metal/atomic.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef struct {
-	atomic_int v;
+	atomic_flag v;
 } metal_mutex_t;
 
 /*
@@ -39,7 +40,7 @@ typedef struct {
 
 static inline void __metal_mutex_init(metal_mutex_t *mutex)
 {
-	atomic_store(&mutex->v, 0);
+	atomic_store((atomic_bool *)&mutex->v, false);
 }
 
 static inline void __metal_mutex_deinit(metal_mutex_t *mutex)
@@ -66,7 +67,7 @@ static inline void __metal_mutex_release(metal_mutex_t *mutex)
 
 static inline int __metal_mutex_is_acquired(metal_mutex_t *mutex)
 {
-	return atomic_load(&mutex->v);
+	return atomic_load((atomic_bool *)&mutex->v);
 }
 
 #ifdef __cplusplus

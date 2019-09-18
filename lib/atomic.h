@@ -20,6 +20,15 @@
 # include <stdatomic.h>
 #elif defined(__cplusplus)
 # include <atomic>
+# define _Atomic(T) std::atomic<T>
+using std::memory_order;
+using std::atomic_flag;
+using std::atomic_bool;
+using std::atomic_uchar;
+using std::atomic_ushort;
+using std::atomic_uint;
+using std::atomic_ulong;
+using std::atomic_ullong;
 #elif defined(__GNUC__)
 # include <metal/compiler/gcc/atomic.h>
 #else
