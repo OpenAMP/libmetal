@@ -17,7 +17,6 @@
 #define __METAL_GENERIC_MUTEX__H__
 
 #include <metal/atomic.h>
-#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,7 +39,7 @@ typedef struct {
 
 static inline void __metal_mutex_init(metal_mutex_t *mutex)
 {
-	atomic_store((atomic_bool *)&mutex->v, false);
+	atomic_flag_clear(&mutex->v);
 }
 
 static inline void __metal_mutex_deinit(metal_mutex_t *mutex)
