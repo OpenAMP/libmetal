@@ -20,7 +20,9 @@ extern "C" {
 #endif
 
 /** \defgroup spinlock Spinlock Interfaces
- *  @{ */
+ *  @{
+ */
+
 struct metal_spinlock {
 	atomic_flag v;
 };

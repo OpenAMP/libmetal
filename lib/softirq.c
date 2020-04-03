@@ -20,9 +20,9 @@
 	static const int metal_softirq_num = num; \
 	static struct metal_irq metal_softirqs[num]; \
 	static atomic_char metal_softirq_pending[num]; \
-	static atomic_char metal_softirq_enabled[num]; \
+	static atomic_char metal_softirq_enabled[num];
 
-static int metal_softirq_avail = 0;
+static int metal_softirq_avail;
 METAL_SOFTIRQ_ARRAY_DECLARE(METAL_SOFTIRQ_NUM)
 
 static void metal_softirq_set_enable(struct metal_irq_controller *cntr,
@@ -45,7 +45,7 @@ static METAL_IRQ_CONTROLLER_DECLARE(metal_softirq_cntr,
 				    METAL_IRQ_ANY, METAL_SOFTIRQ_NUM,
 				    NULL,
 				    metal_softirq_set_enable, NULL,
-				    metal_softirqs)
+				    metal_softirqs);
 
 void metal_softirq_set(int irq)
 {
@@ -62,7 +62,7 @@ void metal_softirq_set(int irq)
 	atomic_store(&metal_softirq_pending[irq], 1);
 }
 
-int metal_softirq_init()
+int metal_softirq_init(void)
 {
 	return metal_irq_register_controller(&metal_softirq_cntr);
 }
@@ -82,7 +82,7 @@ int metal_softirq_allocate(int num)
 	return irq_base;
 }
 
-void metal_softirq_dispatch()
+void metal_softirq_dispatch(void)
 {
 	int i;
 
