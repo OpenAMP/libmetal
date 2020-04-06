@@ -84,7 +84,7 @@ static unsigned long metal_io_phys_to_offset_(struct metal_io_region *io,
 	return (char *)up_addrenv_pa_to_va(phys) - (char *)io->virt;
 }
 
-static metal_phys_addr_t metal_io_phys_start_ = 0;
+static metal_phys_addr_t metal_io_phys_start_;
 
 static struct metal_io_region metal_io_region_ = {
 	.virt = NULL,
