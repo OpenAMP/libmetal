@@ -28,10 +28,11 @@ extern "C" {
 
 struct metal_condition {
 	atomic_uintptr_t mptr; /**< mutex pointer.
-				    The condition variable is attached to
-				    this mutex when it is waiting.
-				    It is also used to check correctness
-				    in case there are multiple waiters. */
+				 * The condition variable is attached to
+				 * this mutex when it is waiting.
+				 * It is also used to check correctness
+				 * in case there are multiple waiters.
+				 */
 
 	atomic_int v; /**< condition variable value. */
 };

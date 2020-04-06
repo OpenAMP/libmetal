@@ -39,6 +39,7 @@ unsigned int sys_irq_save_disable(void)
 void sys_irq_restore_enable(unsigned int flags)
 {
 	unsigned int tmp;
+
 	if (flags)
 		asm volatile("  msrset %0, %1	\n"
 			 :  "=r"(tmp)
@@ -113,20 +114,18 @@ void metal_weak sys_irq_disable(unsigned int vector)
 
 void metal_machine_cache_flush(void *addr, unsigned int len)
 {
-	if (!addr && !len){
+	if (!addr && !len) {
 		Xil_DCacheFlush();
-	}
-	else{
+	} else{
 		Xil_DCacheFlushRange((intptr_t)addr, len);
 	}
 }
 
 void metal_machine_cache_invalidate(void *addr, unsigned int len)
 {
-	if (!addr && !len){
+	if (!addr && !len) {
 		Xil_DCacheInvalidate();
-	}
-	else {
+	} else {
 		Xil_DCacheInvalidateRange((intptr_t)addr, len);
 	}
 }
