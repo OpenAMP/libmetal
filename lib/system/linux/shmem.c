@@ -77,6 +77,7 @@ static int metal_shmem_try_map(struct metal_page_size *ps, int fd, size_t size,
 	} else {
 		for (virt = mem, page = 0; page < pages; page++) {
 			size_t offset = page * ps->page_size;
+
 			error = metal_virt2phys(virt + offset, &phys[page]);
 			if (error < 0)
 				phys[page] = METAL_BAD_OFFSET;

@@ -73,8 +73,10 @@ static struct linux_device *to_linux_device(struct metal_device *device)
 	return metal_container_of(device, struct linux_device, device);
 }
 
-static int metal_uio_read_map_attr(struct linux_device *ldev, unsigned index,
-				   const char *name, unsigned long *value)
+static int metal_uio_read_map_attr(struct linux_device *ldev,
+				   unsigned int index,
+				   const char *name,
+				   unsigned long *value)
 {
 	const char *cls = ldev->cls_path;
 	struct sysfs_attribute *attr;
@@ -147,7 +149,7 @@ static int metal_uio_dev_open(struct linux_bus *lbus, struct linux_device *ldev)
 {
 	char *instance, path[SYSFS_PATH_MAX];
 	struct linux_driver *ldrv = ldev->ldrv;
-	unsigned long *phys, offset=0, size=0;
+	unsigned long *phys, offset = 0, size = 0;
 	struct metal_io_region *io;
 	struct dlist *dlist;
 	int result, i;
@@ -337,17 +339,16 @@ static int metal_uio_dev_dma_map(struct linux_bus *lbus,
 }
 
 static void metal_uio_dev_dma_unmap(struct linux_bus *lbus,
-				 struct linux_device *ldev,
-				 uint32_t dir,
-				 struct metal_sg *sg,
-				 int nents)
+				    struct linux_device *ldev,
+				    uint32_t dir,
+				    struct metal_sg *sg,
+				    int nents)
 {
 	(void) lbus;
 	(void) ldev;
 	(void) dir;
 	(void) sg;
 	(void) nents;
-	return;
 }
 
 static struct linux_bus linux_bus[] = {
@@ -512,10 +513,10 @@ static int metal_linux_dev_dma_map(struct metal_bus *bus,
 }
 
 static void metal_linux_dev_dma_unmap(struct metal_bus *bus,
-			        struct metal_device *device,
-			        uint32_t dir,
-			        struct metal_sg *sg,
-			        int nents)
+				      struct metal_device *device,
+				      uint32_t dir,
+				      struct metal_sg *sg,
+				      int nents)
 {
 	struct linux_device *ldev = to_linux_device(device);
 	struct linux_bus *lbus = to_linux_bus(bus);
