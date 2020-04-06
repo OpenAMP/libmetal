@@ -42,7 +42,7 @@ static METAL_IRQ_CONTROLLER_DECLARE(xlnx_irq_cntr,
 				    0, MAX_IRQS,
 				    NULL,
 				    metal_xlnx_irq_set_enable, NULL,
-				    irqs)
+				    irqs);
 
 /**
  * @brief default handler
