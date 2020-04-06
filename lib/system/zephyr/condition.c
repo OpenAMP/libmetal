@@ -44,7 +44,7 @@ int metal_condition_wait(struct metal_condition *cv,
 		}
 		metal_generic_default_poll();
 		metal_irq_restore_enable(flags);
-	} while(1);
+	} while (1);
 	/* Acquire the mutex again. */
 	metal_mutex_acquire(m);
 	return 0;
