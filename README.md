@@ -8,6 +8,26 @@ and request memory across the following operating environments:
   * RTOS (with and without virtual memory)
   * Bare-metal environments
 
+## Project configuration
+The configuration phase begins when the user invokes CMake. CMake begins by processing the CMakeLists.txt file and the cmake directory.
+Some cmake options are available to help user to customize the libmetal to their
+own project.
+
+* **WITH_DOC** (default ON): Build with documentation. Add -DWITH_DOC=OFF in
+cmake command line to disable.
+* **WITH_EXAMPLES** (default ON): Build with application exemples. Add
+-DWITH_DOC=OFF in cmake command line to disable the option.
+* **WITH_TESTS** (default ON): Build with application tests. Add -DWITH_DOC=OFF
+in cmake command line to disable the option.
+* **WITH_DEFAULT_LOGGER** (default ON): Build with default trace logger. Add
+-DWITH_DEFAULT_LOGGER=OFF in cmake command line to disable the option.
+* **WITH_SHARED_LIB** (default ON): Generate a shared library. Add
+-DWITH_SHARED_LIB=OFF in cmake command line to disable the option.
+* **WITH_STATIC_LIB** (default ON): Generate a static library. Add
+-DWITH_STATIC_LIB=OFF in cmake command line to disable the option.
+*  **WITH_ZEPHYR** (default OFF): Build for Zephyr environment. Add
+-DWITH_ZEPHYR=ON in cmake command line to enable the the option.
+
 ## Build Steps
 
 ### Building for Linux Host
