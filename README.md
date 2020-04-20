@@ -73,6 +73,12 @@ example toolchain file:
 ```
 
 ### Building for Zephyr
+The [zephyr-libmetal](https://github.com/zephyrproject-rtos/libmetal)
+implements the libmetal for the Zephyr project. It is mainly  a fork of this repository, with some add-ons for integration in the Zephyr project.
+
+Following instruction is only to be able to run test application on a QEMU running
+a Zephyr environment.
+
 As Zephyr uses CMake, we build libmetal library and test application as
 targets of Zephyr CMake project. Here is how to build libmetal for Zephyr:
 ```
