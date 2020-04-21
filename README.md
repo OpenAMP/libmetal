@@ -284,3 +284,6 @@ To check your \<n\> commits in your git branch:
    ```
 ### Send a pull request
 We use standard github mechanism for pull request. Please refer to github documentation for help.
+
+## Communication and Collaboration
+[Subscribe](https://lists.openampproject.org/mailman/listinfo/openamp-rp) to the OpenAMP mailing list(openamp-rp@lists.openampproject.org).
