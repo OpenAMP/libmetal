@@ -45,7 +45,7 @@ static int metal_cntr_irq_handler(int irq, void *context, void *data)
 
 	/* context == NULL mean unregister */
 	irqchain_detach(irq, metal_cntr_irq_handler, data);
-	sched_kfree(data);
+	metal_free_memory(data);
 	return 0;
 }
 
