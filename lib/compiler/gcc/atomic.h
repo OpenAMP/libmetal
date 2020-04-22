@@ -23,6 +23,7 @@ typedef short atomic_short;
 typedef unsigned short atomic_ushort;
 typedef int atomic_int;
 typedef unsigned int atomic_uint;
+typedef atomic_uint atomic_uintptr_t;
 typedef long atomic_long;
 typedef unsigned long atomic_ulong;
 typedef long long atomic_llong;
