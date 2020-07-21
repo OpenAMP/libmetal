@@ -1,0 +1,8 @@
+# Copyright (c) 2020 Bobby Noelte
+# SPDX-License-Identifier: Apache-2.0
+
+menuconfig LIBMETAL_BY_OPENAMP
+	bool "OpenAMP libmetal HAL"
+	help
+	  Enable the native OpenAMP libmetal hardware abstraction library
+	  (not the Zephyr fork of libmetal).
