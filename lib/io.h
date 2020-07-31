@@ -274,16 +274,21 @@ metal_io_write(struct metal_io_region *io, unsigned long offset,
 	if (io->ops.write)
 		(*io->ops.write)(io, offset, value, order, width);
 	else if (ptr && sizeof(atomic_uchar) == width)
-		atomic_store_explicit((atomic_uchar *)ptr, value, order);
+		atomic_store_explicit((atomic_uchar *)ptr, (unsigned char)value,
+				      order);
 	else if (ptr && sizeof(atomic_ushort) == width)
-		atomic_store_explicit((atomic_ushort *)ptr, value, order);
+		atomic_store_explicit((atomic_ushort *)ptr,
+				      (unsigned short)value, order);
 	else if (ptr && sizeof(atomic_uint) == width)
-		atomic_store_explicit((atomic_uint *)ptr, value, order);
+		atomic_store_explicit((atomic_uint *)ptr, (unsigned int)value,
+				      order);
 	else if (ptr && sizeof(atomic_ulong) == width)
-		atomic_store_explicit((atomic_ulong *)ptr, value, order);
+		atomic_store_explicit((atomic_ulong *)ptr, (unsigned long)value,
+				      order);
 #ifndef NO_ATOMIC_64_SUPPORT
 	else if (ptr && sizeof(atomic_ullong) == width)
-		atomic_store_explicit((atomic_ullong *)ptr, value, order);
+		atomic_store_explicit((atomic_ullong *)ptr,
+				      (unsigned long long)value, order);
 #endif
 	else
 		metal_assert(0);
