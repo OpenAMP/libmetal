@@ -64,7 +64,7 @@ void metal_machine_cache_invalidate(void *addr, unsigned int len)
  */
 void metal_weak metal_generic_default_poll(void)
 {
-	asm volatile("wfi");
+	metal_asm volatile("wfi");
 }
 
 void *metal_machine_io_mem_map(void *va, metal_phys_addr_t pa,
