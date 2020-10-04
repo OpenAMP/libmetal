@@ -335,16 +335,17 @@ static int measure_shmem_throughput(struct channel_s* ch)
 	}
 
 	/* Print the measurement result */
+	float mbs = TTC_CLK_FREQ_HZ * (TOTAL_DATA_SIZE / MB);
 	for (s = PKG_SIZE_MIN, i = 0; s <= PKG_SIZE_MAX; s <<= 1, i++) {
 		LPRINTF("Shared memory throughput of pkg size %lu : \n", s);
-		LPRINTF("    APU send: %x, %lu MB/s\n", apu_tx_count[i],
-			s * iterations * TTC_CLK_FREQ_HZ / apu_tx_count[i] / MB);
-		LPRINTF("    APU receive: %x, %lu MB/s\n", apu_rx_count[i],
-			s * iterations * TTC_CLK_FREQ_HZ / apu_rx_count[i] / MB);
-		LPRINTF("    RPU send: %x, %lu MB/s\n", rpu_tx_count[i],
-			s * iterations * TTC_CLK_FREQ_HZ / rpu_tx_count[i] / MB);
-		LPRINTF("    RPU receive: %x, %lu MB/s\n", rpu_rx_count[i],
-			s * iterations * TTC_CLK_FREQ_HZ / rpu_rx_count[i] / MB);
+		LPRINTF("    APU send:    %u, %.1f MB/s\n", apu_tx_count[i],
+			mbs / apu_tx_count[i]);
+		LPRINTF("    RPU receive: %u, %.1f MB/s\n", rpu_rx_count[i],
+			mbs / rpu_rx_count[i]);
+		LPRINTF("    RPU send:    %u, %.1f MB/s\n", rpu_tx_count[i],
+			mbs / rpu_tx_count[i]);
+		LPRINTF("    APU receive: %u, %.1f MB/s\n", apu_rx_count[i],
+			mbs / apu_rx_count[i]);
 	}
 
 	LPRINTF("Finished shared memory throughput\n");

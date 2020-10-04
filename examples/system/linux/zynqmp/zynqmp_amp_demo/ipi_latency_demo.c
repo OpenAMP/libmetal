@@ -34,13 +34,15 @@
 #include <metal/io.h>
 #include <metal/device.h>
 #include <metal/irq.h>
+#include <metal/time.h>
 #include "common.h"
 
 #define TTC_CNT_APU_TO_RPU 2 /* APU to RPU TTC counter ID */
 #define TTC_CNT_RPU_TO_APU 3 /* RPU to APU TTC counter ID */
 
 #define TTC_CLK_FREQ_HZ	100000000
-#define NS_PER_SEC 1000000000
+#define NS_PER_SEC     1000000000
+#define NS_PER_TTC_TICK (NS_PER_SEC / TTC_CLK_FREQ_HZ)
 
 /* Shared memory offset */
 #define SHM_DEMO_CNTRL_OFFSET    0x0
@@ -139,6 +141,27 @@ static int ipi_irq_handler (int vect_id, void *priv)
 }
 
 /**
+ * @brief ttc_vs_clock_gettime() sanity check: TTC and CLOCK_MONOTONIC
+ *	  Compare TTC counts with the CLOCK_MONOTONIC over sleep(1).
+ *	  They should be very close, e.g. within 6 us for 100 MHz TTC
+ *
+ * @param[in] ch - channel information for the ttc timer
+ */
+
+static void ttc_vs_clock_gettime(struct channel_s *ch)
+{
+	uint64_t ttc, lnx = metal_get_timestamp();
+
+	reset_timer(ch->ttc_io, TTC_CNT_APU_TO_RPU);
+	sleep(1);
+	stop_timer(ch->ttc_io, TTC_CNT_APU_TO_RPU);
+	lnx = metal_get_timestamp() - lnx;
+	ttc = NS_PER_TTC_TICK * read_timer(ch->ttc_io, TTC_CNT_APU_TO_RPU);
+	LPRINTF("sleep(1) check: TTC= %lu / CLOCK_MONOTONIC= %lu = %.2f\n",
+		ttc, lnx, lnx ? (ttc/(float)lnx) : 0);
+}
+
+/**
  * @brief measure_ipi_latency() - Measure latency of IPI
  *        Repeatedly kick IPI to notify the remote and then wait for IPI kick
  *        from RPU and measure the latency. Similarly, measure the latency
@@ -155,13 +178,17 @@ static int ipi_irq_handler (int vect_id, void *priv)
  */
 static int measure_ipi_latency(struct channel_s *ch)
 {
-	uint32_t apu_to_rpu_sum = 0, rpu_to_apu_sum = 0;
+	struct metal_stat a2r = STAT_INIT;
+	struct metal_stat r2a = STAT_INIT;
+	uint64_t delta_ns;
 	int i;
 
 	LPRINTF("Starting IPI latency task\n");
+	ttc_vs_clock_gettime(ch);
 	/* write to shared memory to indicate demo has started */
 	metal_io_write32(ch->shm_io, SHM_DEMO_CNTRL_OFFSET, DEMO_STATUS_START);
 
+	delta_ns = metal_get_timestamp();
 	for ( i = 1; i <= ITERATIONS; i++) {
 		/* Reset TTC counter */
 		reset_timer(ch->ttc_io, TTC_CNT_APU_TO_RPU);
@@ -170,9 +197,10 @@ static int measure_ipi_latency(struct channel_s *ch)
 		/* irq handler stops timer for rpu->apu irq */
 		wait_for_notified(&ch->remote_nkicked);
 
-		apu_to_rpu_sum += read_timer(ch->ttc_io, TTC_CNT_APU_TO_RPU);
-		rpu_to_apu_sum += read_timer(ch->ttc_io, TTC_CNT_RPU_TO_APU);
+		update_stat(&a2r, read_timer(ch->ttc_io, TTC_CNT_APU_TO_RPU));
+		update_stat(&r2a, read_timer(ch->ttc_io, TTC_CNT_RPU_TO_APU));
 	}
+	delta_ns = metal_get_timestamp() - delta_ns;
 
 	/* write to shared memory to indicate demo has finished */
 	metal_io_write32(ch->shm_io, SHM_DEMO_CNTRL_OFFSET, 0);
@@ -180,11 +208,16 @@ static int measure_ipi_latency(struct channel_s *ch)
 	kick_ipi(NULL);
 
 	/* report avg latencies */
-	LPRINTF("IPI latency result with %i iterations:\n", ITERATIONS);
-	LPRINTF("APU to RPU average latency: %u ns \n",
-		apu_to_rpu_sum / ITERATIONS * NS_PER_SEC / TTC_CLK_FREQ_HZ );
-	LPRINTF("RPU to APU average latency: %u ns \n",
-		rpu_to_apu_sum / ITERATIONS * NS_PER_SEC / TTC_CLK_FREQ_HZ );
+	LPRINTF("IPI latency: %i iterations took %lu ns (CLOCK_MONOTONIC)\n",
+		ITERATIONS, delta_ns);
+	LPRINTF("TTC [min,max] are in TTC ticks: %d ns per tick\n",
+		NS_PER_TTC_TICK);
+	LPRINTF("APU to RPU: [%lu, %lu] avg: %lu ns\n",
+		a2r.st_min, a2r.st_max,
+		a2r.st_sum * NS_PER_TTC_TICK / ITERATIONS);
+	LPRINTF("RPU to APU: [%lu, %lu] avg: %lu ns\n",
+		r2a.st_min, r2a.st_max,
+		r2a.st_sum * NS_PER_TTC_TICK / ITERATIONS);
 	LPRINTF("Finished IPI latency task\n");
 	return 0;
 }

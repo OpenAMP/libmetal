@@ -41,7 +41,8 @@
 #define TTC_CNT_RPU_TO_APU 3 /* RPU to APU TTC counter ID */
 
 #define TTC_CLK_FREQ_HZ	100000000
-#define NS_PER_SEC 1000000000
+#define NS_PER_SEC     1000000000
+#define NS_PER_TTC_TICK	(NS_PER_SEC / TTC_CLK_FREQ_HZ)
 
 /* Shared memory offset */
 #define SHM_DEMO_CNTRL_OFFSET 0x0 /* Shared memory for the demo status */
@@ -166,14 +167,14 @@ static int ipi_irq_handler (int vect_id, void *priv)
  */
 static int measure_shmem_latency(struct channel_s *ch)
 {
-	uint32_t apu_to_rpu_sum = 0, rpu_to_apu_sum = 0;
-	int i;
 	size_t s;
 	struct msg_hdr_s *msg_hdr;
 	void *lbuf;
-	int ret;
+	int ret, i;
 
-	LPRINTF("Starting IPI latency task\n");
+	LPRINTF("Starting shared memory latency task\n\t"
+		"TTC [min,max] are in TTC ticks: %d ns per tick\n",
+		NS_PER_TTC_TICK);
 	/* allocate memory for receiving data */
 	lbuf = metal_allocate_memory(BUF_SIZE_MAX);
 	if (!lbuf) {
@@ -186,6 +187,8 @@ static int measure_shmem_latency(struct channel_s *ch)
 	metal_io_write32(ch->shm_io, SHM_DEMO_CNTRL_OFFSET, DEMO_STATUS_START);
 
 	for (s = PKG_SIZE_MIN; s <= PKG_SIZE_MAX; s <<= 1) {
+		struct metal_stat a2r = STAT_INIT;
+		struct metal_stat r2a = STAT_INIT;
 		for (i = 1; i <= ITERATIONS; i++) {
 			/* Reset TTC counter */
 			reset_timer(ch->ttc_io, TTC_CNT_APU_TO_RPU);
@@ -220,18 +223,20 @@ static int measure_shmem_latency(struct channel_s *ch)
 			/* Stop RPU to APU TTC counter */
 			stop_timer(ch->ttc_io, TTC_CNT_RPU_TO_APU);
 
-			apu_to_rpu_sum += read_timer(ch->ttc_io,
-					TTC_CNT_APU_TO_RPU);
-			rpu_to_apu_sum += read_timer(ch->ttc_io,
-					TTC_CNT_RPU_TO_APU);
+			update_stat(&a2r, read_timer(ch->ttc_io,
+					TTC_CNT_APU_TO_RPU));
+			update_stat(&r2a, read_timer(ch->ttc_io,
+					TTC_CNT_RPU_TO_APU));
 		}
 
 		/* report avg latencies */
-		LPRINTF("package size %lu latency result:\n", s);
-		LPRINTF("APU to RPU average latency: %u ns \n",
-			apu_to_rpu_sum / ITERATIONS * NS_PER_SEC / TTC_CLK_FREQ_HZ );
-		LPRINTF("RPU to APU average latency: %u ns \n",
-			rpu_to_apu_sum / ITERATIONS * NS_PER_SEC / TTC_CLK_FREQ_HZ );
+		LPRINTF("package size %lu latency:\n", s);
+		LPRINTF("  APU to RPU: [%lu, %lu] avg: %lu ns\n",
+			a2r.st_min, a2r.st_max,
+			a2r.st_sum * NS_PER_TTC_TICK / ITERATIONS);
+		LPRINTF("  RPU to APU: [%lu, %lu] avg: %lu ns\n",
+			r2a.st_min, r2a.st_max,
+			r2a.st_sum * NS_PER_TTC_TICK / ITERATIONS);
 	}
 
 	/* write to shared memory to indicate demo has finished */
