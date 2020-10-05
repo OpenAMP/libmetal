@@ -24,6 +24,10 @@ extern "C" {
 #define METAL_PACKED_BEGIN __packed
 #define METAL_PACKED_END
 
+#ifndef __deprecated
+#define __deprecated	__attribute__((deprecated))
+#endif
+
 #ifdef __cplusplus
 }
 #endif
