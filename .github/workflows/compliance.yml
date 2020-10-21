@@ -4,12 +4,6 @@
 name: libmetal compliance checks
 
 on:
-  push:
-    branches: [ master ]
-    paths-ignore:
-      - docs/**
-      - cmake/**
-      - scripts/**
   pull_request:
     branches: [ master ]
     paths-ignore:
