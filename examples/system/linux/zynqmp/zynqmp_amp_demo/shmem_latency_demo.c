@@ -25,7 +25,7 @@
  * 10. Clean up: disable IPI interrupt, deregister the IPI interrupt handler.
  */
 #include <unistd.h>
-#include <errno.h>
+#include <metal/errno.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <metal/atomic.h>

@@ -27,7 +27,7 @@
 
 #include <unistd.h>
 #include <stdio.h>
-#include <errno.h>
+#include <metal/errno.h>
 #include <sys/types.h>
 #include <metal/atomic.h>
 #include <metal/io.h>

@@ -37,7 +37,7 @@
 #include <metal/alloc.h>
 #include <metal/device.h>
 #include <metal/irq.h>
-#include <errno.h>
+#include <metal/errno.h>
 #include "common.h"
 
 #define BUF_SIZE_MAX 512

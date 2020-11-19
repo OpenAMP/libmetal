@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include <errno.h>
+#include <metal/errno.h>
 #include <string.h>
 #include "FreeRTOS.h"
 #include "task.h"

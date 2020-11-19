@@ -5,7 +5,7 @@
  */
 
 #include <stdio.h>
-#include <errno.h>
+#include <metal/errno.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include <metal/sys.h>

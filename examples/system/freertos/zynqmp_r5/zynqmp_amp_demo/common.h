@@ -14,7 +14,7 @@
 #include <metal/atomic.h>
 #include <metal/alloc.h>
 #include <metal/irq.h>
-#include <errno.h>
+#include <metal/errno.h>
 #include <metal/sys.h>
 #include <metal/cpu.h>
 #include <metal/io.h>

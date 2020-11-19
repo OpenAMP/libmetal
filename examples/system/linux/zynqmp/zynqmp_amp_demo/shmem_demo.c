@@ -36,7 +36,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <errno.h>
+#include <metal/errno.h>
 #include <string.h>
 #include <metal/io.h>
 #include <metal/alloc.h>

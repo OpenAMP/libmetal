@@ -28,7 +28,7 @@
 #include <sys/types.h>
 #include <metal/device.h>
 #include <metal/irq.h>
-#include <errno.h>
+#include <metal/errno.h>
 #include <time.h>
 #include "common.h"
 

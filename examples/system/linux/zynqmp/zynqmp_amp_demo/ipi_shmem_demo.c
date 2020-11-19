@@ -41,7 +41,7 @@
 #include <sys/types.h>
 #include <metal/device.h>
 #include <metal/irq.h>
-#include <errno.h>
+#include <metal/errno.h>
 #include "common.h"
 
 /* Shared memory offsets */
