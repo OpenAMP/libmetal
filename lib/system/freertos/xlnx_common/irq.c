@@ -9,7 +9,7 @@
  * @brief	generic libmetal Xilinx irq controller definitions.
  */
 
-#include <errno.h>
+#include <metal/errno.h>
 #include <metal/irq_controller.h>
 #include <metal/sys.h>
 #include <metal/log.h>

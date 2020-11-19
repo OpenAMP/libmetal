@@ -9,7 +9,7 @@
  * @brief	NuttX libmetal irq definitions.
  */
 
-#include <errno.h>
+#include <metal/errno.h>
 #include <metal/irq_controller.h>
 #include <metal/alloc.h>
 #include <nuttx/irq.h>

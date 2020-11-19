@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include <errno.h>
+#include <metal/errno.h>
 #include <string.h>
 #include <metal/device.h>
 #include <metal/log.h>

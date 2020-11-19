@@ -19,7 +19,7 @@
 #include <metal/atomic.h>
 #include <stdint.h>
 #include <limits.h>
-#include <errno.h>
+#include <metal/errno.h>
 
 #ifdef __cplusplus
 extern "C" {

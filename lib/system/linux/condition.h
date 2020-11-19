@@ -20,9 +20,9 @@
 #include <sys/syscall.h>
 #include <linux/futex.h>
 #include <metal/atomic.h>
+#include <metal/errno.h>
 #include <stdint.h>
 #include <limits.h>
-#include <errno.h>
 
 #ifdef __cplusplus
 extern "C" {

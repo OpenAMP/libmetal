@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include <errno.h>
 #include <metal/atomic.h>
+#include <metal/errno.h>
 #include <metal/irq.h>
 #include <metal/irq_controller.h>
 #include <metal/log.h>
