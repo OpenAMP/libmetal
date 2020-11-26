@@ -30,7 +30,7 @@ extern "C" {
  *  @{
  */
 
-#ifdef __MICROBLAZE__
+#if defined (__MICROBLAZE__) || defined (__XTENSA__)
 #define NO_ATOMIC_64_SUPPORT
 #endif
 
