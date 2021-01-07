@@ -16,24 +16,24 @@
 #ifndef __METAL_FREERTOS_MUTEX__H__
 #define __METAL_FREERTOS_MUTEX__H__
 
-#include <metal/atomic.h>
+#include <metal/assert.h>
+#include "FreeRTOS.h"
+#include "semphr.h"
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef struct {
-	atomic_int v;
+	SemaphoreHandle_t m;
 } metal_mutex_t;
-
-#define METAL_MUTEX_UNLOCKED 0
-#define METAL_MUTEX_LOCKED   1
 
 /*
  * METAL_MUTEX_INIT - used for initializing an mutex element in a static struct
  * or global
  */
-#define METAL_MUTEX_INIT(m)	{ ATOMIC_VAR_INIT(METAL_MUTEX_UNLOCKED) }
+#define METAL_MUTEX_INIT(m) { NULL }
 /*
  * METAL_MUTEX_DEFINE - used for defining and initializing a global or
  * static singleton mutex
@@ -42,44 +42,40 @@ typedef struct {
 
 static inline void __metal_mutex_init(metal_mutex_t *mutex)
 {
-	atomic_store(&mutex->v, METAL_MUTEX_UNLOCKED);
+	metal_assert(mutex);
+	mutex->m = xSemaphoreCreateMutex();
+	metal_assert(mutex->m);
 }
 
 static inline void __metal_mutex_deinit(metal_mutex_t *mutex)
 {
-	(void)mutex;
+	metal_assert(mutex && mutex->m);
+	vSemaphoreDelete(mutex->m);
+	mutex->m = NULL;
 }
 
 static inline int __metal_mutex_try_acquire(metal_mutex_t *mutex)
 {
-	int unlocked = METAL_MUTEX_UNLOCKED;
-
-	if (atomic_compare_exchange_strong(&mutex->v, &unlocked,
-					   METAL_MUTEX_LOCKED)) {
-		return 1; /* acquired */
-	} else {
-		return 0; /* not acquired */
-	}
+	metal_assert(mutex && mutex->m);
+	return xSemaphoreTake(mutex->m, (TickType_t)0);
 }
 
 static inline void __metal_mutex_acquire(metal_mutex_t *mutex)
 {
-	int unlocked = METAL_MUTEX_UNLOCKED;
-
-	while (!atomic_compare_exchange_weak(&mutex->v, &unlocked,
-					     METAL_MUTEX_LOCKED)) {
-		;
-	}
+	metal_assert(mutex && mutex->m);
+	xSemaphoreTake(mutex->m, portMAX_DELAY);
 }
 
 static inline void __metal_mutex_release(metal_mutex_t *mutex)
 {
-	atomic_store(&mutex->v, METAL_MUTEX_UNLOCKED);
+	metal_assert(mutex && mutex->m);
+	xSemaphoreGive(mutex->m);
 }
 
 static inline int __metal_mutex_is_acquired(metal_mutex_t *mutex)
 {
-	return atomic_load(&mutex->v);
+	metal_assert(mutex && mutex->m);
+	return (!xSemaphoreGetMutexHolder(mutex->m)) ? 0 : 1;
 }
 
 #ifdef __cplusplus
