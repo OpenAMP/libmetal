@@ -135,7 +135,8 @@ The following utilities are provided in lib/utilities.h:
 
 #### Version
 
-The libmetal version interface allows user to get the version of the library.
+The libmetal version interface allows user to get the version of the library. The version increment
+follows the set of rule proposed in [Semantic Versioning specification](https://semver.org/).
 
 ### Top Level Interfaces
 
