@@ -83,8 +83,8 @@ else (WITH_ZEPHYR)
     endif (PROJECT_EC_FLAGS)
     set_target_properties (${_lib} PROPERTIES
       OUTPUT_NAME       "${PROJECT_NAME}"
-      VERSION           "${PROJECT_VER}"
-      SOVERSION         "${PROJECT_VER_MAJOR}"
+      VERSION           "${PROJECT_VERSION}"
+      SOVERSION         "${PROJECT_VERSION_MAJOR}"
     )
   endif (WITH_SHARED_LIB)
 
