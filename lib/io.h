@@ -355,7 +355,7 @@ metal_io_write8_explicit(struct metal_io_region *io, unsigned long offset,
 }
 
 inline void
-metal_io_write8_explicit(struct metal_io_region *io, unsigned long offset,
+metal_io_write8(struct metal_io_region *io, unsigned long offset,
 	       uint8_t value)
 {
 	metal_io_write(io, offset, value, memory_order_seq_cst, 1);
@@ -369,7 +369,7 @@ metal_io_write16_explicit(struct metal_io_region *io, unsigned long offset,
 }
 
 inline void
-metal_io_write16_explicit(struct metal_io_region *io, unsigned long offset,
+metal_io_write16(struct metal_io_region *io, unsigned long offset,
 	       uint16_t value)
 {
 	metal_io_write(io, offset, value, memory_order_seq_cst, 2);
@@ -383,7 +383,7 @@ metal_io_write32_explicit(struct metal_io_region *io, unsigned long offset,
 }
 
 inline void
-metal_io_write32_explicit(struct metal_io_region *io, unsigned long offset,
+metal_io_write32(struct metal_io_region *io, unsigned long offset,
 	       uint32_t value)
 {
 	metal_io_write(io, offset, value, memory_order_seq_cst, 4);
@@ -397,7 +397,7 @@ metal_io_write64_explicit(struct metal_io_region *io, unsigned long offset,
 }
 
 inline void
-metal_io_write64_explicit(struct metal_io_region *io, unsigned long offset,
+metal_io_write64(struct metal_io_region *io, unsigned long offset,
 	       uint64_t value)
 {
 	metal_io_write(io, offset, value, memory_order_seq_cst, 8);
