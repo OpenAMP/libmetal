@@ -52,6 +52,66 @@ extern uint64_t metal_io_read(struct metal_io_region *io, unsigned long offset, 
 
 extern void metal_io_write(struct metal_io_region *io, unsigned long offset, uint64_t value, memory_order order, int width);
 
+extern uint8_t
+metal_io_read8_explicit(struct metal_io_region *io, unsigned long offset,
+	       memory_order order);
+
+extern uint8_t
+metal_io_read8(struct metal_io_region *io, unsigned long offset);
+
+extern uint16_t
+metal_io_read16_explicit(struct metal_io_region *io, unsigned long offset,
+	       memory_order order);
+
+extern uint16_t
+metal_io_read16(struct metal_io_region *io, unsigned long offset);
+
+extern uint32_t
+metal_io_read32_explicit(struct metal_io_region *io, unsigned long offset,
+	       memory_order order);
+
+extern uint32_t
+metal_io_read32(struct metal_io_region *io, unsigned long offset);
+
+extern uint64_t
+metal_io_read64_explicit(struct metal_io_region *io, unsigned long offset,
+	       memory_order order);
+
+extern uint64_t
+metal_io_read64(struct metal_io_region *io, unsigned long offset);
+
+extern void
+metal_io_write8_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint8_t value, memory_order order);
+
+extern void
+metal_io_write8(struct metal_io_region *io, unsigned long offset,
+	       uint8_t value);
+
+extern void
+metal_io_write16_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint16_t value, memory_order order);
+
+extern void
+metal_io_write16(struct metal_io_region *io, unsigned long offset,
+	       uint16_t value);
+
+extern void
+metal_io_write32_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint32_t value, memory_order order);
+
+extern void
+metal_io_write32(struct metal_io_region *io, unsigned long offset,
+	       uint32_t value);
+
+extern void
+metal_io_write64_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint64_t value, memory_order order);
+
+extern void
+metal_io_write64(struct metal_io_region *io, unsigned long offset,
+	       uint64_t value);
+
 int metal_io_block_read(struct metal_io_region *io, unsigned long offset,
 	       void *restrict dst, int len)
 {

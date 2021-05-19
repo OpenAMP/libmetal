@@ -294,41 +294,114 @@ metal_io_write(struct metal_io_region *io, unsigned long offset,
 		metal_assert(0);
 }
 
-#define metal_io_read8_explicit(_io, _ofs, _order)			\
-	metal_io_read((_io), (_ofs), (_order), 1)
-#define metal_io_read8(_io, _ofs)					\
-	metal_io_read((_io), (_ofs), memory_order_seq_cst, 1)
-#define metal_io_write8_explicit(_io, _ofs, _val, _order)		\
-	metal_io_write((_io), (_ofs), (_val), (_order), 1)
-#define metal_io_write8(_io, _ofs, _val)				\
-	metal_io_write((_io), (_ofs), (_val), memory_order_seq_cst, 1)
+inline uint8_t
+metal_io_read8_explicit(struct metal_io_region *io, unsigned long offset,
+	       memory_order order)
+{
+	return metal_io_read(io, offset, order, 1);
+}
 
-#define metal_io_read16_explicit(_io, _ofs, _order)			\
-	metal_io_read((_io), (_ofs), (_order), 2)
-#define metal_io_read16(_io, _ofs)					\
-	metal_io_read((_io), (_ofs), memory_order_seq_cst, 2)
-#define metal_io_write16_explicit(_io, _ofs, _val, _order)		\
-	metal_io_write((_io), (_ofs), (_val), (_order), 2)
-#define metal_io_write16(_io, _ofs, _val)				\
-	metal_io_write((_io), (_ofs), (_val), memory_order_seq_cst, 2)
+inline uint8_t
+metal_io_read8(struct metal_io_region *io, unsigned long offset)
+{
+	return metal_io_read(io, offset, memory_order_seq_cst, 1);
+}
 
-#define metal_io_read32_explicit(_io, _ofs, _order)			\
-	metal_io_read((_io), (_ofs), (_order), 4)
-#define metal_io_read32(_io, _ofs)					\
-	metal_io_read((_io), (_ofs), memory_order_seq_cst, 4)
-#define metal_io_write32_explicit(_io, _ofs, _val, _order)		\
-	metal_io_write((_io), (_ofs), (_val), (_order), 4)
-#define metal_io_write32(_io, _ofs, _val)				\
-	metal_io_write((_io), (_ofs), (_val), memory_order_seq_cst, 4)
+inline uint16_t
+metal_io_read16_explicit(struct metal_io_region *io, unsigned long offset,
+	       memory_order order)
+{
+	return metal_io_read(io, offset, order, 2);
+}
 
-#define metal_io_read64_explicit(_io, _ofs, _order)			\
-	metal_io_read((_io), (_ofs), (_order), 8)
-#define metal_io_read64(_io, _ofs)					\
-	metal_io_read((_io), (_ofs), memory_order_seq_cst, 8)
-#define metal_io_write64_explicit(_io, _ofs, _val, _order)		\
-	metal_io_write((_io), (_ofs), (_val), (_order), 8)
-#define metal_io_write64(_io, _ofs, _val)				\
-	metal_io_write((_io), (_ofs), (_val), memory_order_seq_cst, 8)
+inline uint16_t
+metal_io_read16(struct metal_io_region *io, unsigned long offset)
+{
+	return metal_io_read(io, offset, memory_order_seq_cst, 2);
+}
+
+inline uint32_t
+metal_io_read32_explicit(struct metal_io_region *io, unsigned long offset,
+	       memory_order order)
+{
+	return metal_io_read(io, offset, order, 4);
+}
+
+inline uint32_t
+metal_io_read32(struct metal_io_region *io, unsigned long offset)
+{
+	return metal_io_read(io, offset, memory_order_seq_cst, 4);
+}
+
+inline uint64_t
+metal_io_read64_explicit(struct metal_io_region *io, unsigned long offset,
+	       memory_order order)
+{
+	return metal_io_read(io, offset, order, 8);
+}
+
+inline uint64_t
+metal_io_read64(struct metal_io_region *io, unsigned long offset)
+{
+	return metal_io_read(io, offset, memory_order_seq_cst, 8);
+}
+
+
+inline void
+metal_io_write8_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint8_t value, memory_order order)
+{
+	metal_io_write(io, offset, value, order, 1);
+}
+
+inline void
+metal_io_write8_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint8_t value)
+{
+	metal_io_write(io, offset, value, memory_order_seq_cst, 1);
+}
+
+inline void
+metal_io_write16_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint16_t value, memory_order order)
+{
+	metal_io_write(io, offset, value, order, 2);
+}
+
+inline void
+metal_io_write16_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint16_t value)
+{
+	metal_io_write(io, offset, value, memory_order_seq_cst, 2);
+}
+
+inline void
+metal_io_write32_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint32_t value, memory_order order)
+{
+	metal_io_write(io, offset, value, order, 4);
+}
+
+inline void
+metal_io_write32_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint32_t value)
+{
+	metal_io_write(io, offset, value, memory_order_seq_cst, 4);
+}
+
+inline void
+metal_io_write64_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint64_t value, memory_order order)
+{
+	metal_io_write(io, offset, value, order, 8);
+}
+
+inline void
+metal_io_write64_explicit(struct metal_io_region *io, unsigned long offset,
+	       uint64_t value)
+{
+	metal_io_write(io, offset, value, memory_order_seq_cst, 8);
+}
 
 /**
  * @brief	Read a block from an I/O region.
