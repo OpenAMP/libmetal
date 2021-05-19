@@ -104,7 +104,7 @@ metal_io_init(struct metal_io_region *io, void *virt,
  * @brief	Close a libmetal shared memory segment.
  * @param[in]	io	I/O region handle.
  */
-static inline void metal_io_finish(struct metal_io_region *io)
+inline void metal_io_finish(struct metal_io_region *io)
 {
 	if (io->ops.close)
 		(*io->ops.close)(io);
@@ -117,7 +117,7 @@ static inline void metal_io_finish(struct metal_io_region *io)
  * @param[in]	io	I/O region handle.
  * @return	Size of I/O region.
  */
-static inline size_t metal_io_region_size(struct metal_io_region *io)
+inline size_t metal_io_region_size(struct metal_io_region *io)
 {
 	return io->size;
 }
@@ -128,7 +128,7 @@ static inline size_t metal_io_region_size(struct metal_io_region *io)
  * @param[in]	offset	Offset into shared memory segment.
  * @return	NULL if offset is out of range, or pointer to offset.
  */
-static inline void *
+inline void *
 metal_io_virt(struct metal_io_region *io, unsigned long offset)
 {
 	return (io->virt != METAL_BAD_VA && offset < io->size
@@ -142,7 +142,7 @@ metal_io_virt(struct metal_io_region *io, unsigned long offset)
  * @param[in]	virt	Virtual address within segment.
  * @return	METAL_BAD_OFFSET if out of range, or offset.
  */
-static inline unsigned long
+inline unsigned long
 metal_io_virt_to_offset(struct metal_io_region *io, void *virt)
 {
 	size_t offset = (uint8_t *)virt - (uint8_t *)io->virt;
@@ -157,7 +157,7 @@ metal_io_virt_to_offset(struct metal_io_region *io, void *virt)
  * @return	METAL_BAD_PHYS if offset is out of range, or physical address
  *		of offset.
  */
-static inline metal_phys_addr_t
+inline metal_phys_addr_t
 metal_io_phys(struct metal_io_region *io, unsigned long offset)
 {
 	if (!io->ops.offset_to_phys) {
@@ -178,7 +178,7 @@ metal_io_phys(struct metal_io_region *io, unsigned long offset)
  * @param[in]	phys	Physical address within segment.
  * @return	METAL_BAD_OFFSET if out of range, or offset.
  */
-static inline unsigned long
+inline unsigned long
 metal_io_phys_to_offset(struct metal_io_region *io, metal_phys_addr_t phys)
 {
 	if (!io->ops.phys_to_offset) {
@@ -202,7 +202,7 @@ metal_io_phys_to_offset(struct metal_io_region *io, metal_phys_addr_t phys)
  * @param[in]	phys	Physical address within segment.
  * @return	NULL if out of range, or corresponding virtual address.
  */
-static inline void *
+inline void *
 metal_io_phys_to_virt(struct metal_io_region *io, metal_phys_addr_t phys)
 {
 	return metal_io_virt(io, metal_io_phys_to_offset(io, phys));
@@ -215,7 +215,7 @@ metal_io_phys_to_virt(struct metal_io_region *io, metal_phys_addr_t phys)
  * @return	METAL_BAD_PHYS if out of range, or corresponding
  *		physical address.
  */
-static inline metal_phys_addr_t
+inline metal_phys_addr_t
 metal_io_virt_to_phys(struct metal_io_region *io, void *virt)
 {
 	return metal_io_phys(io, metal_io_virt_to_offset(io, virt));
@@ -231,7 +231,7 @@ metal_io_virt_to_phys(struct metal_io_region *io, void *virt)
  *			to inline cleanly.
  * @return	Value.
  */
-static inline uint64_t
+inline uint64_t
 metal_io_read(struct metal_io_region *io, unsigned long offset,
 	      memory_order order, int width)
 {
@@ -265,7 +265,7 @@ metal_io_read(struct metal_io_region *io, unsigned long offset,
  *			4, or 8, and a compile time constant for this function
  *			to inline cleanly.
  */
-static inline void
+inline void
 metal_io_write(struct metal_io_region *io, unsigned long offset,
 	       uint64_t value, memory_order order, int width)
 {

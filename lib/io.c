@@ -32,6 +32,26 @@ void metal_io_init(struct metal_io_region *io, void *virt,
 	metal_sys_io_mem_map(io);
 }
 
+extern void metal_io_finish(struct metal_io_region *io);
+
+extern size_t metal_io_region_size(struct metal_io_region *io);
+
+extern void *metal_io_virt(struct metal_io_region *io, unsigned long offset);
+
+extern unsigned long metal_io_virt_to_offset(struct metal_io_region *io, void *virt);
+
+extern metal_phys_addr_t metal_io_phys(struct metal_io_region *io, unsigned long offset);
+
+extern unsigned long metal_io_phys_to_offset(struct metal_io_region *io, metal_phys_addr_t phys);
+
+extern void * metal_io_phys_to_virt(struct metal_io_region *io, metal_phys_addr_t phys);
+
+extern metal_phys_addr_t metal_io_virt_to_phys(struct metal_io_region *io, void *virt);
+
+extern uint64_t metal_io_read(struct metal_io_region *io, unsigned long offset, memory_order order, int width);
+
+extern void metal_io_write(struct metal_io_region *io, unsigned long offset, uint64_t value, memory_order order, int width);
+
 int metal_io_block_read(struct metal_io_region *io, unsigned long offset,
 	       void *restrict dst, int len)
 {
