@@ -188,6 +188,11 @@ metal_io_phys_to_offset(struct metal_io_region *io, metal_phys_addr_t phys)
 		do {
 			if (metal_io_phys(io, offset) == phys)
 				return offset;
+
+			if (offset + io->page_mask + 1 <= offset)
+				/* Overflow */
+				break;
+
 			offset += io->page_mask + 1;
 		} while (offset < io->size);
 		return METAL_BAD_OFFSET;
