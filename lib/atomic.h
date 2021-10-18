@@ -14,7 +14,9 @@
 
 #include <metal/config.h>
 
-#if defined(__cplusplus)
+#if defined(__GNUC__)
+# include <metal/compiler/gcc/atomic.h>
+#elif defined(__cplusplus)
 # include <cstdint>
 
 /*
@@ -98,8 +100,6 @@ using std::atomic_signal_fence;
       !defined(__STDC_NO_ATOMICS__)
 # include <stdint.h>
 # include <stdatomic.h>
-#elif defined(__GNUC__)
-# include <metal/compiler/gcc/atomic.h>
 #else
 # include <metal/processor/@PROJECT_PROCESSOR@/atomic.h>
 #endif
