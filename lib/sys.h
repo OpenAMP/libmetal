@@ -67,6 +67,9 @@ struct metal_common_state {
 	/** Current log handler (null for none). */
 	metal_log_handler		log_handler;
 
+	/** Has the structure been initialized? */
+	int initialized;
+
 	/** List of registered buses. */
 	struct metal_list		bus_list;
 

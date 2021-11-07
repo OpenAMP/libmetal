@@ -24,11 +24,15 @@ int metal_init(const struct metal_init_params *params)
 	if (error)
 		return error;
 
+	_metal.common.initialized = 1;
 	return error;
 }
 
 void metal_finish(void)
 {
+	/* if metal_init() failed, or metal_finish() is called twice, just return */
+	if (!_metal.common.initialized)
+		return;
 	metal_sys_finish();
 	memset(&_metal, 0, sizeof(_metal));
 }
