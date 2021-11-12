@@ -17,6 +17,11 @@ struct metal_state _metal;
 
 int metal_sys_init(const struct metal_init_params *params)
 {
+	int ret;
+
+	ret = metal_zephyr_irq_init();
+	if (ret)
+		return ret;
 	metal_bus_register(&metal_generic_bus);
 	return 0;
 }

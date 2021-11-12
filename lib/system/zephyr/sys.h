@@ -41,6 +41,17 @@ struct metal_state {
 	struct metal_common_state common;
 };
 
+/**
+ * @brief	metal_zephyr_irq_init
+ *
+ * Initialize the metal IRQ controller abstraction.
+ *
+ * @return 0 for success, or negative value for failure.
+ *
+ * @return 0 for success, or negative value for failure
+ */
+int metal_zephyr_irq_init(void);
+
 #ifdef __cplusplus
 }
 #endif
