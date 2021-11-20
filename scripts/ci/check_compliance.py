@@ -244,7 +244,7 @@ class Identity(ComplianceTest):
     """
     name = "Identity"
     # git rev-list and git log don't depend on the current (sub)directory
-    # unless explicited
+    # unless explicit
     path_hint = "<git-top>"
 
     def run(self):

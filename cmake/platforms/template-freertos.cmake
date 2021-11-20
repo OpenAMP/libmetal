@@ -1,4 +1,4 @@
-# Modify to match your needs.  These setttings can also be overridden at the
+# Modify to match your needs.  These settings can also be overridden at the
 # command line.  (eg. cmake -DCMAKE_C_FLAGS="-O3")
 
 set (CMAKE_SYSTEM_PROCESSOR "arm"            CACHE STRING "")

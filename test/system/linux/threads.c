@@ -27,7 +27,7 @@ int metal_run_noblock(int threads, metal_thread_t child,
 	pthread_t *tid_p = (pthread_t *)tids;
 
 	if (!tids) {
-		metal_log(METAL_LOG_ERROR, "invalid arguement, tids is NULL.\n");
+		metal_log(METAL_LOG_ERROR, "invalid argument, tids is NULL.\n");
 		return -EINVAL;
 	}
 

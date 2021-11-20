@@ -33,7 +33,7 @@
 #define IPI_ISR_OFFSET  0x10 /* IPI interrupt status reg offset */
 #define IPI_IMR_OFFSET  0x14 /* IPI interrupt mask reg offset */
 #define IPI_IER_OFFSET  0x18 /* IPI interrupt enable reg offset */
-#define IPI_IDR_OFFSET  0x1C /* IPI interrup disable reg offset */
+#define IPI_IDR_OFFSET  0x1C /* IPI interrupt disable reg offset */
 
 #define IPI_MASK        0x100 /* IPI mask for kick from RPU. */
 
@@ -146,7 +146,7 @@ int shmem_latency_demo();
 int shmem_throughput_demo();
 
 /**
- * @breif wait_for_notified() - Loop until notified bit in channel is set.
+ * @brief wait_for_notified() - Loop until notified bit in channel is set.
  *
  * @param[in] notified - pointer to the notified variable
  */
@@ -167,7 +167,7 @@ static inline void  wait_for_notified(atomic_int *notified)
 }
 
 /**
- * @breif dump_buffer() - print hex value of each byte in the buffer
+ * @brief dump_buffer() - print hex value of each byte in the buffer
  *
  * @param[in] buf - pointer to the buffer
  * @param[in] len - len of the buffer

@@ -7,7 +7,7 @@
 /*****************************************************************************
  * ipi_latency_demo.c
  * This demo measures the IPI latency between the APU and RPU.
- * This demo does the follwing steps:
+ * This demo does the following steps:
  *
  *  1. Get the shared memory device I/O region.
  *  1. Get the TTC timer device I/O region.

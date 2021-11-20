@@ -71,7 +71,7 @@ static atomic_int remote_nkicked; /* is remote kicked, 0 - kicked,
 				       1 - not-kicked */
 
 /**
- * @breif get_timestamp() - Get the timestamp
+ * @brief get_timestamp() - Get the timestamp
  *        IT gets the timestamp and return nanoseconds.
  *
  * @return nano seconds.
