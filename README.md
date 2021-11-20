@@ -15,7 +15,7 @@ own project.
 
 * **WITH_DOC** (default ON): Build with documentation. Add -DWITH_DOC=OFF in
 cmake command line to disable.
-* **WITH_EXAMPLES** (default ON): Build with application exemples. Add
+* **WITH_EXAMPLES** (default ON): Build with application examples. Add
 -DWITH_DOC=OFF in cmake command line to disable the option.
 * **WITH_TESTS** (default ON): Build with application tests. Add -DWITH_DOC=OFF
 in cmake command line to disable the option.
@@ -231,7 +231,7 @@ handler registered by the user application.
 libmetal provides APIs to flush and invalidate caches.
 
 The cache APIs for Linux userspace are empty functions for now as cache
-operations system calls are not avaiable for all architectures.
+operations system calls are not available for all architectures.
 
 ### DMA
 

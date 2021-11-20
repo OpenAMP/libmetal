@@ -27,7 +27,7 @@ struct metal_list {
 };
 
 /*
- * METAL_INIT_LIST - used for initializing an list elmenet in a static struct
+ * METAL_INIT_LIST - used for initializing an list element in a static struct
  * or global
  */
 #define METAL_INIT_LIST(name) { .next = &name, .prev = &name }

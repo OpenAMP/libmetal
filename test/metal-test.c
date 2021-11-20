@@ -16,7 +16,7 @@
 static METAL_DECLARE_LIST(test_cases);
 
 /*
- * Not every enviornment has strerror() implemented.
+ * Not every environment has strerror() implemented.
  */
 #ifdef NOT_HAVE_STRERROR
 char metal_weak *strerror(int errnum)

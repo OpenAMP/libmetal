@@ -24,7 +24,7 @@
  *  7. Download throughput measurement:
  *     Start TTC APU counter, wait for IPI kick, check if data is available,
  *     if yes, read as much data as possible from shared memory. It will
- *     iterates untill 1000 packages have been received, stop TTC APU counter.
+ *     iterates until 1000 packages have been received, stop TTC APU counter.
  *     Wait for RPU IPI kick so that APU can get the TTC RPU TX counter
  *     value. Kick IPI to notify the remote it has read the TTCi counter.
  *     Repeat for different package size.
@@ -182,7 +182,7 @@ static int ipi_irq_handler (int vect_id, void *priv)
  *        - Download throughput measurement:
  *          Start TTC APU counter, wait for IPI kick, check if data is
  *          available, if yes, read as much data as possible from shared
- *          memory. It will iterates untill 1000 packages have been received,
+ *          memory. It will iterates until 1000 packages have been received,
  *          stop TTC APU counter. Wait for RPU IPI kick so that APU can get
  *          the TTC RPU TX counter value. Kick IPI to notify the remote it
  *          has read the TTCi counter. Repeat for different package size.

@@ -69,7 +69,7 @@ struct msg_hdr_s {
  *        If messages differ, report error.
  *
  *        Steps:
- *        1. Clear demo control and TX/RX avaiable values
+ *        1. Clear demo control and TX/RX available values
  *
  * @param[in] shm_io - metal i/o region of the shared memory
  * @return - return 0 on success, otherwise return error number indicating
