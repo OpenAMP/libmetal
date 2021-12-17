@@ -10,5 +10,8 @@ if (WITH_ZEPHYR)
   if (CONFIG_ARM)
     set (MACHINE "arm" CACHE STRING "")
   endif(CONFIG_ARM)
+  if (CONFIG_RISCV)
+    set (MACHINE "riscv" CACHE STRING "")
+  endif (CONFIG_RISCV)
 
 endif (WITH_ZEPHYR)
