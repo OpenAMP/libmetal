@@ -82,6 +82,15 @@ build_zephyr(){
         echo  "###### Build for qemu_xtensa ######" &&
         cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_xtensa -DWITH_TESTS=on -Bbuild-zephyr-xtensa &&
         cd build-zephyr-xtensa &&
+	cd .. &&
+	echo  "###### Build for qemu_riscv64 ######" &&
+	cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_riscv64 -DWITH_TESTS=on -Bbuild-zephyr-rscv64 &&
+	cd build-zephyr-rscv64 &&
+	make VERBOSE=1 &&
+	cd .. &&
+	echo  "###### Build for qemu_riscv32 ######" &&
+	cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_riscv32 -DWITH_TESTS=on -Bbuild-zephyr-rscv32 &&
+	cd build-zephyr-rscv32 &&
 	make VERBOSE=1 &&
 	exit 0
 }
