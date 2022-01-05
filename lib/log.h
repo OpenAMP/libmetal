@@ -82,6 +82,18 @@ extern void metal_default_log_handler(enum metal_log_level level,
 	       ? (void)_metal.common.log_handler(level, __VA_ARGS__)	       \
 	       : (void)0)
 
+/**
+ * Convenience macros ML_ERR, ML_INFO, ML_DBG add source
+ * function name and the line number before the message.
+ * Inspired by pr_err, pr_info, etc. in the kernel's printk.h.
+ */
+#define ML_ERR(fmt, args ...) metal_log(METAL_LOG_ERROR, "%s():%u "fmt, \
+	       __func__, __LINE__, ##args)
+#define ML_INFO(fmt, args ...) metal_log(METAL_LOG_INFO, "%s():%u "fmt, \
+		__func__, __LINE__, ##args)
+#define ML_DBG(fmt, args ...) metal_log(METAL_LOG_DEBUG, "%s():%u "fmt, \
+	       __func__, __LINE__, ##args)
+
 /** @} */
 
 #ifdef __cplusplus
