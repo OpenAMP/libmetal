@@ -13,5 +13,8 @@ if (WITH_ZEPHYR)
   if (CONFIG_RISCV)
     set (MACHINE "riscv" CACHE STRING "")
   endif (CONFIG_RISCV)
+ if (CONFIG_XTENSA)
+    set (MACHINE "xtensa" CACHE STRING "")
+  endif (CONFIG_XTENSA)
 
 endif (WITH_ZEPHYR)
