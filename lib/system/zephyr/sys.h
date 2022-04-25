@@ -18,8 +18,6 @@
 
 #include <stdlib.h>
 
-#include "./@PROJECT_MACHINE@/sys.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif

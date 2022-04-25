@@ -17,9 +17,7 @@ collect (PROJECT_LIB_SOURCES irq.c)
 collect (PROJECT_LIB_SOURCES log.c)
 collect (PROJECT_LIB_SOURCES shmem.c)
 collect (PROJECT_LIB_SOURCES time.c)
+collect (PROJECT_LIB_SOURCES sys.c)
 
-if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_MACHINE})
-  add_subdirectory(${PROJECT_MACHINE})
-endif (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_MACHINE})
 
 # vim: expandtab:ts=2:sw=2:smartindent
