@@ -79,6 +79,11 @@ build_zephyr(){
         cd build-zephyr-m3 &&
         make VERBOSE=1 &&
         cd .. &&
+        echo  "###### Build for qemu_cortex_a53 ######" &&
+        cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_cortex_a53 -DWITH_TESTS=on -Bbuild-zephyr-a53 &&
+        cd build-zephyr-a53 &&
+        make VERBOSE=1 &&
+        cd .. &&
         echo  "###### Build for qemu_xtensa ######" &&
         cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_xtensa -DWITH_TESTS=on -Bbuild-zephyr-xtensa &&
         cd build-zephyr-xtensa &&
