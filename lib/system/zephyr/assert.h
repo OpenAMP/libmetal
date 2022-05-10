@@ -16,7 +16,7 @@
 #ifndef __METAL_ZEPHYR_ASSERT__H__
 #define __METAL_ZEPHYR_ASSERT__H__
 
-#include <zephyr/zephyr.h>
+#include <zephyr/kernel.h>
 
 /**
  * @brief Assertion macro for Zephyr-based applications.

@@ -11,7 +11,7 @@
 
 #include <stdarg.h>
 #include <metal/log.h>
-#include <zephyr/zephyr.h>
+#include <zephyr/kernel.h>
 
 static const char * const level_strs[] = {
 	"metal: emergency: ",
