@@ -16,7 +16,7 @@
 #ifndef __METAL_ZEPHYR_SLEEP__H__
 #define __METAL_ZEPHYR_SLEEP__H__
 
-#include <kernel.h>
+#include <zephyr/kernel.h>
 
 #ifdef __cplusplus
 extern "C" {

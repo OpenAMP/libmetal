@@ -12,7 +12,7 @@
 #include <metal/io.h>
 #include <metal/sys.h>
 
-#include <sys/arch_interface.h>
+#include <zephyr/sys/arch_interface.h>
 
 /**
  * @brief poll function until some event happens

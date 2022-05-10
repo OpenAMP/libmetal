@@ -16,7 +16,7 @@
 #ifndef __METAL_ZEPHYR_ALLOC__H__
 #define __METAL_ZEPHYR_ALLOC__H__
 
-#include <kernel.h>
+#include <zephyr/kernel.h>
 #include <stdlib.h>
 
 #ifdef __cplusplus

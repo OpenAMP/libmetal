@@ -17,7 +17,7 @@
 #define __METAL_ZEPHYR_MUTEX__H__
 
 #include <metal/atomic.h>
-#include <kernel.h>
+#include <zephyr/kernel.h>
 
 #ifdef __cplusplus
 extern "C" {

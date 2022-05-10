@@ -5,9 +5,9 @@
  */
 
 #include "metal-test-internal.h"
-#include <kernel.h>
+#include <zephyr/kernel.h>
 #include <metal/log.h>
-#include <sys/printk.h>
+#include <zephyr/sys/printk.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>

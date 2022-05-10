@@ -10,7 +10,7 @@
  */
 
 #include <metal/time.h>
-#include <kernel.h>
+#include <zephyr/kernel.h>
 
 unsigned long long metal_get_timestamp(void)
 {

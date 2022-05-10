@@ -16,7 +16,7 @@
 #ifndef __METAL_ZEPHYR_CACHE__H__
 #define __METAL_ZEPHYR_CACHE__H__
 
-#include <cache.h>
+#include <zephyr/cache.h>
 #include <metal/utilities.h>
 
 #ifdef __cplusplus
