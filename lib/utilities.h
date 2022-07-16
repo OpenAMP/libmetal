@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015, Xilinx Inc. and Contributors. All rights reserved.
+ * Copyright (c) 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -23,6 +24,9 @@ extern "C" {
 /** \defgroup utilities Simple Utilities
  *  @{
  */
+
+#define MB (1024 * 1024UL)
+#define GB (1024 * 1024 * 1024UL)
 
 /** Marker for unused function arguments/variables. */
 #define metal_unused(x)	do { (x) = (x); } while (0)
