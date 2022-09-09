@@ -4,10 +4,11 @@ readonly TARGET="$1"
 
 ZEPHYR_TOOLCHAIN_VARIANT=zephyr
 ZEPHYR_SDK_INSTALL_DIR=/opt/zephyr-sdk
-ZEPHYR_SDK_VERSION=0.13.1
+ZEPHYR_SDK_VERSION=0.15.0
 ZEPHYR_SDK_DOWNLOAD_FOLDER=https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$ZEPHYR_SDK_VERSION
-ZEPHYR_SDK_SETUP_BINARY=zephyr-sdk-$ZEPHYR_SDK_VERSION-linux-x86_64-setup.run
-ZEPHYR_SDK_DOWNLOAD_URL=$ZEPHYR_SDK_DOWNLOAD_FOLDER/$ZEPHYR_SDK_SETUP_BINARY
+ZEPHYR_SDK_SETUP_DIR=zephyr-sdk-$ZEPHYR_SDK_VERSION
+ZEPHYR_SDK_SETUP_TAR=${ZEPHYR_SDK_SETUP_DIR}_linux-x86_64.tar.gz
+ZEPHYR_SDK_DOWNLOAD_URL=$ZEPHYR_SDK_DOWNLOAD_FOLDER/$ZEPHYR_SDK_SETUP_TAR
 
 FREERTOS_ZIP_URL=https://cfhcable.dl.sourceforge.net/project/freertos/FreeRTOS/V10.0.1/FreeRTOSv10.0.1.zip
 
@@ -54,22 +55,25 @@ build_freertos(){
 
 build_zephyr(){
 	echo  " Build for Zephyr OS "
-        sudo apt-get install libc6-dev-i386 make gperf gcc g++ python3-ply python3-yaml python3-pip device-tree-compiler ncurses-dev uglifyjs -qq &&
-        sudo pip3 install pyelftools &&
+	sudo apt-get install -y git cmake ninja-build gperf || exit 1
+  	sudo apt-get install -y ccache dfu-util device-tree-compiler wget || exit 1
+  	sudo apt-get install -y python3-dev python3-pip python3-setuptools python3-tk python3-wheel xz-utils file || exit 1
+  	sudo apt-get install -y make gcc gcc-multilib g++-multilib libsdl2-dev || exit 1
+	sudo apt-get install -y libc6-dev-i386 gperf g++ python3-ply python3-yaml device-tree-compiler ncurses-dev uglifyjs -qq || exit 1
+	sudo pip3 install pyelftools || exit 1
 	pip3 install --user -U west
 	echo 'export PATH=~/.local/bin:"$PATH"' >> ~/.bashrc
 	source ~/.bashrc
 
-	wget $ZEPHYR_SDK_DOWNLOAD_URL &&
-    	chmod +x $ZEPHYR_SDK_SETUP_BINARY &&
-    	rm -rf $ZEPHYR_SDK_INSTALL_DIR &&
-    	./$ZEPHYR_SDK_SETUP_BINARY --quiet -- -y -d $ZEPHYR_SDK_INSTALL_DIR 2> /dev/null &&
-
-	west init ./zephyrproject
-	cd ./zephyrproject
-	west update
-	west zephyr-export
-	pip3 install --user -r ./zephyr/scripts/requirements.txt
+	wget $ZEPHYR_SDK_DOWNLOAD_URL || exit 1
+	tar xvf $ZEPHYR_SDK_SETUP_TAR || exit 1
+	rm -rf $ZEPHYR_SDK_INSTALL_DIR || exit 1
+	yes | ./$ZEPHYR_SDK_SETUP_DIR/setup.sh || exit 1
+	west init ./zephyrproject || exit 1
+	cd ./zephyrproject || exit 1
+	west update || exit 1
+	west zephyr-export || exit 1
+	pip3 install --user -r ./zephyr/scripts/requirements.txt || exit 1
 
     	cd ./zephyr &&
     	source zephyr-env.sh &&
