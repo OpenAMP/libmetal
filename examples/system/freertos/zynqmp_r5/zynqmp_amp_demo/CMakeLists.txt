@@ -21,10 +21,8 @@ list(APPEND _src0 ${CMAKE_CURRENT_SOURCE_DIR}/shmem_throughput_demod.c)
 
 get_property (_linker_options GLOBAL PROPERTY TEST_LINKER_OPTIONS)
 add_executable (${_app0}.elf ${_src0})
-if (PROJECT_EC_FLAGS)
-  string(REPLACE " " ";" _ec_flgs ${PROJECT_EC_FLAGS})
-  target_compile_options (${_app0}.elf PUBLIC ${_ec_flgs})
-endif (PROJECT_EC_FLAGS)
+get_property (_ec_flgs GLOBAL PROPERTY "PROJECT_EC_FLAGS")
+target_compile_options (${_app0}.elf PUBLIC ${_ec_flgs})
 target_link_libraries(${_app0}.elf -Wl,-Map=${_app0}.map -Wl,--gc-sections -T\"${_linker_script}\" -Wl,--start-group ${_deps} -Wl,--end-group)
 install (TARGETS ${_app0}.elf RUNTIME DESTINATION bin)
 
