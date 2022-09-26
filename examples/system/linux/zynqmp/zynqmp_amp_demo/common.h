@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2017, Xilinx Inc. and Contributors. All rights reserved.
+ * Copyright (C) 2022, Advanced Micro Devices, Inc.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -150,7 +151,7 @@ int shmem_throughput_demo();
  *
  * @param[in] notified - pointer to the notified variable
  */
-static inline void  wait_for_notified(atomic_int *notified)
+static inline void  wait_for_notified(atomic_flag *notified)
 {
 	unsigned int flags;
 
