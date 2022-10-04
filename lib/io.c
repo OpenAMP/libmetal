@@ -139,3 +139,15 @@ int metal_io_block_set(struct metal_io_region *io, unsigned long offset,
 	return retlen;
 }
 
+bool metal_io_is_block_valid(struct metal_io_region *io, unsigned long offset,
+			     const void *addr, int len)
+{
+	if (!io || !addr)
+		return false;
+
+	if ((addr >= (io->virt + offset)) && ((addr + len) < (io->virt + io->size)))
+		return true;
+
+	return false;
+}
+

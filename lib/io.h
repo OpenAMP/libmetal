@@ -363,6 +363,17 @@ int metal_io_block_write(struct metal_io_region *io, unsigned long offset,
 int metal_io_block_set(struct metal_io_region *io, unsigned long offset,
 		       unsigned char value, int len);
 
+/**
+ * @brief	validate an address within a block.
+ * @param[in]	io	I/O region handle.
+ * @param[in]	offset	Offset into I/O region.
+ * @param[in]	addr	Address to validate.
+ * @param[in]	len	Length in bytes of data at address.
+ * @return      On success, true. On failure, false
+ */
+bool metal_io_is_block_valid(struct metal_io_region *io, unsigned long offset,
+			     const void *addr, int len);
+
 /** @} */
 
 #ifdef __cplusplus
