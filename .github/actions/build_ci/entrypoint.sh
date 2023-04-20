@@ -78,6 +78,8 @@ build_zephyr(){
     	cd ./zephyr &&
     	source zephyr-env.sh &&
 	cd ../.. &&
+	# The prj.conf is mandatory for cmake execution, create a void file.
+	touch prj.conf &&
         echo  "###### Build for qemu_cortex_m3 ######" &&
         cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_cortex_m3 -DWITH_TESTS=on -Bbuild-zephyr-m3 &&
         cd build-zephyr-m3 &&
