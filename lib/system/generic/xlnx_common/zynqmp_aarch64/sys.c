@@ -19,7 +19,9 @@
 #include "xil_mmu.h"
 #include "xscugic.h"
 
-#if defined(versal)
+#ifdef VERSAL_NET
+#include "xcpu_cortexa78.h"
+#elif defined(versal)
 #include "xcpu_cortexa72.h"
 #else
 #include "xreg_cortexa53.h"
