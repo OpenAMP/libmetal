@@ -29,11 +29,21 @@
 
 #define INTC_DEVICE_ID		XPAR_SCUGIC_0_DEVICE_ID
 
+#ifndef IPI_IRQ_VECT_ID
 #define IPI_IRQ_VECT_ID         65
+#endif
 
+#ifndef SHM_BASE_ADDR
 #define SHM_BASE_ADDR   0x3ED80000
+#endif
+
+#ifndef TTC0_BASE_ADDR
 #define TTC0_BASE_ADDR  0xFF110000
+#endif
+
+#ifndef IPI_BASE_ADDR
 #define IPI_BASE_ADDR   0xFF310000
+#endif
 
 /* Default generic I/O region page shift */
 /* Each I/O region can contain multiple pages.

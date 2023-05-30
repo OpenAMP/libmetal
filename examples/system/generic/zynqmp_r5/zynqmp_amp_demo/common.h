@@ -26,9 +26,18 @@
 
 /* Devices names */
 #define BUS_NAME        "generic"
+
+#ifndef IPI_DEV_NAME
 #define IPI_DEV_NAME    "ff310000.ipi"
+#endif
+
+#ifndef SHM_DEV_NAME
 #define SHM_DEV_NAME    "3ed80000.shm"
+#endif
+
+#ifndef TTC_DEV_NAME
 #define TTC_DEV_NAME    "ff110000.ttc"
+#endif
 
 /* IPI registers offset */
 #define IPI_TRIG_OFFSET 0x0  /* IPI trigger reg offset */
@@ -38,8 +47,12 @@
 #define IPI_IER_OFFSET  0x18 /* IPI interrupt enable reg offset */
 #define IPI_IDR_OFFSET  0x1C /* IPI interrupt disable reg offset */
 
-#define IPI_MASK        0x1000000 /* IPI mask for kick from APU.
-				     We use PL0 IPI in this demo. */
+#ifndef IPI_MASK
+/*
+ * IPI mask for kick from APU. We use PL0 IPI in this demo.
+ */
+#define IPI_MASK        0x1000000
+#endif
 
 /* TTC counter offsets */
 #define XTTCPS_CLK_CNTRL_OFFSET 0x0  /* TTC counter clock control reg offset */
