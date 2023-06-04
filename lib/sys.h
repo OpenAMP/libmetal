@@ -17,6 +17,7 @@
 
 #include <metal/log.h>
 #include <metal/list.h>
+#include <metal/atomic.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,6 +62,9 @@ struct metal_init_params {
  * specific singleton data structure (@see _metal).
  */
 struct metal_common_state {
+	/** reference count to track metal_init/metal_finish. */
+	atomic_int			ref_count;
+
 	/** Current log level. */
 	enum metal_log_level		log_level;
 
