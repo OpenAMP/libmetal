@@ -27,6 +27,14 @@
 #include "xreg_cortexa53.h"
 #endif /* defined(versal) */
 
+#ifndef MB
+#define MB (1024 * 1024UL)
+#endif /* MB */
+
+#ifndef GB
+#define GB (MB * 1024UL)
+#endif /* GB */
+
 void sys_irq_restore_enable(unsigned int flags)
 {
 	Xil_ExceptionEnableMask(~flags);
