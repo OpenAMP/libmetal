@@ -13,6 +13,8 @@
 #include <metal/irq.h>
 #include <metal/sys.h>
 
+#include "irq.h"
+
 struct metal_state _metal;
 
 int metal_sys_init(const struct metal_init_params *params)
