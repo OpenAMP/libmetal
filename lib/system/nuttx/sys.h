@@ -17,6 +17,7 @@
 #define __METAL_NUTTX_SYS__H__
 
 #include <metal/sleep.h>
+#include <syslog.h>
 
 #ifdef __cplusplus
 extern "C" {
