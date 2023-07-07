@@ -10,7 +10,7 @@
  */
 
 #ifndef __METAL_IO__H__
-#error "Include metal/io.h instead of metal/freertos/io.h"
+#error "Do not include this file directly, include <metal/io.h> instead"
 #endif
 
 #ifndef __METAL_FREEROTS_IO__H__

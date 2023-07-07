@@ -10,7 +10,7 @@
  */
 
 #ifndef __METAL_METAL_LOG__H__
-#error "Include metal/log.h instead of metal/zephyr/log.h"
+#error "Do not include this file directly, include <metal/log.h> instead"
 #endif
 
 #ifndef __METAL_ZEPHYR_LOG__H__

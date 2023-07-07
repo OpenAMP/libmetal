@@ -10,7 +10,7 @@
  */
 
 #ifndef __METAL_SLEEP__H__
-#error "Include metal/sleep.h instead of metal/freertos/sleep.h"
+#error "Do not include this file directly, include <metal/sleep.h> instead"
 #endif
 
 #ifndef __METAL_FREERTOS_SLEEP__H__

@@ -10,7 +10,7 @@
  */
 
 #ifndef __METAL_CACHE__H__
-#error "Include metal/cache.h instead of metal/freertos/cache.h"
+#error "Do not include this file directly, include <metal/cache.h> instead"
 #endif
 
 #ifndef __METAL_FREERTOS_CACHE__H__

@@ -10,7 +10,7 @@
  */
 
 #ifndef __METAL_IRQ__H__
-#error "Include metal/irq.h instead of metal/linux/irq.h"
+#error "Do not include this file directly, include <metal/irq.h> instead"
 #endif
 
 #ifndef __METAL_LINUX_IRQ__H__

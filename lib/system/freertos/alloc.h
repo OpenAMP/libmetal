@@ -10,7 +10,7 @@
  */
 
 #ifndef __METAL_ALLOC__H__
-#error "Include metal/alloc.h instead of metal/freertos/alloc.h"
+#error "Do not include this file directly, include <metal/alloc.h> instead"
 #endif
 
 #ifndef __METAL_FREERTOS_ALLOC__H__
