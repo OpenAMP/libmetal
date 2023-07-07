@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-/** \defgroup logging Library Logging Interfaces
+/** \defgroup logging Logging Interfaces
  *  @{
  */
 

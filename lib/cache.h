@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-/** \defgroup cache CACHE Interfaces
+/** \defgroup cache Cache Interfaces
  *  @{
  */
 

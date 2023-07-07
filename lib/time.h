@@ -19,7 +19,7 @@
 extern "C" {
 #endif
 
-/** \defgroup time TIME Interfaces
+/** \defgroup time Time Interfaces
  *  @{
  */
 
