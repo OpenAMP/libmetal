@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-/** \defgroup soft irq Interrupt Handling Interfaces
+/** \defgroup softirq Soft Interrupt Handling Interfaces
  *  @{
  */
 
