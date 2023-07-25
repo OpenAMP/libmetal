@@ -93,10 +93,28 @@ static inline struct metal_list *metal_list_first(struct metal_list *list)
 	return metal_list_is_empty(list) ? NULL : list->next;
 }
 
+/**
+ * @brief	Used for iterating over a list
+ *
+ * @param	list	Pointer to the head node of the list
+ * @param	node	Pointer to each node in the list during iteration
+ */
 #define metal_list_for_each(list, node)		\
 	for ((node) = (list)->next;		\
 	     (node) != (list);			\
 	     (node) = (node)->next)
+
+/**
+ * @brief	Used for iterating over a list safely
+ *
+ * @param	list	Pointer to the head node of the list
+ * @param	temp	Pointer to the next node's address during iteration
+ * @param	node	Pointer to each node in the list during iteration
+ */
+#define metal_list_for_each_safe(list, temp, node)		\
+	for ((node) = (list)->next, (temp) = (node)->next;	\
+	     (node) != (list);					\
+	     (node) = (temp), (temp) = (node)->next)
 
 static inline bool metal_list_find_node(struct metal_list *list,
 					struct metal_list *node)
