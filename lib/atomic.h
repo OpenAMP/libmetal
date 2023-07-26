@@ -26,6 +26,12 @@
 # include <atomic>
 using std::atomic_flag;
 using std::memory_order;
+using std::memory_order_relaxed;
+using std::memory_order_consume;
+using std::memory_order_acquire;
+using std::memory_order_release;
+using std::memory_order_acq_rel;
+using std::memory_order_seq_cst;
 
 using std::atomic_bool;
 using std::atomic_char;
