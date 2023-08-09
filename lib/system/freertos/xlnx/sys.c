@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2017, Xilinx Inc. and Contributors. All rights reserved.
+ * Copyright (C) 2023, Advanced Micro Devices, Inc.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
 /*
- * @file	freertos/zynqmp_a53/sys.c
+ * @file	freertos/xlnx/sys.c
  * @brief	machine specific system primitives implementation.
  */
 
@@ -16,9 +16,25 @@
 #include <stdint.h>
 #include "xil_cache.h"
 #include "xil_exception.h"
-#include "xil_mmu.h"
-#include "xreg_cortexa53.h"
 #include "xscugic.h"
+#include "xil_mmu.h"
+
+#if (defined(__aarch64__) || defined(ARMA53_32)) && !defined(SDT)
+
+#ifdef VERSAL_NET
+#include "xcpu_cortexa78.h"
+#elif defined(versal)
+#include "xcpu_cortexa72.h"
+#else
+#include "xreg_cortexa53.h"
+#endif /* defined(versal) */
+
+#elif defined(ARMR5)
+
+#include "xil_mpu.h"
+#include "xreg_cortexr5.h"
+
+#endif /* (defined(__aarch64__) || defined(ARMA53_32)) && !defined(SDT) */
 
 void sys_irq_restore_enable(unsigned int flags)
 {
@@ -62,42 +78,9 @@ void metal_weak metal_generic_default_poll(void)
 void *metal_machine_io_mem_map(void *va, metal_phys_addr_t pa,
 			       size_t size, unsigned int flags)
 {
-	unsigned long section_offset;
-	unsigned long ttb_addr;
-#if defined(__aarch64__)
-	unsigned long ttb_size = (pa < 4*GB) ? 2*MB : 1*GB;
-#else
-	unsigned long ttb_size = 1*MB;
-#endif
+	void *__attribute__((unused)) physaddr;
 
-	if (!flags)
-		return va;
-
-	/* Ensure alignment on a section boundary */
-	pa &= ~(ttb_size-1UL);
-
-	/*
-	 * Loop through entire region of memory (one MMU section at a time).
-	 * Each section requires a TTB entry.
-	 */
-	for (section_offset = 0; section_offset < size; ) {
-		/* Calculate translation table entry for this memory section */
-		ttb_addr = (pa + section_offset);
-
-		/* Write translation table entry value to entry address */
-		Xil_SetTlbAttributes(ttb_addr, flags);
-
-#if defined(__aarch64__)
-		/*
-		 * recalculate if we started below 4GB and going above in
-		 * 64bit mode
-		 */
-		if (ttb_addr >= 4*GB) {
-			ttb_size = 1*GB;
-		}
-#endif
-		section_offset += ttb_size;
-	}
-
+	physaddr = Xil_MemMap(pa, size, flags);
+	metal_assert(physaddr == (void *)pa);
 	return va;
 }
