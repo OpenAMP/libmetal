@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright (C) 2010 - 2017 Xilinx, Inc.  All rights reserved.
+ * Copyright (c) 2022-2023, Advanced Micro Devices, Inc. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -44,7 +44,12 @@
 #define DEFAULT_PAGE_SHIFT (-1UL)
 #define DEFAULT_PAGE_MASK  (-1UL)
 
+#if defined(SDT)
+/* System Device Tree (SDT) flow does not provide this symbol. */
+static XScuGic xInterruptController;
+#else
 extern XScuGic xInterruptController;
+#endif
 
 const metal_phys_addr_t metal_phys[] = {
 	IPI_BASE_ADDR, /**< base IPI address */
