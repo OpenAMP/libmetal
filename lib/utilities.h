@@ -25,8 +25,13 @@ extern "C" {
  *  @{
  */
 
-#define MB (1024 * 1024UL)
-#define GB (1024 * 1024 * 1024UL)
+#ifndef MB
+#define MB (1024UL << 10UL)
+#endif
+
+#ifndef GB
+#define GB (MB << 10UL)
+#endif
 
 /** Marker for unused function arguments/variables. */
 #define metal_unused(x)	do { (x) = (x); } while (0)
