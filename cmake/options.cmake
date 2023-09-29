@@ -69,6 +69,7 @@ if (WITH_ZEPHYR)
 endif (WITH_ZEPHYR)
 
 option (WITH_DEFAULT_LOGGER "Build with default logger" ON)
+option (WITH_FUNC_LINE_LOG "Log with function name, line number prefix" OFF)
 
 option (WITH_DOC "Build with documentation" ON)
 

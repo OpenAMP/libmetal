@@ -65,6 +65,10 @@ if (WITH_DEFAULT_LOGGER)
   add_definitions (-DDEFAULT_LOGGER_ON)
 endif (WITH_DEFAULT_LOGGER)
 
+if (WITH_FUNC_LINE_LOG)
+  add_definitions (-DML_FUNC_LINE)
+endif (WITH_FUNC_LINE_LOG)
+
 get_property (_ec_flgs GLOBAL PROPERTY "PROJECT_EC_FLAGS")
 
 if (WITH_ZEPHYR)
