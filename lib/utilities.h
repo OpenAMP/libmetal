@@ -134,10 +134,10 @@ metal_bitmap_next_clear_bit(unsigned long *bitmap, unsigned int start,
 	unsigned int bit;
 
 	for (bit = start;
-	     bit < max && !metal_bitmap_is_bit_clear(bitmap, bit);
+	     bit < max + start && !metal_bitmap_is_bit_clear(bitmap, bit % max);
 	     bit++)
 		;
-	return bit;
+	return bit % max;
 }
 
 #define metal_bitmap_for_each_clear_bit(bitmap, bit, max)		\
