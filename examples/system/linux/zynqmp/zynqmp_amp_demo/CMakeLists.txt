@@ -35,5 +35,3 @@ foreach (_app libmetal_amp_demo libmetal_amp_demod)
   endif (WITH_STATIC_LIB)
 endforeach (_app)
 
-# vim: expandtab:ts=2:sw=2:smartindent
-

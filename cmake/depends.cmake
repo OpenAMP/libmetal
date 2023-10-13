@@ -35,4 +35,3 @@ else ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
 
 endif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
 
-# vim: expandtab:ts=2:sw=2:smartindent

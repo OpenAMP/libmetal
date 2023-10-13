@@ -103,4 +103,3 @@ else (WITH_ZEPHYR)
   endif (WITH_STATIC_LIB)
 endif (WITH_ZEPHYR)
 
-# vim: expandtab:ts=2:sw=2:smartindent

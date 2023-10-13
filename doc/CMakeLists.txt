@@ -28,4 +28,3 @@ install (FILES ${PROJECT_SOURCE_DIR}/LICENSE.md
 
 endif (DOXYGEN_FOUND)
 
-# vim: expandtab:ts=2:sw=2:smartindent

@@ -26,4 +26,3 @@ target_compile_options (${_app0}.elf PUBLIC ${_ec_flgs})
 target_link_libraries(${_app0}.elf -Wl,-Map=${_app0}.map -Wl,--gc-sections -T\"${_linker_script}\" -Wl,--start-group ${_deps} -Wl,--end-group)
 install (TARGETS ${_app0}.elf RUNTIME DESTINATION bin)
 
-# vim: expandtab:ts=2:sw=2:smartindent
