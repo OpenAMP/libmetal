@@ -77,7 +77,7 @@ build_zephyr(){
 	yes | ./$ZEPHYR_SDK_SETUP_DIR/setup.sh || exit 1
 	west init ./zephyrproject || exit 1
 	cd ./zephyrproject || exit 1
-	west update || exit 1
+	west update --narrow || exit 1
 	west zephyr-export || exit 1
 	pip3 install --user -r ./zephyr/scripts/requirements.txt || exit 1
 
