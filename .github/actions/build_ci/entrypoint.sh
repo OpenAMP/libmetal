@@ -44,7 +44,7 @@ build_generic(){
 build_freertos(){
 	echo  " Build for freertos OS "
       	apt-get install -y gcc-arm-none-eabi unzip &&
-      	wget $FREERTOS_ZIP_URL > /dev/null &&
+      	wget $FREERTOS_ZIP_URL --dot-style=giga > /dev/null &&
       	unzip FreeRTOSv10.0.1.zip > /dev/null &&
 	mkdir -p build-freertos &&
 	cd build-freertos && export &&
@@ -56,7 +56,7 @@ build_freertos(){
 build_zephyr(){
 	echo  " Build for Zephyr OS "
 	sudo apt-get install -y git cmake ninja-build gperf || exit 1
-  	sudo apt-get install -y ccache dfu-util device-tree-compiler wget || exit 1
+  	sudo apt-get install -y ccache dfu-util device-tree-compiler wget pv || exit 1
   	sudo apt-get install -y python3-dev python3-pip python3-setuptools python3-tk python3-wheel xz-utils file || exit 1
   	sudo apt-get install -y make gcc gcc-multilib g++-multilib libsdl2-dev || exit 1
 	sudo apt-get install -y libc6-dev-i386 gperf g++ python3-ply python3-yaml device-tree-compiler ncurses-dev uglifyjs -qq || exit 1
@@ -65,8 +65,9 @@ build_zephyr(){
 	echo 'export PATH=~/.local/bin:"$PATH"' >> ~/.bashrc
 	source ~/.bashrc
 
-	wget $ZEPHYR_SDK_DOWNLOAD_URL || exit 1
-	tar xvf $ZEPHYR_SDK_SETUP_TAR || exit 1
+	wget $ZEPHYR_SDK_DOWNLOAD_URL --dot-style=giga || exit 1
+	echo "Extracting $ZEPHYR_SDK_SETUP_TAR"
+	pv $ZEPHYR_SDK_SETUP_TAR -i 3 -ptebr -f | tar xJ || exit 1
 	rm -rf $ZEPHYR_SDK_INSTALL_DIR || exit 1
 	yes | ./$ZEPHYR_SDK_SETUP_DIR/setup.sh || exit 1
 	west init ./zephyrproject || exit 1
