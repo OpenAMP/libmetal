@@ -17,8 +17,8 @@ pre_build(){
 	echo 'Etc/UTC' > /etc/timezone &&
 	ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime &&
 	apt update &&
-   	apt-get install -y make || exit 1
-   	sudo pip3 install cmake || exit 1
+	apt-get install -y make || exit 1
+	sudo pip3 install cmake || exit 1
 }
 
 build_linux(){
@@ -33,7 +33,7 @@ build_linux(){
 
 build_generic(){
 	echo  " Build for generic platform "
-      	apt-get install -y gcc-arm-none-eabi &&
+	apt-get install -y gcc-arm-none-eabi &&
 	mkdir -p build-generic &&
 	cd build-generic &&
 	cmake .. -DCMAKE_TOOLCHAIN_FILE=template-generic &&
@@ -48,7 +48,10 @@ build_freertos(){
       	unzip FreeRTOSv10.0.1.zip > /dev/null &&
 	mkdir -p build-freertos &&
 	cd build-freertos && export &&
-      	cmake .. -DCMAKE_TOOLCHAIN_FILE=template-freertos -DCMAKE_C_FLAGS="-I$PWD/../FreeRTOSv10.0.1/FreeRTOS/Source/include/ -I$PWD/../FreeRTOSv10.0.1/FreeRTOS/Demo/CORTEX_STM32F107_GCC_Rowley -I$PWD/../FreeRTOSv10.0.1/FreeRTOS/Source/portable/GCC/ARM_CM3" &&
+	cmake .. -DCMAKE_TOOLCHAIN_FILE=template-freertos \
+		-DCMAKE_C_FLAGS="-I$PWD/../FreeRTOSv10.0.1/FreeRTOS/Source/include/ \
+		-I$PWD/../FreeRTOSv10.0.1/FreeRTOS/Demo/CORTEX_STM32F107_GCC_Rowley \
+		-I$PWD/../FreeRTOSv10.0.1/FreeRTOS/Source/portable/GCC/ARM_CM3" &&
 	make VERBOSE=1 &&
 	exit 0
 }
@@ -56,10 +59,12 @@ build_freertos(){
 build_zephyr(){
 	echo  " Build for Zephyr OS "
 	sudo apt-get install -y git cmake ninja-build gperf || exit 1
-  	sudo apt-get install -y ccache dfu-util device-tree-compiler wget pv || exit 1
-  	sudo apt-get install -y python3-dev python3-pip python3-setuptools python3-tk python3-wheel xz-utils file || exit 1
-  	sudo apt-get install -y make gcc gcc-multilib g++-multilib libsdl2-dev || exit 1
-	sudo apt-get install -y libc6-dev-i386 gperf g++ python3-ply python3-yaml device-tree-compiler ncurses-dev uglifyjs -qq || exit 1
+	sudo apt-get install -y ccache dfu-util device-tree-compiler wget pv || exit 1
+	sudo apt-get install -y python3-dev python3-pip python3-setuptools python3-tk \
+		python3-wheel xz-utils file || exit 1
+	sudo apt-get install -y make gcc gcc-multilib g++-multilib libsdl2-dev || exit 1
+	sudo apt-get install -y libc6-dev-i386 gperf g++ python3-ply python3-yaml \
+		device-tree-compiler ncurses-dev uglifyjs -qq || exit 1
 	sudo pip3 install pyelftools || exit 1
 	pip3 install --user -U west
 	echo 'export PATH=~/.local/bin:"$PATH"' >> ~/.bashrc
@@ -76,8 +81,8 @@ build_zephyr(){
 	west zephyr-export || exit 1
 	pip3 install --user -r ./zephyr/scripts/requirements.txt || exit 1
 
-    	cd ./zephyr &&
-    	source zephyr-env.sh &&
+	cd ./zephyr &&
+	source zephyr-env.sh &&
 	cd ../.. &&
 	# The prj.conf is mandatory for cmake execution, create a void file.
 	touch prj.conf &&
@@ -85,19 +90,19 @@ build_zephyr(){
 	# version.cmake file
  	echo "PATCHLEVEL = 0" >>VERSION &&
  	echo "VERSION_TWEAK = 0" >>VERSION &&
-        echo  "###### Build for qemu_cortex_m3 ######" &&
-        cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_cortex_m3 -DWITH_TESTS=on -Bbuild-zephyr-m3 &&
-        cd build-zephyr-m3 &&
-        make VERBOSE=1 &&
-        cd .. &&
-        echo  "###### Build for qemu_cortex_a53 ######" &&
-        cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_cortex_a53 -DWITH_TESTS=on -Bbuild-zephyr-a53 &&
-        cd build-zephyr-a53 &&
-        make VERBOSE=1 &&
-        cd .. &&
-        echo  "###### Build for qemu_xtensa ######" &&
-        cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_xtensa -DWITH_TESTS=on -Bbuild-zephyr-xtensa &&
-        cd build-zephyr-xtensa &&
+	echo  "###### Build for qemu_cortex_m3 ######" &&
+	cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_cortex_m3 -DWITH_TESTS=on -Bbuild-zephyr-m3 &&
+	cd build-zephyr-m3 &&
+	make VERBOSE=1 &&
+	cd .. &&
+	echo  "###### Build for qemu_cortex_a53 ######" &&
+	cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_cortex_a53 -DWITH_TESTS=on -Bbuild-zephyr-a53 &&
+	cd build-zephyr-a53 &&
+	make VERBOSE=1 &&
+	cd .. &&
+	echo  "###### Build for qemu_xtensa ######" &&
+	cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_xtensa -DWITH_TESTS=on -Bbuild-zephyr-xtensa &&
+	cd build-zephyr-xtensa &&
 	cd .. &&
 	echo  "###### Build for qemu_riscv64 ######" &&
 	cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_riscv64 -DWITH_TESTS=on -Bbuild-zephyr-rscv64 &&
@@ -115,17 +120,17 @@ main(){
 	pre_build;
 
 	if [[ "$TARGET" == "linux" ]]; then
-   		build_linux
-   	fi
+		build_linux
+	fi
 	if [[ "$TARGET" == "generic" ]]; then
-   		build_generic
-   	fi
+		build_generic
+	fi
 	if [[ "$TARGET" == "freertos" ]]; then
-   		build_freertos
-   	fi
+		build_freertos
+	fi
 	if [[ "$TARGET" == "zephyr" ]]; then
-   		build_zephyr
-   	fi
+		build_zephyr
+	fi
 }
 
 main
