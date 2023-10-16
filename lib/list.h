@@ -98,6 +98,10 @@ static inline struct metal_list *metal_list_first(struct metal_list *list)
 	     (node) != (list);			\
 	     (node) = (node)->next)
 
+#define metal_list_for_each_safe(list, node, temp)			\
+	for ((node) = (list)->next, (temp) = (node)->next;		\
+	     (node) != (list); (node) = (temp), (temp) = (node)->next)
+
 static inline bool metal_list_find_node(struct metal_list *list,
 					struct metal_list *node)
 {
