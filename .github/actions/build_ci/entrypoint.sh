@@ -3,12 +3,8 @@
 readonly TARGET="$1"
 
 ZEPHYR_TOOLCHAIN_VARIANT=zephyr
-ZEPHYR_SDK_INSTALL_DIR=/opt/zephyr-sdk
-ZEPHYR_SDK_VERSION=0.16.1
-ZEPHYR_SDK_DOWNLOAD_FOLDER=https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$ZEPHYR_SDK_VERSION
-ZEPHYR_SDK_SETUP_DIR=zephyr-sdk-$ZEPHYR_SDK_VERSION
-ZEPHYR_SDK_SETUP_TAR=${ZEPHYR_SDK_SETUP_DIR}_linux-x86_64.tar.xz
-ZEPHYR_SDK_DOWNLOAD_URL=$ZEPHYR_SDK_DOWNLOAD_FOLDER/$ZEPHYR_SDK_SETUP_TAR
+ZEPHYR_SDK_API_FOLDER=https://api.github.com/repos/zephyrproject-rtos/sdk-ng/releases/latest
+ZEPHYR_SDK_SETUP_TAR=zephyr-sdk-.*linux-x86_64.tar.xz
 
 FREERTOS_ZIP_URL=https://cfhcable.dl.sourceforge.net/project/freertos/FreeRTOS/V10.0.1/FreeRTOSv10.0.1.zip
 
@@ -17,7 +13,7 @@ pre_build(){
 	echo 'Etc/UTC' > /etc/timezone &&
 	ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime &&
 	apt update &&
-	apt-get install -y make || exit 1
+	apt-get install -y make curl || exit 1
 	sudo pip3 install cmake || exit 1
 }
 
@@ -57,6 +53,10 @@ build_freertos(){
 }
 
 build_zephyr(){
+	ZEPHYR_SDK_DOWNLOAD_URL=`curl -s ${ZEPHYR_SDK_API_FOLDER} | \
+		grep -e "browser_download_url.*${ZEPHYR_SDK_SETUP_TAR}"| cut -d : -f 2,3 | tr -d \"`
+	ZEPHYR_SDK_TAR=`basename  $ZEPHYR_SDK_DOWNLOAD_URL`
+	ZEPHYR_SDK_SETUP_DIR=`echo $ZEPHYR_SDK_TAR | cut -d_ -f1`
 	echo  " Build for Zephyr OS "
 	sudo apt-get install -y git cmake ninja-build gperf || exit 1
 	sudo apt-get install -y ccache dfu-util device-tree-compiler wget pv || exit 1
@@ -71,9 +71,9 @@ build_zephyr(){
 	source ~/.bashrc
 
 	wget $ZEPHYR_SDK_DOWNLOAD_URL --dot-style=giga || exit 1
-	echo "Extracting $ZEPHYR_SDK_SETUP_TAR"
-	pv $ZEPHYR_SDK_SETUP_TAR -i 3 -ptebr -f | tar xJ || exit 1
-	rm -rf $ZEPHYR_SDK_INSTALL_DIR || exit 1
+	echo "Extracting $ZEPHYR_SDK_TAR"
+	pv $ZEPHYR_SDK_TAR -i 3 -ptebr -f | tar xJ || exit 1
+	rm -rf $ZEPHYR_SDK_TAR || exit 1
 	yes | ./$ZEPHYR_SDK_SETUP_DIR/setup.sh || exit 1
 	west init ./zephyrproject || exit 1
 	cd ./zephyrproject || exit 1
