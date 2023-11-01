@@ -42,6 +42,8 @@ extern "C" {
 
 #cmakedefine HAVE_STDATOMIC_H
 #cmakedefine HAVE_FUTEX_H
+#cmakedefine HAVE_PROCESSOR_ATOMIC_H
+#cmakedefine HAVE_PROCESSOR_CPU_H
 
 #ifdef __cplusplus
 }

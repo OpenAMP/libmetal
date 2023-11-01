@@ -12,6 +12,12 @@
 #ifndef __METAL_CPU__H__
 #define __METAL_CPU__H__
 
+#include <metal/config.h>
+
+#if defined(HAVE_PROCESSOR_CPU_H)
 # include <metal/processor/@PROJECT_PROCESSOR@/cpu.h>
+#else
+# include <metal/processor/generic/cpu.h>
+#endif
 
 #endif /* __METAL_CPU__H__ */

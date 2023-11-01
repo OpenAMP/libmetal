@@ -107,7 +107,11 @@ using std::atomic_signal_fence;
 #elif defined(__GNUC__)
 # include <metal/compiler/gcc/atomic.h>
 #else
+#if defined(HAVE_PROCESSOR_ATOMIC_H)
 # include <metal/processor/@PROJECT_PROCESSOR@/atomic.h>
+#else
+# include <metal/processor/generic/atomic.h>
+#endif /* defined(HAVE_PROCESSOR_ATOMIC_H) */
 #endif
 
 #endif /* __METAL_ATOMIC__H__ */
