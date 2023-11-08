@@ -12,12 +12,12 @@
 #include <metal/io.h>
 #include <metal/sys.h>
 
-#include <zephyr/sys/arch_interface.h>
+#include <zephyr/kernel.h>
 
 /**
  * @brief poll function until some event happens
  */
 void metal_weak metal_generic_default_poll(void)
 {
-	arch_cpu_idle();
+	k_cpu_idle();
 }
