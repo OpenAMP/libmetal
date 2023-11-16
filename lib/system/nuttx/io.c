@@ -37,7 +37,17 @@ static int metal_io_block_read_(struct metal_io_region *io,
 	void *va = metal_io_virt(io, offset);
 
 	metal_cache_invalidate(va, len);
-	memcpy(dst, va, len);
+	if (len == 1)
+		*(uint8_t *)dst = *(uint8_t *)va;
+	else if (len == 2)
+		*(uint16_t *)dst = *(uint16_t *)va;
+	else if (len == 4)
+		*(uint32_t *)dst = *(uint32_t *)va;
+	else if (len == 8) {
+		*(uint32_t *)dst = *(uint32_t *)va;
+		*((uint32_t *)dst + 1) = *((uint32_t *)va + 1);
+	} else
+		memcpy(dst, va, len);
 
 	return len;
 }
@@ -50,7 +60,18 @@ static int metal_io_block_write_(struct metal_io_region *io,
 {
 	void *va = metal_io_virt(io, offset);
 
-	memcpy(va, src, len);
+	if (len == 1)
+		*(uint8_t *)va = *(uint8_t *)src;
+	else if (len == 2)
+		*(uint16_t *)va = *(uint16_t *)src;
+	else if (len == 4)
+		*(uint32_t *)va = *(uint32_t *)src;
+	else if (len == 8) {
+		*(uint32_t *)va = *(uint32_t *)src;
+		*((uint32_t *)va + 1) = *((uint32_t *)src + 1);
+	} else
+		memcpy(va, src, len);
+
 	metal_cache_flush(va, len);
 
 	return len;
