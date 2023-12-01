@@ -8,4 +8,8 @@ collect (PROJECT_LIB_HEADERS sys.h)
 
 collect (PROJECT_LIB_SOURCES irq.c)
 
-# vim: expandtab:ts=2:sw=2:smartindent
+include(CheckSymbolExists)
+check_symbol_exists(SDT "bspconfig.h" HAS_SYSTEM_DT)
+if (HAS_SYSTEM_DT)
+  collect (PROJECT_LIB_HEADERS sys_devicetree.h)
+endif()

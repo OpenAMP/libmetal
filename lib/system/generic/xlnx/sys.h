@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015, Xilinx Inc. and Contributors. All rights reserved.
+ * Copyright (C) 2023, Advanced Micro Devices, Inc.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -27,6 +28,10 @@
 #include <xil_cache.h>
 #include <xil_exception.h>
 #include <xparameters.h>
+
+#ifdef SDT
+#include <metal/system/generic/xlnx/sys_devicetree.h>
+#endif
 
 #ifndef __METAL_GENERIC_XLNX_SYS__H__
 #define __METAL_GENERIC_XLNX_SYS__H__
