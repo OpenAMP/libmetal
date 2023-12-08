@@ -12,7 +12,7 @@
 #include <metal/alloc.h>
 #include <metal/compiler.h>
 
-#if (CONFIG_HEAP_MEM_POOL_SIZE <= 0)
+#if (K_HEAP_MEM_POOL_SIZE <= 0)
 
 void *metal_weak metal_zephyr_allocate_memory(unsigned int size)
 {
@@ -25,4 +25,4 @@ void metal_weak metal_zephyr_free_memory(void *ptr)
 	(void)ptr;
 }
 
-#endif /* CONFIG_HEAP_MEM_POOL_SIZE */
+#endif /* K_HEAP_MEM_POOL_SIZE */
