@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2017, Xilinx Inc. and Contributors. All rights reserved.
- * Copyright (C) 2022, Advanced Micro Devices, Inc.
+ * Copyright (C) 2022 - 2024, Advanced Micro Devices, Inc.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -15,9 +15,54 @@
 #include <stdio.h>
 
 #define BUS_NAME        "platform"
-#define IPI_DEV_NAME	CONFIG_IPI_DEV_NAME
+
+#ifndef SHM_DEV_NAME
 #define SHM_DEV_NAME    "3ed80000.shm"
-#define TTC_DEV_NAME	CONFIG_TTC_DEV_NAME
+#endif /* !SHM_DEV_NAME */
+
+#if defined(PLATFORM_ZYNQMP)
+
+#ifndef IPI_DEV_NAME
+#define IPI_DEV_NAME "ff340000.ipi"
+#endif /* !IPI_DEV_NAME */
+
+#ifndef TTC_DEV_NAME
+#define TTC_DEV_NAME "ff110000.timer"
+#endif /* !TTC_DEV_NAME */
+
+#ifndef IPI_MASK
+#define IPI_MASK 0x100
+#endif /* !IPI_MASK */
+
+#elif defined(versal)
+
+#ifndef IPI_DEV_NAME
+#define IPI_DEV_NAME "ff360000.ipi"
+#endif /* !IPI_DEV_NAME */
+
+#ifndef IPI_MASK
+#define IPI_MASK 0x08
+#endif /* !IPI_MASK */
+
+#ifndef TTC_DEV_NAME
+#define TTC_DEV_NAME "ff0e0000.ttc0"
+#endif /* TTC_DEV_NAME */
+
+#elif defined(VERSAL_NET)
+
+#ifndef IPI_DEV_NAME
+#define IPI_DEV_NAME "eb3600000.ipi"
+#endif /* !IPI_DEV_NAME */
+
+#ifndef IPI_MASK
+#define IPI_MASK 0x08
+#endif /* !IPI_MASK */
+
+#ifndef TTC_DEV_NAME
+#define TTC_DEV_NAME "fd1c0000.ttc0"
+#endif /* !TTC_DEV_NAME */
+
+#endif
 
 /* Apply this snippet to the device tree in an overlay so that
  * Linux userspace can see and use TTC0:
@@ -34,8 +79,6 @@
 #define IPI_IMR_OFFSET  0x14 /* IPI interrupt mask reg offset */
 #define IPI_IER_OFFSET  0x18 /* IPI interrupt enable reg offset */
 #define IPI_IDR_OFFSET  0x1C /* IPI interrupt disable reg offset */
-
-#define IPI_MASK	CONFIG_IPI_MASK /* IPI mask for kick from RPU. */
 
 /* TTC counter offsets */
 #define XTTCPS_CLK_CNTRL_OFFSET 0x0  /* TTC counter clock control reg offset */
