@@ -25,7 +25,7 @@
 
 #elif defined(versal)
 
-#define IPI_DEV_NAME "ff3600000.ipi"
+#define IPI_DEV_NAME "ff360000.ipi"
 #define IPI_MASK 0x08
 #define TTC_DEV_NAME "ff0e0000.ttc0"
 
