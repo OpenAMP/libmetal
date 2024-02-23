@@ -83,6 +83,9 @@ void metal_device_close(struct metal_device *device)
 		device->bus->ops.dev_close(device->bus, device);
 }
 
+extern struct metal_io_region *
+metal_device_io_region(struct metal_device *device, unsigned int index);
+
 int metal_register_generic_device(struct metal_device *device)
 {
 	if (!device->name || !strlen(device->name) ||
