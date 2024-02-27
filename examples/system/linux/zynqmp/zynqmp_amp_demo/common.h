@@ -15,25 +15,52 @@
 #include <stdio.h>
 
 #define BUS_NAME        "platform"
+
+#ifndef SHM_DEV_NAME
 #define SHM_DEV_NAME    "3ed80000.shm"
+#endif /* !SHM_DEV_NAME */
 
 #if defined(PLATFORM_ZYNQMP)
 
+#ifndef IPI_DEV_NAME
 #define IPI_DEV_NAME "ff340000.ipi"
-#define IPI_MASK 0x20
+#endif /* !IPI_DEV_NAME */
+
+#ifndef TTC_DEV_NAME
 #define TTC_DEV_NAME "ff110000.timer"
+#endif /* !TTC_DEV_NAME */
+
+#ifndef IPI_MASK
+#define IPI_MASK 0x100
+#endif /* !IPI_MASK */
 
 #elif defined(versal)
 
+#ifndef IPI_DEV_NAME
 #define IPI_DEV_NAME "ff360000.ipi"
+#endif /* !IPI_DEV_NAME */
+
+#ifndef IPI_MASK
 #define IPI_MASK 0x08
+#endif /* !IPI_MASK */
+
+#ifndef TTC_DEV_NAME
 #define TTC_DEV_NAME "ff0e0000.ttc0"
+#endif /* TTC_DEV_NAME */
 
 #elif defined(VERSAL_NET)
 
+#ifndef IPI_DEV_NAME
 #define IPI_DEV_NAME "eb3600000.ipi"
+#endif /* !IPI_DEV_NAME */
+
+#ifndef IPI_MASK
 #define IPI_MASK 0x08
+#endif /* !IPI_MASK */
+
+#ifndef TTC_DEV_NAME
 #define TTC_DEV_NAME "fd1c0000.ttc0"
+#endif /* !TTC_DEV_NAME */
 
 #endif
 
