@@ -110,31 +110,3 @@ int metal_mlock(void *mem, size_t size)
 {
 	return mlock(mem, size) ? -errno : 0;
 }
-
-int metal_virt2phys(void *addr, unsigned long *phys)
-{
-	off_t offset;
-	uint64_t entry;
-	int error;
-
-	if (_metal.pagemap_fd < 0)
-		return -EINVAL;
-
-	offset = ((uintptr_t)addr >> _metal.page_shift) * sizeof(entry);
-	error = pread(_metal.pagemap_fd, &entry, sizeof(entry), offset);
-	if (error < 0) {
-		metal_log(METAL_LOG_ERROR, "failed pagemap pread (offset %llx) - %s\n",
-			  (unsigned long long)offset, strerror(errno));
-		return -errno;
-	}
-
-	/* Check page present and not swapped. */
-	if ((entry >> 62) != 2) {
-		metal_log(METAL_LOG_ERROR, "pagemap page not present, %llx -> %llx\n",
-			  (unsigned long long)offset, (unsigned long long)entry);
-		return -ENOENT;
-	}
-
-	*phys = (entry & ((1ULL << 54) - 1)) << _metal.page_shift;
-	return 0;
-}

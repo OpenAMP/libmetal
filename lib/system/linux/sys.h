@@ -105,8 +105,6 @@ extern int metal_map(int fd, off_t offset, size_t size, int expand,
 extern int metal_unmap(void *mem, size_t size);
 extern int metal_mlock(void *mem, size_t size);
 
-extern int metal_virt2phys(void *addr, unsigned long *phys);
-
 /**
  * @brief	Read a device tree property of a device
  *
