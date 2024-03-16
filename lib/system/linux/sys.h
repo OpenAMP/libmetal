@@ -99,18 +99,12 @@ extern int metal_linux_bus_init(void);
 extern void metal_linux_bus_finish(void);
 
 extern int metal_open(const char *path, int shm);
-extern int metal_open_unlinked(const char *path, int shm);
-extern int metal_mktemp(char *template, int fifo);
-extern int metal_mktemp_unlinked(char *template);
 
 extern int metal_map(int fd, off_t offset, size_t size, int expand,
 		     int flags, void **result);
 extern int metal_unmap(void *mem, size_t size);
 extern int metal_mlock(void *mem, size_t size);
 
-extern void metal_randomize_string(char *template);
-extern void metal_mktemp_template(char template[PATH_MAX],
-				  const char *name);
 extern int metal_virt2phys(void *addr, unsigned long *phys);
 
 /**
