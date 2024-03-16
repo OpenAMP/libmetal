@@ -77,10 +77,10 @@ static int metal_shmem_try_map(struct metal_page_size *ps, int fd, size_t size,
 		return error;
 	}
 
-	error = metal_mlock(mem, size);
+	error = mlock(mem, size);
 	if (error) {
 		metal_log(METAL_LOG_WARNING, "failed to mlock shmem - %s\n",
-			  strerror(-error));
+			  strerror(errno));
 	}
 
 	phys_size = sizeof(*phys) * pages;

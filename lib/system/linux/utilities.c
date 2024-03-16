@@ -98,15 +98,3 @@ int metal_unmap(void *mem, size_t size)
 {
 	return munmap(mem, size) < 0 ? -errno : 0;
 }
-
-/**
- * @brief	Lock in a region of the process address space.
- *
- * @param[in]	mem	Pointer to start of region.
- * @param[in]	size	Size of region.
- * @return	0 on success, or -errno on error.
- */
-int metal_mlock(void *mem, size_t size)
-{
-	return mlock(mem, size) ? -errno : 0;
-}
