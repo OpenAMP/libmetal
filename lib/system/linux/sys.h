@@ -79,9 +79,6 @@ struct metal_state {
 	unsigned long		page_shift;
 
 	/** sysfs mount point. */
-	const char		*sysfs_path;
-
-	/** sysfs mount point. */
 	const char		*tmp_path;
 
 	/** available page sizes. */
