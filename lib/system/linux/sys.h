@@ -101,19 +101,6 @@ extern int metal_map(int fd, off_t offset, size_t size, int expand,
 		     int flags, void **result);
 extern int metal_unmap(void *mem, size_t size);
 
-/**
- * @brief	Read a device tree property of a device
- *
- * @param[in]	device metal_device of the intended DT node
- * @param[in]	property_name name of the property to be read
- * @param[out]	output output buffer to store read data
- * @param[in]	len number of bytes to be read
- * @return	0 on success, or -errno on error.
- */
-extern int metal_linux_get_device_property(struct metal_device *device,
-					   const char *property_name,
-					   void *output, int len);
-
 #define metal_for_each_page_size_up(ps)					\
 	for ((ps) = &_metal.page_sizes[0];				\
 	     (ps) <= &_metal.page_sizes[_metal.num_page_sizes - 1];	\
