@@ -72,8 +72,7 @@ int metal_softirq_allocate(int num)
 	int irq_base;
 
 	if ((metal_softirq_avail + num) >= metal_softirq_num) {
-		metal_log(METAL_LOG_ERROR, "No %d available soft irqs.\r\n",
-			  num);
+		metal_log(METAL_LOG_ERROR, "No more available soft irqs\n");
 		return -EINVAL;
 	}
 	irq_base = metal_softirq_avail;
