@@ -41,8 +41,8 @@ struct metal_generic_shmem {
  *
  * @see metal_shmem_create
  */
-extern int metal_shmem_open(const char *name, size_t size,
-			    struct metal_io_region **io);
+int metal_shmem_open(const char *name, size_t size,
+		     struct metal_io_region **io);
 
 /**
  * @brief	Statically register a generic shared memory region.
@@ -55,7 +55,7 @@ extern int metal_shmem_open(const char *name, size_t size,
  * @param[in]	shmem	Generic shmem structure.
  * @return 0 on success, or -errno on failure.
  */
-extern int metal_shmem_register_generic(struct metal_generic_shmem *shmem);
+int metal_shmem_register_generic(struct metal_generic_shmem *shmem);
 
 #ifdef METAL_INTERNAL
 

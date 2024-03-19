@@ -106,7 +106,7 @@ extern struct metal_state _metal;
  *
  * @see metal_finish
  */
-extern int metal_init(const struct metal_init_params *params);
+int metal_init(const struct metal_init_params *params);
 
 /**
  * @brief	Shutdown libmetal.
@@ -115,7 +115,7 @@ extern int metal_init(const struct metal_init_params *params);
  *
  * @see metal_init
  */
-extern void metal_finish(void);
+void metal_finish(void);
 
 #ifdef METAL_INTERNAL
 
@@ -129,7 +129,7 @@ extern void metal_finish(void);
  * @param[in]	params	Initialization parameters (@see metal_init_params).
  * @return	0 on success, or -errno on failure.
  */
-extern int metal_sys_init(const struct metal_init_params *params);
+int metal_sys_init(const struct metal_init_params *params);
 
 /**
  * @brief	libmetal system shutdown.
@@ -139,7 +139,7 @@ extern int metal_sys_init(const struct metal_init_params *params);
  *
  * @see metal_sys_init
  */
-extern void metal_sys_finish(void);
+void metal_sys_finish(void);
 
 #endif
 

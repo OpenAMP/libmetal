@@ -30,7 +30,7 @@ extern "C" {
  *  @return	Library major version number.
  *  @see	METAL_VER_MAJOR
  */
-extern int metal_ver_major(void);
+int metal_ver_major(void);
 
 /**
  *  @brief	Library minor version number.
@@ -42,7 +42,7 @@ extern int metal_ver_major(void);
  *  @return	Library minor version number.
  *  @see	METAL_VER_MINOR
  */
-extern int metal_ver_minor(void);
+int metal_ver_minor(void);
 
 /**
  *  @brief	Library patch level.
@@ -54,7 +54,7 @@ extern int metal_ver_minor(void);
  *  @return	Library patch level.
  *  @see	METAL_VER_PATCH
  */
-extern int metal_ver_patch(void);
+int metal_ver_patch(void);
 
 /**
  *  @brief	Library version string.
@@ -66,7 +66,7 @@ extern int metal_ver_patch(void);
  *  @return	Library version string.
  *  @see	METAL_VER
  */
-extern const char *metal_ver(void);
+const char *metal_ver(void);
 
 /** @} */
 
