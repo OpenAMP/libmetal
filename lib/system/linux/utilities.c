@@ -118,7 +118,7 @@ int metal_virt2phys(void *addr, unsigned long *phys)
 	int error;
 
 	if (_metal.pagemap_fd < 0)
-		return -ENOSYS;
+		return -EINVAL;
 
 	offset = ((uintptr_t)addr >> _metal.page_shift) * sizeof(entry);
 	error = pread(_metal.pagemap_fd, &entry, sizeof(entry), offset);

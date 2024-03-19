@@ -65,7 +65,7 @@ static int metal_init_page_sizes(void)
 	sizes[0] = getpagesize();
 	if (sizes[0] <= 0) {
 		metal_log(METAL_LOG_ERROR, "failed to get page size\n");
-		return -ENOSYS;
+		return -EINVAL;
 	}
 	_metal.page_size  = sizes[0];
 	_metal.page_shift = metal_log2(sizes[0]);
