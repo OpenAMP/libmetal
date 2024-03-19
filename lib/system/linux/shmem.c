@@ -28,6 +28,34 @@ static const struct metal_io_ops metal_shmem_io_ops = {
 	NULL, NULL, NULL, NULL, NULL, metal_shmem_io_close, NULL, NULL
 };
 
+static int metal_virt2phys(void *addr, unsigned long *phys)
+{
+	off_t offset;
+	uint64_t entry;
+	int error;
+
+	if (_metal.pagemap_fd < 0)
+		return -EINVAL;
+
+	offset = ((uintptr_t)addr >> _metal.page_shift) * sizeof(entry);
+	error = pread(_metal.pagemap_fd, &entry, sizeof(entry), offset);
+	if (error < 0) {
+		metal_log(METAL_LOG_ERROR, "failed pagemap pread (offset %llx) - %s\n",
+			  (unsigned long long)offset, strerror(errno));
+		return -errno;
+	}
+
+	/* Check page present and not swapped. */
+	if ((entry >> 62) != 2) {
+		metal_log(METAL_LOG_ERROR, "pagemap page not present, %llx -> %llx\n",
+			  (unsigned long long)offset, (unsigned long long)entry);
+		return -ENOENT;
+	}
+
+	*phys = (entry & ((1ULL << 54) - 1)) << _metal.page_shift;
+	return 0;
+}
+
 static int metal_shmem_try_map(struct metal_page_size *ps, int fd, size_t size,
 			       struct metal_io_region **result)
 {
@@ -49,10 +77,10 @@ static int metal_shmem_try_map(struct metal_page_size *ps, int fd, size_t size,
 		return error;
 	}
 
-	error = metal_mlock(mem, size);
+	error = mlock(mem, size);
 	if (error) {
 		metal_log(METAL_LOG_WARNING, "failed to mlock shmem - %s\n",
-			  strerror(-error));
+			  strerror(errno));
 	}
 
 	phys_size = sizeof(*phys) * pages;
