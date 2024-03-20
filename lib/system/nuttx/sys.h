@@ -16,6 +16,8 @@
 #ifndef __METAL_NUTTX_SYS__H__
 #define __METAL_NUTTX_SYS__H__
 
+#include <syslog.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
