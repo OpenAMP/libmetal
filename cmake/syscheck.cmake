@@ -5,7 +5,7 @@ if (WITH_ZEPHYR)
   string (TOLOWER "Zephyr"                PROJECT_SYSTEM)
   string (TOUPPER "Zephyr"                PROJECT_SYSTEM_UPPER)
   if (NOT WITH_ZEPHYR_LIB)
-    include($ENV{ZEPHYR_BASE}/cmake/app/boilerplate.cmake NO_POLICY_SCOPE)
+    find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
   endif()
   # map zephyr arch to libmetal machine
   set (MACHINE "${CONFIG_ARCH}" CACHE STRING "")

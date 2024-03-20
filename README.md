@@ -94,7 +94,7 @@ running a Zephyr environment.
 As Zephyr uses CMake, we build libmetal library and test application as targets
 of Zephyr CMake project. Here is how to build libmetal for Zephyr:
 ```
-    $ export ZEPHYR_GCC_VARIANT=zephyr
+    $ export ZEPHYR_TOOLCHAIN_VARIANT=zephyr
     $ export ZEPHYR_SDK_INSTALL_DIR=<where Zephyr SDK is installed>
     $ source <git_clone_zephyr_project_source_root>/zephyr-env.sh
 
