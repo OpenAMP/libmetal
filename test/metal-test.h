@@ -33,7 +33,8 @@ extern void metal_add_test_case(struct metal_test_case *test_case);
 
 
 #define METAL_ADD_TEST(func)						\
-__attribute__ ((constructor)) static void metal_test_##func() {		\
+__attribute__ ((constructor)) static void metal_test_##func(void)	\
+{									\
 	static struct metal_test_case metal_test_##func = {		\
 		.name	= #func,					\
 		.test	= func,						\
