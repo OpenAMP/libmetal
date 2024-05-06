@@ -93,11 +93,11 @@ extern void metal_default_log_handler(enum metal_log_level level,
  *
  * @param	level	Log level.
  * @param	fmt	Format string.
- * @param	args... Variable number of arguments.
+ * @param	... Variable number of arguments.
  */
-#define metal_log(level, fmt, args...) ({				   \
+#define metal_log(level, fmt, ...) ({				   \
 	if (_metal.common.log_handler && level <= _metal.common.log_level) \
-		_metal.common.log_handler(level, metal_fmt(fmt), ##args);  \
+		_metal.common.log_handler(level, metal_fmt(fmt), ## __VA_ARGS__);  \
 })
 
 #define metal_err(fmt, args...) metal_log(METAL_LOG_ERROR, fmt, ##args)
