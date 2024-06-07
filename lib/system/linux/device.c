@@ -14,6 +14,8 @@
 #include <metal/utilities.h>
 #include <metal/irq.h>
 
+#include "irq.h"
+
 #define MAX_DRIVERS	64
 
 struct linux_bus;

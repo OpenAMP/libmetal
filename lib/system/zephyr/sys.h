@@ -19,6 +19,8 @@
 #include <stdlib.h>
 #include <zephyr/kernel.h>
 
+#include "log.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
