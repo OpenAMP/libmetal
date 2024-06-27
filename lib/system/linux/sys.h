@@ -79,9 +79,6 @@ struct metal_state {
 	unsigned long		page_shift;
 
 	/** sysfs mount point. */
-	const char		*sysfs_path;
-
-	/** sysfs mount point. */
 	const char		*tmp_path;
 
 	/** available page sizes. */
@@ -99,19 +96,10 @@ int metal_linux_bus_init(void);
 void metal_linux_bus_finish(void);
 
 int metal_open(const char *path, int shm);
-int metal_open_unlinked(const char *path, int shm);
-int metal_mktemp(char *template, int fifo);
-int metal_mktemp_unlinked(char *template);
 
 int metal_map(int fd, off_t offset, size_t size, int expand,
 	      int flags, void **result);
 int metal_unmap(void *mem, size_t size);
-int metal_mlock(void *mem, size_t size);
-
-void metal_randomize_string(char *template);
-void metal_mktemp_template(char template[PATH_MAX],
-			   const char *name);
-int metal_virt2phys(void *addr, unsigned long *phys);
 
 /**
  * @brief	Read a device tree property of a device

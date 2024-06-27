@@ -592,8 +592,6 @@ static int metal_linux_probe_driver(struct linux_bus *lbus,
 	return ldrv->sdrv ? 0 : -ENODEV;
 }
 
-static void metal_linux_bus_close(struct metal_bus *bus);
-
 static int metal_linux_probe_bus(struct linux_bus *lbus)
 {
 	struct linux_driver *ldrv;

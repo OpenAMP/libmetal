@@ -65,7 +65,7 @@ static int metal_init_page_sizes(void)
 	sizes[0] = getpagesize();
 	if (sizes[0] <= 0) {
 		metal_log(METAL_LOG_ERROR, "failed to get page size\n");
-		return -ENOSYS;
+		return -EINVAL;
 	}
 	_metal.page_size  = sizes[0];
 	_metal.page_shift = metal_log2(sizes[0]);
@@ -109,20 +109,10 @@ static int metal_init_page_sizes(void)
 
 int metal_sys_init(const struct metal_init_params *params)
 {
-	static char sysfs_path[SYSFS_PATH_MAX];
 	const char *tmp_path;
 	unsigned int seed;
 	FILE *urandom;
 	int result;
-
-	/* Determine sysfs mount point. */
-	result = sysfs_get_mnt_path(sysfs_path, sizeof(sysfs_path));
-	if (result) {
-		metal_log(METAL_LOG_ERROR, "failed to get sysfs path (%s)\n",
-			  strerror(-result));
-		return result;
-	}
-	_metal.sysfs_path = sysfs_path;
 
 	/* Find the temporary directory location. */
 	tmp_path = getenv("TMPDIR");
