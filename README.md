@@ -263,6 +263,9 @@ This API is for compiler dependent functions.  For this release, there is only
 a GCC implementation, and compiler specific code is limited to atomic
 operations.
 
+## Deprecated platforms
+  - AMD-Xilinx Zynq7000. Last known stable release - v2023.04
+
 ## How to contribute
 
 As an open-source project, we welcome and encourage the community to submit
