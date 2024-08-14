@@ -5,6 +5,14 @@ collect(PROJECT_LIB_DEPS xil)
 collect(PROJECT_LIB_DEPS c)
 collect(PROJECT_LIB_DEPS m)
 
+get_property (HAS_SYSTEM_DT GLOBAL PROPERTY HAS_SYSTEM_DT)
+if (HAS_SYSTEM_DT)
+  # SDT flow has broken up libxil into multiple libs. Below libs are required
+  # for compilation.
+  collect(PROJECT_LIB_DEPS xilstandalone)
+  collect(PROJECT_LIB_DEPS xiltimer)
+endif(HAS_SYSTEM_DT)
+
 set (_lib "xil")
 find_library (_lib_path ${_lib})
 if (NOT CMAKE_C_FLAGS MATCHES "SDT")
