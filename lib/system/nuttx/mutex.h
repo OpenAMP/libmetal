@@ -28,12 +28,12 @@ typedef mutex_t metal_mutex_t;
  * METAL_MUTEX_INIT - used for initializing an mutex element in a static struct
  * or global
  */
-#define METAL_MUTEX_INIT(m) MUTEX_INITIALIZER
+#define METAL_MUTEX_INIT(m) NXMUTEX_INITIALIZER
 /*
  * METAL_MUTEX_DEFINE - used for defining and initializing a global or
  * static singleton mutex
  */
-#define METAL_MUTEX_DEFINE(m) metal_mutex_t m = MUTEX_INITIALIZER
+#define METAL_MUTEX_DEFINE(m) metal_mutex_t m = NXMUTEX_INITIALIZER
 
 static inline void __metal_mutex_init(metal_mutex_t *mutex)
 {
