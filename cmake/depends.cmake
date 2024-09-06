@@ -24,7 +24,7 @@ if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
   find_package(LibRt REQUIRED)
   collect (PROJECT_LIB_DEPS "${LIBRT_LIBRARIES}")
 
-else ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+elseif (NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "NuttX")
 
   # TODO: fix for find_path() to detect stdatomic.h
   # find_path (HAVE_STDATOMIC_H stdatomic.h)
@@ -33,5 +33,5 @@ else ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
   check_include_files (stdatomic.h HAVE_STDATOMIC_H)
   set (CMAKE_REQUIRED_FLAGS ${_saved_cmake_required_flags})
 
-endif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+endif ()
 
