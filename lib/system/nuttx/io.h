@@ -16,6 +16,8 @@
 #ifndef __METAL_NUTTX_IO__H__
 #define __METAL_NUTTX_IO__H__
 
+#include <metal/utilities.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -39,6 +41,7 @@ struct metal_io_region *metal_io_get_region(void);
  */
 static inline void metal_sys_io_mem_map(struct metal_io_region *io)
 {
+	metal_unused(io);
 }
 #endif
 
