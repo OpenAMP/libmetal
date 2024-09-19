@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright (c) 2022-2023, Advanced Micro Devices, Inc. All rights reserved.
+ * Copyright (c) 2022-2024, Advanced Micro Devices, Inc. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -26,14 +26,6 @@
 
  #define UART_BAUD 9600
 #endif
-
-#define INTC_DEVICE_ID		XPAR_SCUGIC_0_DEVICE_ID
-
-#define IPI_IRQ_VECT_ID         CONFIG_IPI_IRQ_VECT_ID
-
-#define SHM_BASE_ADDR   0x3ED80000
-#define TTC0_BASE_ADDR	CONFIG_TTC0_BASE_ADDR 
-#define IPI_BASE_ADDR   CONFIG_IPI_BASE_ADDR
 
 /* Default generic I/O region page shift */
 /* Each I/O region can contain multiple pages.

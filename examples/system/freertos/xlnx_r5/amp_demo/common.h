@@ -1,8 +1,9 @@
  /*
- * Copyright (c) 2017, Xilinx Inc. and Contributors. All rights reserved.
- *
- * SPDX-License-Identifier: BSD-3-Clause
- */
+  * Copyright (c) 2017 - 2022, Xilinx Inc. and Contributors. All rights reserved.
+  * Copyright (C) 2023 - 2024, Advanced Micro Devices, Inc.
+  *
+  * SPDX-License-Identifier: BSD-3-Clause
+  */
 
 #ifndef __COMMON_H__
 #define __COMMON_H__
@@ -22,11 +23,46 @@
 #include <sys/types.h>
 #include "sys_init.h"
 
+#if defined(PLATFORM_ZYNQMP)
+
+#define TTC0_BASE_ADDR 0xff110000
+#define TTC_DEV_NAME "ff110000.ttc"
+#define IPI_MASK 0x1000000
+
+#if XPAR_CPU_ID == 0
+#define IPI_DEV_NAME "ff310000.ipi"
+#define IPI_BASE_ADDR 0xff310000
+#define IPI_IRQ_VECT_ID 65
+#else
+#define IPI_DEV_NAME "ff320000.ipi"
+#define IPI_BASE_ADDR 0xff320000
+#define IPI_IRQ_VECT_ID 66
+#endif
+
+#elif defined(versal)
+#define TTC0_BASE_ADDR 0xFF0E0000
+#define IPI_BASE_ADDR 0xFF340000
+#define IPI_IRQ_VECT_ID 63
+#define IPI_MASK 0x0000020
+#define TTC_DEV_NAME "ff0e0000.ttc"
+#define IPI_DEV_NAME "ff340000.ipi"
+
+#elif defined(VERSAL_NET)
+
+#define TTC0_BASE_ADDR 0xFD1C0000
+#define IPI_BASE_ADDR 0xEB340000
+#define IPI_IRQ_VECT_ID 90
+#define IPI_MASK 0x0000020
+#define TTC_DEV_NAME "fd1c0000.ttc"
+#define IPI_DEV_NAME "eb340000.ipi"
+#endif
+
 /* Devices names */
 #define BUS_NAME        "generic"
-#define IPI_DEV_NAME	CONFIG_IPI_DEV_NAME
-#define SHM_DEV_NAME    "3ed80000.shm"
-#define TTC_DEV_NAME	CONFIG_TTC_DEV_NAME 
+#define SHM_DEV_NAME	"3ed80000.shm"
+
+#define INTC_DEVICE_ID	XPAR_SCUGIC_0_DEVICE_ID
+#define SHM_BASE_ADDR   0x3ED80000
 
 /* IPI registers offset */
 #define IPI_TRIG_OFFSET 0x0  /* IPI trigger reg offset */
@@ -35,9 +71,6 @@
 #define IPI_IMR_OFFSET  0x14 /* IPI interrupt mask reg offset */
 #define IPI_IER_OFFSET  0x18 /* IPI interrupt enable reg offset */
 #define IPI_IDR_OFFSET  0x1C /* IPI interrupt disable reg offset */
-
-#define IPI_MASK        CONFIG_IPI_MASK /* IPI mask for kick from APU.
-				     We use PL0 IPI in this demo. */
 
 /* TTC counter offsets */
 #define XTTCPS_CLK_CNTRL_OFFSET 0x0  /* TTC counter clock control reg offset */
@@ -160,4 +193,4 @@ static inline void print_demo(char *name)
 }
 
 #endif /* __COMMON_H__ */
-
+ 
