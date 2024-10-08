@@ -17,12 +17,16 @@
 #ifndef __METAL_FREERTOS_XLNX_SYS__H__
 #define __METAL_FREERTOS_XLNX_SYS__H__
 
+#include <metal/cpu.h>
+
 #include "xscugic.h"
 #include "FreeRTOS.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define metal_yield() metal_cpu_yield()
 
 #if defined(SDT) && defined(PLATFORM_ZYNQ)
 #define XPAR_SCUGIC_0_DIST_BASEADDR XPAR_SCUGIC_DIST_BASEADDR

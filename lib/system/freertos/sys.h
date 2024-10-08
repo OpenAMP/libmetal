@@ -18,6 +18,7 @@
 #define __METAL_FREERTOS_SYS__H__
 
 #include <metal/errno.h>
+#include <metal/cpu.h>
 
 #ifdef XLNX_PLATFORM
 #include <metal/system/freertos/xlnx/sys.h>
@@ -32,6 +33,8 @@ extern "C" {
 #ifndef METAL_MAX_DEVICE_REGIONS
 #define METAL_MAX_DEVICE_REGIONS 1
 #endif
+
+#define metal_yield() metal_cpu_yield()
 
 /** Structure for FreeRTOS libmetal runtime state. */
 struct metal_state {

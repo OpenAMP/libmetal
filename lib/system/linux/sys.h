@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <libgen.h>
 #include <limits.h>
+#include <metal/cpu.h>
 #include <metal/errno.h>
 #include <pthread.h>
 #include <stdio.h>
@@ -45,6 +46,8 @@ extern "C" {
 
 #define METAL_INVALID_VADDR     NULL
 #define MAX_PAGE_SIZES		32
+
+#define metal_yield() metal_cpu_yield()
 
 struct metal_device;
 

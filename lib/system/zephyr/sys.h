@@ -16,12 +16,15 @@
 #ifndef __METAL_ZEPHYR_SYS__H__
 #define __METAL_ZEPHYR_SYS__H__
 
+#include <metal/cpu.h>
 #include <stdlib.h>
 #include <zephyr/kernel.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define metal_yield() metal_cpu_yield()
 
 #define METAL_INIT_DEFAULTS				\
 {							\

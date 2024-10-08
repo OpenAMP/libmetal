@@ -16,9 +16,13 @@
 #ifndef __METAL_FREERTOS_TEMPLATE_SYS__H__
 #define __METAL_FREERTOS_TEMPLATE_SYS__H__
 
+#include <metal/cpu.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define metal_yield() metal_cpu_yield()
 
 #ifdef METAL_INTERNAL
 
