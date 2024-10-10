@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include <stddef.h>
 #include <metal/cache.h>
 #include <metal/io.h>
 #include <nuttx/arch.h>
