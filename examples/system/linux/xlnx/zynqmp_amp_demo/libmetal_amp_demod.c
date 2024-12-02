@@ -25,9 +25,13 @@
 #define IPI_IER_OFFSET  0x18
 #define IPI_IDR_OFFSET  0x1C
 
+#ifndef IPI_MASK
 #define IPI_MASK        0x1000000
 
+#endif /* IPI_MASK */
+#ifndef IPI_DEV_NAME
 #define IPI_DEV_NAME    "ff310000.ipi"
+#endif /* IPI_DEV_NAME */
 #define SHM0_DESC_DEV_NAME    "3ed00000.shm_desc"
 #define SHM1_DESC_DEV_NAME    "3ed10000.shm_desc"
 #define SHM_DEV_NAME    "3ed20000.shm"

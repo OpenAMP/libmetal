@@ -42,19 +42,9 @@ static atomic_flag remote_nkicked; /* is remote kicked, 0 - kicked,
 static int ipi_irq_handler (int vect_id, void *priv)
 {
 	(void)vect_id;
-	struct metal_io_region *ipi_io = (struct metal_io_region *)priv;
-	uint32_t ipi_mask = IPI_MASK;
-	uint64_t val = 1;
-
-	if (!ipi_io)
-		return METAL_IRQ_NOT_HANDLED;
-	val = metal_io_read32(ipi_io, IPI_ISR_OFFSET);
-	if (val & ipi_mask) {
-		metal_io_write32(ipi_io, IPI_ISR_OFFSET, ipi_mask);
-		atomic_flag_clear(&remote_nkicked);
-		return METAL_IRQ_HANDLED;
-	}
-	return METAL_IRQ_NOT_HANDLED;
+	(void)priv;
+	atomic_flag_clear(&remote_nkicked);
+	return METAL_IRQ_HANDLED;
 }
 
 /**
@@ -69,17 +59,14 @@ static int ipi_irq_handler (int vect_id, void *priv)
  *            if the value stored in the shared memory is the same as the
  *            expected.
  *          * It will print if the atomic add test has passed or not.
- * @param[in] ipi_io - IPI metal i/o region
  * @param[in] shm_io - shared memory metal i/o region
  * @return - If setup failed, return the corresponding error number. Otherwise
  *          return 0 on success.
  */
-static int atomic_add_shmem(struct metal_io_region *ipi_io,
-		struct metal_io_region *shm_io)
+static int atomic_add_shmem(struct metal_io_region *shm_io)
 {
 	int i, ret;
 	atomic_int *shm_int;
-	uint32_t ipi_mask = IPI_MASK;
 
 	LPRINTF("Starting atomic shared memory task.\n");
 
@@ -89,7 +76,7 @@ static int atomic_add_shmem(struct metal_io_region *ipi_io,
 	atomic_store(shm_int, 0);
 
 	/* Kick the remote to notify demo starts. */
-	metal_io_write32(ipi_io, IPI_TRIG_OFFSET, ipi_mask);
+	kick_ipi(NULL);
 
 	/* Do atomic add over the shared memory */
 	for (i = 0; i < ITERATIONS; i++) {
@@ -113,9 +100,8 @@ static int atomic_add_shmem(struct metal_io_region *ipi_io,
 
 int atomic_shmem_demo()
 {
-	struct metal_device *ipi_dev = NULL, *shm_dev = NULL;
-	struct metal_io_region *ipi_io = NULL, *shm_io = NULL;
-	int ipi_irq;
+	struct metal_device *shm_dev = NULL;
+	struct metal_io_region *shm_io = NULL;
 	int ret = 0;
 
 	print_demo("atomic operation over shared memory");
@@ -135,51 +121,27 @@ int atomic_shmem_demo()
 		goto out;
 	}
 
-	/* Open IPI device */
-	ret = metal_device_open(BUS_NAME, IPI_DEV_NAME, &ipi_dev);
-	if (ret) {
-		LPERROR("Failed to open device %s.\n", IPI_DEV_NAME);
-		goto out;
-	}
-
-	/* Get IPI device IO region */
-	ipi_io = metal_device_io_region(ipi_dev, 0);
-	if (!ipi_io) {
-		LPERROR("Failed to map io region for %s.\n", ipi_dev->name);
-		ret = -ENODEV;
-		goto out;
-	}
-
-	/* Get the IPI IRQ from the opened IPI device */
-	ipi_irq = (intptr_t)ipi_dev->irq_info;
-
-	/* disable IPI interrupt */
-	metal_io_write32(ipi_io, IPI_IDR_OFFSET, IPI_MASK);
-	/* clear old IPI interrupt */
-	metal_io_write32(ipi_io, IPI_ISR_OFFSET, IPI_MASK);
-	/* Register IPI irq handler */
-	metal_irq_register(ipi_irq, ipi_irq_handler, ipi_io);
-	metal_irq_enable(ipi_irq);
 	/* initialize remote_nkicked */
 	remote_nkicked = (atomic_flag)ATOMIC_FLAG_INIT;
 	atomic_flag_test_and_set(&remote_nkicked);
-	/* Enable IPI interrupt */
-	metal_io_write32(ipi_io, IPI_IER_OFFSET, IPI_MASK);
+
+	ret = init_ipi();
+	if (ret) {
+		goto out;
+	}
+	ipi_kick_register_handler(ipi_irq_handler, NULL);
+	enable_ipi_kick();
 
 	/* Run atomic operation demo */
-	ret = atomic_add_shmem(ipi_io, shm_io);
+	ret = atomic_add_shmem(shm_io);
 
 	/* disable IPI interrupt */
-	metal_io_write32(ipi_io, IPI_IDR_OFFSET, IPI_MASK);
-	/* unregister IPI irq handler by setting the handler to 0 */
-	metal_irq_disable(ipi_irq);
-	metal_irq_unregister(ipi_irq);
+	disable_ipi_kick();
+	deinit_ipi();
 
 out:
 	if (shm_dev)
 		metal_device_close(shm_dev);
-	if (ipi_dev)
-		metal_device_close(ipi_dev);
 	return ret;
 
 }
