@@ -97,19 +97,10 @@ static unsigned long long get_timestamp (void)
 static int ipi_irq_handler (int vect_id, void *priv)
 {
 	(void)vect_id;
-	struct metal_io_region *ipi_io = (struct metal_io_region *)priv;
-	uint32_t ipi_mask = IPI_MASK;
-	uint64_t val = 1;
+	(void)priv;
 
-	if (!ipi_io)
-		return METAL_IRQ_NOT_HANDLED;
-	val = metal_io_read32(ipi_io, IPI_ISR_OFFSET);
-	if (val & ipi_mask) {
-		metal_io_write32(ipi_io, IPI_ISR_OFFSET, ipi_mask);
-		atomic_flag_clear(&remote_nkicked);
-		return METAL_IRQ_HANDLED;
-	}
-	return METAL_IRQ_NOT_HANDLED;
+	atomic_flag_clear(&remote_nkicked);
+	return METAL_IRQ_HANDLED;
 }
 
 /**
@@ -124,13 +115,11 @@ static int ipi_irq_handler (int vect_id, void *priv)
  *          * After all the packages are received, it sends out shutdown
  *            message to the remote.
  *
- * @param[in] ipi_io - IPI metal i/o region
  * @param[in] shm_io - shared memory metal i/o region
  * @return - return 0 on success, otherwise return error number indicating
  *           type of error.
  */
-static int ipi_shmem_echo(struct metal_io_region *ipi_io,
-		struct metal_io_region *shm_io)
+static int ipi_shmem_echo(struct metal_io_region *shm_io)
 {
 	int ret;
 	uint32_t i;
@@ -144,7 +133,6 @@ static int ipi_shmem_echo(struct metal_io_region *ipi_io,
 	long long tdiff_avg_s = 0, tdiff_avg_ns = 0;
 	void *txbuf = NULL, *rxbuf = NULL, *tmpptr;
 	struct msg_hdr_s *msg_hdr;
-	uint32_t ipi_mask = IPI_MASK;
 	uint32_t tx_phy_addr_32;
 
 	txbuf = metal_allocate_memory(BUF_SIZE_MAX);
@@ -202,7 +190,7 @@ static int ipi_shmem_echo(struct metal_io_region *ipi_io,
 		/* Increase number of available buffers */
 		metal_io_write32(shm_io, tx_avail_offset, (i + 1));
 		/* Kick IPI to notify data has been put to shared buffer */
-		metal_io_write32(ipi_io, IPI_TRIG_OFFSET, ipi_mask);
+		kick_ipi(NULL);
 	}
 
 	LPRINTF("Waiting for messages to echo back and verify.\n");
@@ -303,7 +291,7 @@ static int ipi_shmem_echo(struct metal_io_region *ipi_io,
 	metal_io_write32(shm_io, tx_addr_offset, tx_phy_addr_32);
 	metal_io_write32(shm_io, tx_avail_offset, PKGS_TOTAL + 1);
 	LPRINTF("Kick remote to notify shutdown message sent...\n");
-	metal_io_write32(ipi_io, IPI_TRIG_OFFSET, ipi_mask);
+	kick_ipi(NULL);
 
 	tdiff /= PKGS_TOTAL;
 	tdiff_avg_s = tdiff / NS_PER_S;
@@ -322,9 +310,8 @@ out:
 
 int ipi_shmem_demo()
 {
-	struct metal_device *ipi_dev = NULL, *shm_dev = NULL;
-	struct metal_io_region *ipi_io = NULL, *shm_io = NULL;
-	int ipi_irq;
+	struct metal_device *shm_dev = NULL;
+	struct metal_io_region *shm_io = NULL;
 	int ret = 0;
 
 	print_demo("IPI and shared memory");
@@ -344,51 +331,27 @@ int ipi_shmem_demo()
 		goto out;
 	}
 
-	/* Open IPI device */
-	ret = metal_device_open(BUS_NAME, IPI_DEV_NAME, &ipi_dev);
-	if (ret) {
-		LPERROR("Failed to open device %s.\n", IPI_DEV_NAME);
-		goto out;
-	}
-
-	/* Get IPI device IO region */
-	ipi_io = metal_device_io_region(ipi_dev, 0);
-	if (!ipi_io) {
-		LPERROR("Failed to map io region for %s.\n", ipi_dev->name);
-		ret = -ENODEV;
-		goto out;
-	}
-
-	/* Get the IPI IRQ from the opened IPI device */
-	ipi_irq = (intptr_t)ipi_dev->irq_info;
-
-	/* disable IPI interrupt */
-	metal_io_write32(ipi_io, IPI_IDR_OFFSET, IPI_MASK);
-	/* clear old IPI interrupt */
-	metal_io_write32(ipi_io, IPI_ISR_OFFSET, IPI_MASK);
-	/* Register IPI irq handler */
-	metal_irq_register(ipi_irq, ipi_irq_handler, ipi_io);
-	metal_irq_enable(ipi_irq);
 	/* initialize remote_nkicked */
 	remote_nkicked = (atomic_flag)ATOMIC_FLAG_INIT;
 	atomic_flag_test_and_set(&remote_nkicked);
-	/* Enable IPI interrupt */
-	metal_io_write32(ipi_io, IPI_IER_OFFSET, IPI_MASK);
+
+	ret = init_ipi();
+	if (ret) {
+		goto out;
+	}
+	ipi_kick_register_handler(ipi_irq_handler, NULL);
+	enable_ipi_kick();
 
 	/* Run atomic operation demo */
-	ret = ipi_shmem_echo(ipi_io, shm_io);
+	ret = ipi_shmem_echo(shm_io);
 
 	/* disable IPI interrupt */
-	metal_io_write32(ipi_io, IPI_IDR_OFFSET, IPI_MASK);
-	/* unregister IPI irq handler by setting the handler to 0 */
-	metal_irq_disable(ipi_irq);
-	metal_irq_unregister(ipi_irq);
+	disable_ipi_kick();
+	deinit_ipi();
 
 out:
 	if (shm_dev)
 		metal_device_close(shm_dev);
-	if (ipi_dev)
-		metal_device_close(ipi_dev);
 	return ret;
 
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2017, Xilinx Inc. and Contributors. All rights reserved.
- * Copyright (C) 2022, Advanced Micro Devices, Inc.
+ * Copyright (C) 2022 - 2024, Advanced Micro Devices, Inc.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -15,9 +15,54 @@
 #include <stdio.h>
 
 #define BUS_NAME        "platform"
-#define IPI_DEV_NAME    "ff340000.ipi"
+
+#ifndef SHM_DEV_NAME
 #define SHM_DEV_NAME    "3ed80000.shm"
-#define TTC_DEV_NAME    "ff110000.timer"
+#endif /* !SHM_DEV_NAME */
+
+#if defined(PLATFORM_ZYNQMP)
+
+#ifndef IPI_DEV_NAME
+#define IPI_DEV_NAME "ff340000.ipi"
+#endif /* !IPI_DEV_NAME */
+
+#ifndef TTC_DEV_NAME
+#define TTC_DEV_NAME "ff110000.timer"
+#endif /* !TTC_DEV_NAME */
+
+#ifndef IPI_MASK
+#define IPI_MASK 0x100
+#endif /* !IPI_MASK */
+
+#elif defined(versal)
+
+#ifndef IPI_DEV_NAME
+#define IPI_DEV_NAME "ff360000.ipi"
+#endif /* !IPI_DEV_NAME */
+
+#ifndef IPI_MASK
+#define IPI_MASK 0x08
+#endif /* !IPI_MASK */
+
+#ifndef TTC_DEV_NAME
+#define TTC_DEV_NAME "ff0e0000.ttc0"
+#endif /* TTC_DEV_NAME */
+
+#elif defined(VERSAL_NET)
+
+#ifndef IPI_DEV_NAME
+#define IPI_DEV_NAME "eb3600000.ipi"
+#endif /* !IPI_DEV_NAME */
+
+#ifndef IPI_MASK
+#define IPI_MASK 0x08
+#endif /* !IPI_MASK */
+
+#ifndef TTC_DEV_NAME
+#define TTC_DEV_NAME "fd1c0000.ttc0"
+#endif /* !TTC_DEV_NAME */
+
+#endif
 
 /* Apply this snippet to the device tree in an overlay so that
  * Linux userspace can see and use TTC0:
@@ -35,8 +80,6 @@
 #define IPI_IMR_OFFSET  0x14 /* IPI interrupt mask reg offset */
 #define IPI_IER_OFFSET  0x18 /* IPI interrupt enable reg offset */
 #define IPI_IDR_OFFSET  0x1C /* IPI interrupt disable reg offset */
-
-#define IPI_MASK        0x100 /* IPI mask for kick from RPU. */
 
 /* TTC counter offsets */
 #define XTTCPS_CLK_CNTRL_OFFSET 0x0  /* TTC counter clock control reg offset */
@@ -194,6 +237,69 @@ static inline void dump_buffer(void *buf, unsigned int len)
 static inline void print_demo(char *name)
 {
 	LPRINTF("****** libmetal demo: %s ******\n", name);
+}
+
+/**
+ * @brief ipi_kick_register_handler() - register for IPI kick handler
+ *
+ * @param[in] hd - handler function
+ * @param[in] priv - private data will be passed to the handler
+ */
+void ipi_kick_register_handler(metal_irq_handler hd, void *priv);
+
+/**
+ * @brief init_ipi() - Initialize IPI
+ *
+ * @return return 0 for success, negative value for failure.
+ */
+int init_ipi(void);
+
+/**
+ * @brief deinit_ipi() - Deinitialize IPI
+ */
+void deinit_ipi(void);
+
+/**
+ * @brief kick_ipi() - kick remote with IPI
+ */
+void kick_ipi(void *msg);
+
+/**
+ * @brief disable_ipi_kick() - disable IPI interrupt from remote kick
+ */
+void disable_ipi_kick(void);
+
+/**
+ * @brief enable_ipi_kick() - enable IPI interrupt from remote kick
+ */
+void enable_ipi_kick(void);
+
+/**
+ * basic statistics
+ */
+struct metal_stat {
+	uint64_t st_cnt;
+	uint64_t st_sum;
+	uint64_t st_min;
+	uint64_t st_max;
+};
+
+#define STAT_INIT { .st_cnt = 0, .st_sum = 0, .st_min = ~0UL, .st_max = 0, }
+
+/**
+ * @brief update_stat() - update basic statistics
+ *
+ * @param[in] pst   - pointer to the struct stat
+ * @param[in] val - the value for the update
+ */
+static inline void update_stat(struct metal_stat *pst, uint64_t val)
+{
+	pst->st_cnt++;
+	pst->st_sum += val;
+	if (pst->st_min > val)
+		pst->st_min = val;
+	if (pst->st_max < val)
+		pst->st_max = val;
 }
 
 #endif /* __COMMON_H__ */

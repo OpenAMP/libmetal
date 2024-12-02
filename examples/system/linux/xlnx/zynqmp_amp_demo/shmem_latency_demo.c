@@ -41,7 +41,8 @@
 #define TTC_CNT_RPU_TO_APU 3 /* RPU to APU TTC counter ID */
 
 #define TTC_CLK_FREQ_HZ	100000000
-#define NS_PER_SEC 1000000000
+#define NS_PER_SEC     1000000000
+#define NS_PER_TTC_TICK	(NS_PER_SEC / TTC_CLK_FREQ_HZ)
 
 /* Shared memory offset */
 #define SHM_DEMO_CNTRL_OFFSET 0x0 /* Shared memory for the demo status */
@@ -58,13 +59,10 @@
 #define PKG_SIZE_MAX 1024
 
 struct channel_s {
-	struct metal_device *ipi_dev; /* IPI metal device */
-	struct metal_io_region *ipi_io; /* IPI metal i/o region */
 	struct metal_device *shm_dev; /* Shared memory metal device */
 	struct metal_io_region *shm_io; /* Shared memory metal i/o region */
 	struct metal_device *ttc_dev; /* TTC metal device */
 	struct metal_io_region *ttc_io; /* TTC metal i/o region */
-	uint32_t ipi_mask; /* RPU IPI mask */
 	atomic_flag remote_nkicked; /* 0 - kicked from remote */
 };
 
@@ -141,18 +139,12 @@ static inline void stop_timer(struct metal_io_region *ttc_io,
 static int ipi_irq_handler (int vect_id, void *priv)
 {
 	struct channel_s *ch = (struct channel_s *)priv;
-	uint32_t val;
 
 	(void)vect_id;
 
 	if (ch) {
-		val = metal_io_read32(ch->ipi_io, IPI_ISR_OFFSET);
-		if (val & ch->ipi_mask) {
-			metal_io_write32(ch->ipi_io, IPI_ISR_OFFSET,
-					ch->ipi_mask);
-			atomic_flag_clear(&ch->remote_nkicked);
-			return METAL_IRQ_HANDLED;
-		}
+		atomic_flag_clear(&ch->remote_nkicked);
+		return METAL_IRQ_HANDLED;
 	}
 	return METAL_IRQ_NOT_HANDLED;
 }
@@ -175,14 +167,14 @@ static int ipi_irq_handler (int vect_id, void *priv)
  */
 static int measure_shmem_latency(struct channel_s *ch)
 {
-	uint32_t apu_to_rpu_sum = 0, rpu_to_apu_sum = 0;
-	int i;
 	size_t s;
 	struct msg_hdr_s *msg_hdr;
 	void *lbuf;
-	int ret;
+	int ret, i;
 
-	LPRINTF("Starting IPI latency task\n");
+	LPRINTF("Starting shared memory latency task\n\t"
+		"TTC [min,max] are in TTC ticks: %d ns per tick\n",
+		NS_PER_TTC_TICK);
 	/* allocate memory for receiving data */
 	lbuf = metal_allocate_memory(BUF_SIZE_MAX);
 	if (!lbuf) {
@@ -195,6 +187,8 @@ static int measure_shmem_latency(struct channel_s *ch)
 	metal_io_write32(ch->shm_io, SHM_DEMO_CNTRL_OFFSET, DEMO_STATUS_START);
 
 	for (s = PKG_SIZE_MIN; s <= PKG_SIZE_MAX; s <<= 1) {
+		struct metal_stat a2r = STAT_INIT;
+		struct metal_stat r2a = STAT_INIT;
 		for (i = 1; i <= ITERATIONS; i++) {
 			/* Reset TTC counter */
 			reset_timer(ch->ttc_io, TTC_CNT_APU_TO_RPU);
@@ -212,8 +206,7 @@ static int measure_shmem_latency(struct channel_s *ch)
 				goto out;
 			}
 			/* Kick IPI to notify the remote */
-			metal_io_write32(ch->ipi_io, IPI_TRIG_OFFSET,
-					ch->ipi_mask);
+			kick_ipi(NULL);
 			/* irq handler stops timer for rpu->apu irq */
 			wait_for_notified(&ch->remote_nkicked);
 			/* Read message */
@@ -230,24 +223,24 @@ static int measure_shmem_latency(struct channel_s *ch)
 			/* Stop RPU to APU TTC counter */
 			stop_timer(ch->ttc_io, TTC_CNT_RPU_TO_APU);
 
-			apu_to_rpu_sum += read_timer(ch->ttc_io,
-					TTC_CNT_APU_TO_RPU);
-			rpu_to_apu_sum += read_timer(ch->ttc_io,
-					TTC_CNT_RPU_TO_APU);
+			update_stat(&a2r, read_timer(ch->ttc_io, TTC_CNT_APU_TO_RPU));
+			update_stat(&r2a, read_timer(ch->ttc_io, TTC_CNT_RPU_TO_APU));
 		}
 
 		/* report avg latencies */
-		LPRINTF("package size %lu latency result:\n", s);
-		LPRINTF("APU to RPU average latency: %u ns \n",
-			apu_to_rpu_sum / ITERATIONS * NS_PER_SEC / TTC_CLK_FREQ_HZ );
-		LPRINTF("RPU to APU average latency: %u ns \n",
-			rpu_to_apu_sum / ITERATIONS * NS_PER_SEC / TTC_CLK_FREQ_HZ );
+		LPRINTF("package size %lu latency:\n", s);
+		LPRINTF("  APU to RPU: [%lu, %lu] avg: %lu ns\n",
+			a2r.st_min, a2r.st_max,
+			a2r.st_sum * NS_PER_TTC_TICK / ITERATIONS);
+		LPRINTF("  RPU to APU: [%lu, %lu] avg: %lu ns\n",
+			r2a.st_min, r2a.st_max,
+			r2a.st_sum * NS_PER_TTC_TICK / ITERATIONS);
 	}
 
 	/* write to shared memory to indicate demo has finished */
 	metal_io_write32(ch->shm_io, SHM_DEMO_CNTRL_OFFSET, 0);
 	/* Kick IPI to notify the remote */
-	metal_io_write32(ch->ipi_io, IPI_TRIG_OFFSET, ch->ipi_mask);
+	kick_ipi(NULL);
 
 	LPRINTF("Finished shared memory latency task\n");
 
@@ -261,7 +254,6 @@ int shmem_latency_demo()
 	struct metal_device *dev;
 	struct metal_io_region *io;
 	struct channel_s ch;
-	int ipi_irq;
 	int ret = 0;
 
 	print_demo("shared memory latency");
@@ -301,56 +293,29 @@ int shmem_latency_demo()
 	ch.ttc_dev = dev;
 	ch.ttc_io = io;
 
-	/* Open IPI device */
-	ret = metal_device_open(BUS_NAME, IPI_DEV_NAME, &dev);
-	if (ret) {
-		LPERROR("Failed to open device %s.\n", IPI_DEV_NAME);
-		goto out;
-	}
-
-	/* Get IPI device IO region */
-	io = metal_device_io_region(dev, 0);
-	if (!io) {
-		LPERROR("Failed to map io region for %s.\n", dev->name);
-		ret = -ENODEV;
-		goto out;
-	}
-	ch.ipi_dev = dev;
-	ch.ipi_io = io;
-
-	/* Get the IPI IRQ from the opened IPI device */
-	ipi_irq = (intptr_t)ch.ipi_dev->irq_info;
-
-	/* disable IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_IDR_OFFSET, IPI_MASK);
-	/* clear old IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_ISR_OFFSET, IPI_MASK);
 	/* initialize remote_nkicked */
 	ch.remote_nkicked = (atomic_flag)ATOMIC_FLAG_INIT;
 	atomic_flag_test_and_set(&ch.remote_nkicked);
-	ch.ipi_mask = IPI_MASK;
-	/* Register IPI irq handler */
-	metal_irq_register(ipi_irq, ipi_irq_handler, &ch);
-	metal_irq_enable(ipi_irq);
-	/* Enable IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_IER_OFFSET, IPI_MASK);
+
+	ret = init_ipi();
+	if (ret) {
+		goto out;
+	}
+	ipi_kick_register_handler(ipi_irq_handler, &ch);
+	enable_ipi_kick();
 
 	/* Run atomic operation demo */
 	ret = measure_shmem_latency(&ch);
 
 	/* disable IPI interrupt */
-	metal_io_write32(ch.ipi_io, IPI_IDR_OFFSET, IPI_MASK);
-	/* unregister IPI irq handler by setting the handler to 0 */
-	metal_irq_disable(ipi_irq);
-	metal_irq_unregister(ipi_irq);
+	disable_ipi_kick();
+	deinit_ipi();
 
 out:
 	if (ch.ttc_dev)
 		metal_device_close(ch.ttc_dev);
 	if (ch.shm_dev)
 		metal_device_close(ch.shm_dev);
-	if (ch.ipi_dev)
-		metal_device_close(ch.ipi_dev);
 	return ret;
 
 }

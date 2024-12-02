@@ -72,14 +72,19 @@
  *        Report if any of the above tasks failed.
  * @return   0 - succeeded, non-zero for failures.
  */
-int main(void)
+int main(int ac, char **av)
 {
-	int ret;
+	int ret, opt;
 
 	ret = sys_init();
 	if (ret) {
 		LPERROR("Failed to initialize system.\n");
 		return ret;
+	}
+
+	while ((opt = getopt(ac, av, "d")) != -1) {
+		if (opt == 'd')
+			metal_set_log_level(METAL_LOG_DEBUG);
 	}
 
 	ret = shmem_demo();
