@@ -177,7 +177,7 @@ static inline void wait_for_interrupt()
  *
  * @param[in] notified - pointer to the notified variable
  */
-static inline void  wait_for_notified(atomic_int *notified)
+static inline void  wait_for_notified(atomic_flag *notified)
 {
 	while (atomic_flag_test_and_set(notified));
 }
