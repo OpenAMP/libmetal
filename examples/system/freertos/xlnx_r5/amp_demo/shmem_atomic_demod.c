@@ -125,11 +125,6 @@ int atomic_shmem_demod()
 	/* Get the IPI IRQ from the opened IPI device */
 	ipi_irq = (intptr_t)ipi_dev->irq_info;
 
-	/* disable IPI interrupt */
-	metal_io_write32(ipi_io, IPI_IDR_OFFSET, IPI_MASK);
-	/* clear old IPI interrupt */
-	metal_io_write32(ipi_io, IPI_ISR_OFFSET, IPI_MASK);
-	/* Register IPI irq handler */
 	metal_irq_register(ipi_irq, ipi_irq_handler, ipi_io);
 	metal_irq_enable(ipi_irq);
 	/* initialize remote_nkicked */
