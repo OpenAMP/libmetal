@@ -76,6 +76,9 @@ struct metal_io_region {
 						 of each of the pages in the I/O
 						 region */
 	size_t			size;       /**< size of the I/O region */
+	const metal_phys_addr_t	*physmap_drv;/**< table of base physical address
+						 of each of the pages in the I/O
+						 region, for driver */
 	unsigned long		page_shift; /**< page shift of I/O region */
 	metal_phys_addr_t	page_mask;  /**< page mask of I/O region */
 	unsigned int		mem_flags;  /**< memory attribute of the
@@ -90,6 +93,7 @@ struct metal_io_region {
  * @param[in]		virt		Virtual address of region.
  * @param[in]		physmap		Array of physical addresses per page.
  * @param[in]		size		Size of region.
+ * @param[in]		physmap_drv	Array of physical addresses for driver.
  * @param[in]		page_shift	Log2 of page size (-1 for single page).
  * @param[in]		mem_flags	Memory flags
  * @param[in]		ops			ops
@@ -97,6 +101,7 @@ struct metal_io_region {
 void
 metal_io_init(struct metal_io_region *io, void *virt,
 	      const metal_phys_addr_t *physmap, size_t size,
+	      const metal_phys_addr_t *physmap_drv,
 	      unsigned int page_shift, unsigned int mem_flags,
 	      const struct metal_io_ops *ops);
 
@@ -197,6 +202,39 @@ metal_io_phys_to_offset(struct metal_io_region *io, metal_phys_addr_t phys)
 }
 
 /**
+ * @brief	Convert a driver physical address to a device physical address.
+ * @param[in]	io		I/O region handle.
+ * @param[in]	phys_drv	Driver physical address
+ * @return	METAL_BAD_PHYS if invalid driver physical address,
+ *		or device physical address
+ */
+static inline metal_phys_addr_t
+metal_io_phys_drv_to_phys(struct metal_io_region *io, metal_phys_addr_t phys_drv)
+{
+	size_t p;
+	size_t page_cnt = 1;
+	size_t page_size = io->size;
+
+	if (!io->physmap_drv || !io->size) {
+		return METAL_BAD_PHYS;
+	}
+
+	if (io->page_mask != (metal_phys_addr_t)(-1)) {
+		page_cnt = (io->size + io->page_mask) >> io->page_shift;
+		page_size = io->page_mask + 1;
+	}
+
+	for (p = 0; p < page_cnt; p++) {
+		if (phys_drv >= io->physmap_drv[p] &&
+		    phys_drv < io->physmap_drv[p] + page_size) {
+			return phys_drv - io->physmap_drv[p] + io->physmap[p];
+		}
+	}
+
+	return METAL_BAD_PHYS;
+}
+
+/**
  * @brief	Convert a physical address to virtual address.
  * @param[in]	io	Shared memory segment handle.
  * @param[in]	phys	Physical address within segment.
@@ -205,6 +243,12 @@ metal_io_phys_to_offset(struct metal_io_region *io, metal_phys_addr_t phys)
 static inline void *
 metal_io_phys_to_virt(struct metal_io_region *io, metal_phys_addr_t phys)
 {
+	metal_phys_addr_t tmp_phys = metal_io_phys_drv_to_phys(io, phys);
+
+	if (tmp_phys != METAL_BAD_PHYS) {
+		phys = tmp_phys;
+	}
+
 	return metal_io_virt(io, metal_io_phys_to_offset(io, phys));
 }
 

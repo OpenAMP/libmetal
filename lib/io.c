@@ -11,6 +11,7 @@
 
 void metal_io_init(struct metal_io_region *io, void *virt,
 	      const metal_phys_addr_t *physmap, size_t size,
+	      const metal_phys_addr_t *physmap_drv,
 	      unsigned int page_shift, unsigned int mem_flags,
 	      const struct metal_io_ops *ops)
 {
@@ -21,6 +22,7 @@ void metal_io_init(struct metal_io_region *io, void *virt,
 	io->virt = virt;
 	io->physmap = physmap;
 	io->size = size;
+	io->physmap_drv = physmap_drv;
 	io->page_shift = page_shift;
 	if (page_shift >= sizeof(io->page_mask) * CHAR_BIT)
 		/* avoid overflow */
