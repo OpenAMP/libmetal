@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright (C) 2010 - 2017 Xilinx, Inc.  All rights reserved.
+ * Copyright (c) 2022-2024, Advanced Micro Devices, Inc. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -27,14 +27,6 @@
  #define UART_BAUD 9600
 #endif
 
-#define INTC_DEVICE_ID		XPAR_SCUGIC_0_DEVICE_ID
-
-#define IPI_IRQ_VECT_ID         65
-
-#define SHM_BASE_ADDR   0x3ED80000
-#define TTC0_BASE_ADDR  0xFF110000
-#define IPI_BASE_ADDR   0xFF310000
-
 /* Default generic I/O region page shift */
 /* Each I/O region can contain multiple pages.
  * In FreeRTOS system, the memory mapping is flat, there is no
@@ -44,7 +36,12 @@
 #define DEFAULT_PAGE_SHIFT (-1UL)
 #define DEFAULT_PAGE_MASK  (-1UL)
 
+#if defined(SDT)
+/* System Device Tree (SDT) flow does not provide this symbol. */
+static XScuGic xInterruptController;
+#else
 extern XScuGic xInterruptController;
+#endif
 
 const metal_phys_addr_t metal_phys[] = {
 	IPI_BASE_ADDR, /**< base IPI address */

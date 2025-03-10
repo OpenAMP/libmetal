@@ -105,6 +105,17 @@ void metal_default_log_handler(enum metal_log_level level,
 #define metal_info(fmt, args...) metal_log(METAL_LOG_INFO, fmt, ##args)
 #define metal_dbg(fmt, args...) metal_log(METAL_LOG_DEBUG, fmt, ##args)
 
+/**
+ * Convenience macros ML_ERR, ML_INFO, ML_DBG add source
+ * function name and the line number before the message.
+ * Inspired by pr_err, pr_info, etc. in the kernel's printk.h.
+ * Keep the original ML_ERR, ML_INFO, ML_DBG until the open-amp
+ * code is converted to use the new metal_*() macros.
+ */
+#define ML_ERR(fmt, args...) metal_err(fmt, ##args)
+#define ML_INFO(fmt, args...) metal_info(fmt, ##args)
+#define ML_DBG(fmt, args...) metal_dbg(fmt, ##args)
+
 /** @} */
 
 #ifdef __cplusplus
