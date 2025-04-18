@@ -28,6 +28,10 @@
 #define ATOMIC_INT_OFFSET 0x0 /* shared memory offset for atomic operation */
 #define ITERATIONS 5000
 
+#define SHM_DEMO_CNTRL_OFFSET	 0x500 /* Shared memory for the demo status */
+#define DEMO_STATUS_IN_PROGRESS 0x0
+#define DEMO_STATUS_DONE	 0x1 /* Status value to indicate demo start */
+
 static atomic_flag remote_nkicked; /* is remote kicked, 0 - kicked,
 				       1 - not-kicked */
 
@@ -71,6 +75,9 @@ int atomic_add_shmemd(struct metal_io_region *ipi_io,
 	uint32_t ipi_mask = IPI_MASK;
 	int i;
 
+	/* clear demo status value */
+	metal_io_write32(shm_io, SHM_DEMO_CNTRL_OFFSET, DEMO_STATUS_IN_PROGRESS);
+
 	LPRINTF("Starting atomic add on shared memory demo.\n");
 	shm_int = (atomic_int *)metal_io_virt(shm_io,
 					ATOMIC_INT_OFFSET);
@@ -85,6 +92,10 @@ int atomic_add_shmemd(struct metal_io_region *ipi_io,
 	/* Write to IPI trigger register to notify the remote it has finished
 	 * the atomic operation. */
 	metal_io_write32(ipi_io, IPI_TRIG_OFFSET, ipi_mask);
+
+	/* Wait for other side to mark test as done before proceeding. */
+	while (metal_io_read32(shm_io, SHM_DEMO_CNTRL_OFFSET) == DEMO_STATUS_IN_PROGRESS)
+		continue;
 
 	LPRINTF("Shared memory with atomics test finished\n");
 	return 0;

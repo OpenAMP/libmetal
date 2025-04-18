@@ -36,6 +36,10 @@
 #define ATOMIC_INT_OFFSET 0x0 /* shared memory offset for atomic operation */
 #define ITERATIONS 5000
 
+#define SHM_DEMO_CNTRL_OFFSET   0x500 /* Shared memory for the demo status */
+#define DEMO_STATUS_IN_PROGRESS 0x0
+#define DEMO_STATUS_DONE        0x1 /* Status value to indicate demo start */
+
 static atomic_flag remote_nkicked; /* is remote kicked, 0 - kicked,
 				       1 - not-kicked */
 
@@ -68,6 +72,9 @@ static int atomic_add_shmem(struct metal_io_region *shm_io)
 	int i, ret;
 	atomic_int *shm_int;
 
+	/* clear demo status value */
+	metal_io_write32(shm_io, SHM_DEMO_CNTRL_OFFSET, DEMO_STATUS_IN_PROGRESS);
+
 	LPRINTF("Starting atomic shared memory task.\n");
 
 	/* Initialize the shared memory on which we run the atomic add */
@@ -94,6 +101,9 @@ static int atomic_add_shmem(struct metal_io_region *shm_io)
 			(unsigned int)(ITERATIONS << 1), atomic_load(shm_int));
 		ret = -1;
 	}
+
+	/* This will ensure that next demo does not start prematurely. */
+	metal_io_write32(shm_io, SHM_DEMO_CNTRL_OFFSET, DEMO_STATUS_DONE);
 
 	return ret;
 }
