@@ -1,6 +1,7 @@
 /******************************************************************************
  *
- * Copyright (C) 2017 Xilinx, Inc.  All rights reserved.
+ * Copyright (C) 2017 - 2022, Xilinx, Inc.  All rights reserved.
+ * Copyright (C) 2023 - 2024, Advanced Micro Devices, Inc.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -26,14 +27,6 @@
 
  #define UART_BAUD 9600
 #endif
-
-#define INTC_DEVICE_ID		XPAR_SCUGIC_0_DEVICE_ID
-
-#define IPI_IRQ_VECT_ID         65
-
-#define SHM_BASE_ADDR   0x3ED80000
-#define TTC0_BASE_ADDR  0xFF110000
-#define IPI_BASE_ADDR   0xFF310000
 
 /* Default generic I/O region page shift */
 /* Each I/O region can contain multiple pages.
