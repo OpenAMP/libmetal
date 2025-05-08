@@ -22,6 +22,10 @@
 #include "xscugic.h"
 #include "FreeRTOS.h"
 
+#ifdef SDT
+#include <metal/system/freertos/xlnx/sys_devicetree.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
