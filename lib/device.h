@@ -131,6 +131,15 @@ int metal_device_open(const char *bus_name, const char *dev_name,
 		      struct metal_device **device);
 
 /**
+ * @brief	Find a libmetal device by name.
+ * @param[in]	bus_name	Bus name.
+ * @param[in]	dev_name	Device name.
+ * @param[out]	device		Returned device handle.
+ * @return 0 on success, or -errno on failure.
+ */
+int metal_device_find(const char *bus_name, const char *dev_name,
+		      struct metal_device **device);
+/**
  * @brief	Close a libmetal device.
  * @param[in]	device		Device handle.
  */
