@@ -8,8 +8,6 @@ collect (PROJECT_LIB_HEADERS sys.h)
 
 collect (PROJECT_LIB_SOURCES irq.c)
 
-include(CheckSymbolExists)
-check_symbol_exists(SDT "bspconfig.h" HAS_SYSTEM_DT)
-if (HAS_SYSTEM_DT)
+if (CMAKE_C_FLAGS MATCHES "SDT")
   collect (PROJECT_LIB_HEADERS sys_devicetree.h)
-endif()
+endif (CMAKE_C_FLAGS MATCHES "SDT")
