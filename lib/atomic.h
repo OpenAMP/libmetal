@@ -114,4 +114,8 @@ using std::atomic_signal_fence;
 #endif /* defined(HAVE_PROCESSOR_ATOMIC_H) */
 #endif
 
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L && !defined(ATOMIC_VAR_INIT)
+# define ATOMIC_VAR_INIT(VAL) (VAL)
+#endif
+
 #endif /* __METAL_ATOMIC__H__ */
