@@ -8,6 +8,9 @@
 #include <metal/utilities.h>
 #include "metal-test.h"
 
+#include <string.h>
+#include <pthread.h>
+
 int metal_run(int threads, metal_thread_t child, void *arg)
 {
 	pthread_t tids[threads];
