@@ -1,32 +1,9 @@
 /******************************************************************************
  *
- * Copyright (C) 2017 Xilinx, Inc.  All rights reserved.
+ * Copyright (C) 2017 - 2022 Xilinx, Inc.  All rights reserved.
+ * Copyright (C) 2023 - 2024 Advanced Micro Devices, Inc.  All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of Xilinx nor the names of its contributors may be used
- *    to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  ******************************************************************************/
 
@@ -43,14 +20,15 @@ _UNDEF_STACK_SIZE = DEFINED(_UNDEF_STACK_SIZE) ? _UNDEF_STACK_SIZE : 1024;
 
 MEMORY
 {
-   psu_r5_atcm_MEM_0 : ORIGIN = 0x0, LENGTH = 0x10000
-   psu_r5_btcm_MEM_0 : ORIGIN = 0x20000, LENGTH = 0x10000
-   psu_r5_ddr_0_MEM_0 : ORIGIN = 0x3ed00000, LENGTH = 0x80000
+   psx_r52_atcm_MEM_0 : ORIGIN = 0x0, LENGTH = 0x10000
+   psx_r52_btcm_MEM_0 : ORIGIN = 0x10000, LENGTH = 0x8000
+   psx_r52_ctcm_MEM_0 : ORIGIN = 0x18000, LENGTH = 0x8000
+   psx_r52_ddr_0_MEM_0 : ORIGIN = 0x3ed00000, LENGTH = 0x80000
 }
 
 /* Specify the default entry point to the program */
 
-ENTRY(_boot)
+ENTRY(_vector_table)
 
 /* Define the sections, and where they are mapped in memory */
 
@@ -59,7 +37,7 @@ SECTIONS
 .vectors : {
    KEEP (*(.vectors))
    *(.boot)
-} > psu_r5_atcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .text : {
    *(.text)
@@ -73,23 +51,23 @@ SECTIONS
    *(.vfp11_veneer)
    *(.ARM.extab)
    *(.gnu.linkonce.armextab.*)
-} > psu_r5_atcm_MEM_0
+} > psx_r52_ddr_0_MEM_0
 
 .init : {
    KEEP (*(.init))
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .fini : {
    KEEP (*(.fini))
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .interp : {
    KEEP (*(.interp))
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .note-ABI-tag : {
    KEEP (*(.note-ABI-tag))
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .rodata : {
    __rodata_start = .;
@@ -97,14 +75,14 @@ SECTIONS
    *(.rodata.*)
    *(.gnu.linkonce.r.*)
    __rodata_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .rodata1 : {
    __rodata1_start = .;
    *(.rodata1)
    *(.rodata1.*)
    __rodata1_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .sdata2 : {
    __sdata2_start = .;
@@ -112,7 +90,7 @@ SECTIONS
    *(.sdata2.*)
    *(.gnu.linkonce.s2.*)
    __sdata2_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .sbss2 : {
    __sbss2_start = .;
@@ -120,7 +98,7 @@ SECTIONS
    *(.sbss2.*)
    *(.gnu.linkonce.sb2.*)
    __sbss2_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .data : {
    __data_start = .;
@@ -131,18 +109,18 @@ SECTIONS
    *(.got)
    *(.got.plt)
    __data_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .data1 : {
    __data1_start = .;
    *(.data1)
    *(.data1.*)
    __data1_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .got : {
    *(.got)
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .ctors : {
    __CTOR_LIST__ = .;
@@ -153,7 +131,7 @@ SECTIONS
    KEEP (*(.ctors))
    __CTOR_END__ = .;
    ___CTORS_END___ = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .dtors : {
    __DTOR_LIST__ = .;
@@ -164,67 +142,67 @@ SECTIONS
    KEEP (*(.dtors))
    __DTOR_END__ = .;
    ___DTORS_END___ = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .fixup : {
    __fixup_start = .;
    *(.fixup)
    __fixup_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .eh_frame : {
    *(.eh_frame)
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .eh_framehdr : {
    __eh_framehdr_start = .;
    *(.eh_framehdr)
    __eh_framehdr_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .gcc_except_table : {
    *(.gcc_except_table)
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .mmu_tbl (ALIGN(16384)) : {
    __mmu_tbl_start = .;
    *(.mmu_tbl)
    __mmu_tbl_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .ARM.exidx : {
    __exidx_start = .;
    *(.ARM.exidx*)
    *(.gnu.linkonce.armexidix.*.*)
    __exidx_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .preinit_array : {
    __preinit_array_start = .;
    KEEP (*(SORT(.preinit_array.*)))
    KEEP (*(.preinit_array))
    __preinit_array_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .init_array : {
    __init_array_start = .;
    KEEP (*(SORT(.init_array.*)))
    KEEP (*(.init_array))
    __init_array_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .fini_array : {
    __fini_array_start = .;
    KEEP (*(SORT(.fini_array.*)))
    KEEP (*(.fini_array))
    __fini_array_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .ARM.attributes : {
    __ARM.attributes_start = .;
    *(.ARM.attributes)
    __ARM.attributes_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .sdata : {
    __sdata_start = .;
@@ -232,7 +210,7 @@ SECTIONS
    *(.sdata.*)
    *(.gnu.linkonce.s.*)
    __sdata_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .sbss (NOLOAD) : {
    __sbss_start = .;
@@ -240,7 +218,7 @@ SECTIONS
    *(.sbss.*)
    *(.gnu.linkonce.sb.*)
    __sbss_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .tdata : {
    __tdata_start = .;
@@ -248,7 +226,7 @@ SECTIONS
    *(.tdata.*)
    *(.gnu.linkonce.td.*)
    __tdata_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .tbss : {
    __tbss_start = .;
@@ -256,7 +234,7 @@ SECTIONS
    *(.tbss.*)
    *(.gnu.linkonce.tb.*)
    __tbss_end = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .bss (NOLOAD) : {
    . = ALIGN(4);
@@ -267,7 +245,7 @@ SECTIONS
    *(COMMON)
    . = ALIGN(4);
    __bss_end__ = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 _SDA_BASE_ = __sdata_start + ((__sbss_end - __sdata_start) / 2 );
 
@@ -283,7 +261,7 @@ _SDA2_BASE_ = __sdata2_start + ((__sbss2_end - __sdata2_start) / 2 );
    . += _HEAP_SIZE;
    _heap_end = .;
    HeapLimit = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 .stack (NOLOAD) : {
    . = ALIGN(16);
@@ -311,7 +289,7 @@ _SDA2_BASE_ = __sdata2_start + ((__sbss2_end - __sdata2_start) / 2 );
    . += _UNDEF_STACK_SIZE;
    . = ALIGN(16);
    __undef_stack = .;
-} > psu_r5_btcm_MEM_0
+} > psx_r52_atcm_MEM_0
 
 _end = .;
 }

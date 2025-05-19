@@ -1,6 +1,7 @@
 /******************************************************************************
  *
- * Copyright (C) 2008 - 2014 Xilinx, Inc.  All rights reserved.
+ * Copyright (C) 2017-2022 Xilinx, Inc.  All rights reserved.
+ * Copyright (c) 2022-2024, Advanced Micro Devices, Inc. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
