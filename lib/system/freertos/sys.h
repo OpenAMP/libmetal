@@ -20,12 +20,6 @@
 #include <metal/errno.h>
 #include <metal/cpu.h>
 
-#ifdef XLNX_PLATFORM
-#include <metal/system/freertos/xlnx/sys.h>
-#else
-#include "./@PROJECT_MACHINE@/sys.h"
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
