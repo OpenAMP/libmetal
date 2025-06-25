@@ -440,12 +440,6 @@ static int metal_linux_dev_open(struct metal_bus *bus,
 		if (!ldrv->sdrv || !ldrv->dev_open)
 			continue;
 
-		/* Allocate a linux device if we haven't already. */
-		if (!ldev)
-			ldev = malloc(sizeof(*ldev));
-		if (!ldev)
-			return -ENOMEM;
-
 		/* Reset device data. */
 		memset(ldev, 0, sizeof(*ldev));
 		strncpy(ldev->dev_name, dev_name, sizeof(ldev->dev_name) - 1);
