@@ -467,8 +467,7 @@ static int metal_linux_dev_open(struct metal_bus *bus,
 		return 0;
 	}
 
-	if (ldev)
-		free(ldev);
+	free(ldev);
 
 	return -ENODEV;
 }
