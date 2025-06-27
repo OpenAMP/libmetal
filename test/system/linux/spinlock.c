@@ -34,7 +34,7 @@ static int spinlock(void)
 	const int threads = 10;
 	int value, error;
 
-	error = metal_run(threads, spinlock_thread, &lock);
+	error = metal_test_run(threads, spinlock_thread, &lock);
 	if (!error) {
 		value = total;
 		value -= spinlock_test_count * threads;
