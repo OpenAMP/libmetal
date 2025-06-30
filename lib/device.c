@@ -76,6 +76,29 @@ int metal_device_open(const char *bus_name, const char *dev_name,
 	return 0;
 }
 
+int metal_device_find(const char *bus_name, const char *dev_name,
+		      struct metal_device **device)
+{
+	struct metal_device *dev;
+	struct metal_list *node;
+	struct metal_bus *bus;
+	int ret;
+
+	ret = metal_bus_find(bus_name, &bus);
+	if (ret)
+		return ret;
+
+	metal_list_for_each(&bus->devices, node) {
+		dev = metal_container_of(node, struct metal_device, node);
+		if (strcmp(dev->name, dev_name) == 0 && device) {
+			*device = dev;
+			return 0;
+		}
+	}
+
+	return -ENODEV;
+}
+
 void metal_device_close(struct metal_device *device)
 {
 	metal_assert(device && device->bus);

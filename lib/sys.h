@@ -132,6 +132,15 @@ void metal_finish(void);
 int metal_sys_init(const struct metal_init_params *params);
 
 /**
+ * @brief	vendor SOC initialization.
+ *
+ * Init call for vendor BSP to implement.
+ *
+ * @return	0 on success, or -errno on failure.
+ */
+int metal_machine_init(void);
+
+/**
  * @brief	libmetal system shutdown.
  *
  * This function shuts down and releases resources held by libmetal Linux or
@@ -140,6 +149,15 @@ int metal_sys_init(const struct metal_init_params *params);
  * @see metal_sys_init
  */
 void metal_sys_finish(void);
+
+/**
+ * @brief	libmetal machine(SOC) shutdown.
+ *
+ * cleanup call for vendor BSP to implement.
+ *
+ * @see metal_machine_init
+ */
+void metal_machine_finish(void);
 
 #endif
 
