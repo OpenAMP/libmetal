@@ -11,20 +11,20 @@
 #include <string.h>
 #include <pthread.h>
 
-int metal_run(int threads, metal_thread_t child, void *arg)
+int metal_test_run(int threads, metal_thread_t child, void *arg)
 {
 	pthread_t tids[threads];
 	int error, ts_created;
 
-	error = metal_run_noblock(threads, child, arg, tids, &ts_created);
+	error = metal_test_run_noblock(threads, child, arg, tids, &ts_created);
 
-	metal_finish_threads(ts_created, (void *)tids);
+	metal_test_finish_threads(ts_created, (void *)tids);
 
 	return error;
 }
 
-int metal_run_noblock(int threads, metal_thread_t child,
-		     void *arg, void *tids, int *threads_out)
+int metal_test_run_noblock(int threads, metal_thread_t child,
+			   void *arg, void *tids, int *threads_out)
 {
 	int error, i;
 	pthread_t *tid_p = (pthread_t *)tids;
@@ -48,7 +48,7 @@ int metal_run_noblock(int threads, metal_thread_t child,
 	return error;
 }
 
-void metal_finish_threads(int threads, void *tids)
+void metal_test_finish_threads(int threads, void *tids)
 {
 	int i;
 	pthread_t *tid_p = (pthread_t *)tids;
