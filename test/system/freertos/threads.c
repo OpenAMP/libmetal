@@ -25,23 +25,23 @@ static void thread_wrapper(void *arg)
 	(void)wrap_p->thread_func(wrap_p->arg);
 	vPortFree(wrap_p);
 	vTaskDelete(NULL);
-}       
+}
 
-int metal_run(int threads, metal_thread_t child, void *arg)
+int metal_test_run(int threads, metal_thread_t child, void *arg)
 {
 	TaskHandle_t tids[threads];
 	int error, ts_created;
 
-	error = metal_run_noblock(threads, child, arg, (void *)tids, &ts_created);
+	error = metal_test_run_noblock(threads, child, arg, (void *)tids, &ts_created);
 
-	metal_finish_threads(ts_created, (void *)tids);
+	metal_test_finish_threads(ts_created, (void *)tids);
 
 	return error;
 }
 
 
-int metal_run_noblock(int threads, metal_thread_t child,
-		     void *arg, void *tids, int *threads_out)
+int metal_test_run_noblock(int threads, metal_thread_t child,
+			   void *arg, void *tids, int *threads_out)
 {
 	int i;
 	TaskHandle_t *tid_p = (TaskHandle_t *)tids;
@@ -61,7 +61,7 @@ int metal_run_noblock(int threads, metal_thread_t child,
 			metal_log(METAL_LOG_ERROR, "failed to allocate wrapper %d\n", i);
 			break;
 		}
-			
+
 		wrap_p->thread_func = child;
 		wrap_p->arg = arg;
 		stat = xTaskCreate(thread_wrapper, tn, TEST_THREAD_STACK_SIZE,
@@ -78,7 +78,7 @@ int metal_run_noblock(int threads, metal_thread_t child,
 }
 
 
-void metal_finish_threads(int threads, void *tids)
+void metal_test_finish_threads(int threads, void *tids)
 {
 	int i;
 	TaskHandle_t *tid_p = (TaskHandle_t *)tids;
