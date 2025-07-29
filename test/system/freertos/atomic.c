@@ -30,7 +30,7 @@ static int atomic(void)
 	atomic_int counter = ATOMIC_VAR_INIT(0);
 	int value, error;
 
-	error = metal_run(threads, atomic_thread, &counter);
+	error = metal_test_run(threads, atomic_thread, &counter);
 	if (!error) {
 		value = atomic_load(&counter);
 		value -= atomic_test_count * threads;
