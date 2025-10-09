@@ -14,14 +14,13 @@
 
 unsigned long long metal_get_timestamp(void)
 {
-	unsigned long long t = 0;
+	unsigned long long t;
 	struct timespec tp;
-	int r;
 
-	r = clock_systime_timespec(&tp);
-	if (!r) {
-		t = (unsigned long long)tp.tv_sec * NSEC_PER_SEC;
-		t += tp.tv_nsec;
-	}
+	clock_systime_timespec(&tp);
+
+	t = (unsigned long long)tp.tv_sec * NSEC_PER_SEC;
+	t += tp.tv_nsec;
+
 	return t;
 }
