@@ -44,7 +44,7 @@ static int alloc(void)
 	const int threads = 10;
 	int rc;
 
-	rc =  metal_run(threads, alloc_thread, NULL);
+	rc =  metal_test_run(threads, alloc_thread, NULL);
 
 	return rc;
 }
