@@ -20,6 +20,7 @@
 #include <metal/errno.h>
 #include <metal/cpu.h>
 
+#include "./@PROJECT_MACHINE@/sys.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
