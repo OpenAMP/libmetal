@@ -53,7 +53,7 @@ static void *shmem_child(void *arg)
 
 static int shmem(void)
 {
-	return atomic_load(&nb_err) || metal_run(shmem_threads, shmem_child, "/foo");
+	return atomic_load(&nb_err) || metal_test_run(shmem_threads, shmem_child, "/foo");
 }
 METAL_ADD_TEST(shmem);
 

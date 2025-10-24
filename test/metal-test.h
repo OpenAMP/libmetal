@@ -63,7 +63,7 @@ int metal_tests_run(struct metal_init_params *params);
  *
  * @return       zero on no errors, non-zero on errors
  */
-extern int metal_run(int threads, metal_thread_t child, void *arg);
+extern int metal_test_run(int threads, metal_thread_t child, void *arg);
 
 /**
  * @brief        run child threads and return without waiting
@@ -78,8 +78,8 @@ extern int metal_run(int threads, metal_thread_t child, void *arg);
  *
  * @return       zero on no errors, non-zero on errors
  */
-extern int metal_run_noblock(int threads, metal_thread_t child,
-		    void *arg, void *tids, int *threads_out);
+extern int metal_test_run_noblock(int threads, metal_thread_t child,
+				  void *arg, void *tids, int *threads_out);
 
 /**
  * @brief        do not return until all the specified child threads
@@ -88,7 +88,7 @@ extern int metal_run_noblock(int threads, metal_thread_t child,
  * @param[in]    tids pointers to the threads ids.
  *
 */
-extern void metal_finish_threads(int threads, void *tids);
+extern void metal_test_finish_threads(int threads, void *tids);
 
 #ifdef __cplusplus
 }

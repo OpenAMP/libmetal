@@ -8,6 +8,8 @@ collect (PROJECT_LIB_TESTS spinlock.c)
 collect (PROJECT_LIB_TESTS alloc.c)
 collect (PROJECT_LIB_TESTS irq.c)
 
+collect (PROJECT_LIB_API_TEST threads.c)
+
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_MACHINE})
   add_subdirectory(${PROJECT_MACHINE})
 endif (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_MACHINE})
