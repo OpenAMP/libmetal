@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+/**
+ * @file	log.c
+ * @brief	Libmetal Logging primitives definition.
+ */
+
 #include <stdarg.h>
 #include <stdio.h>
 

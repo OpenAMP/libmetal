@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+/**
+ * @file	init.c
+ * @brief	Libmetal initialization.
+ */
+
 #include <string.h>
 #include <metal/sys.h>
 

@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+/**
+ * @file	irq.c
+ * @brief	Libmetal interrupt primitives definition.
+ */
+
 #include <metal/errno.h>
 #include <metal/irq.h>
 #include <metal/irq_controller.h>

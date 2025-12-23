@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+/**
+ * @file	version.c
+ * @brief	Libmetal version information definition.
+ */
+
 #include <metal/config.h>
 
 int metal_ver_major(void)

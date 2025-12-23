@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+/**
+ * @file	nuttx/io.c
+ * @brief	NuttX libmetal io operations
+ */
+
 #include <stddef.h>
 #include <metal/cache.h>
 #include <metal/io.h>

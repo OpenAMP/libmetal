@@ -9,6 +9,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+/**
+ * @file	armcc/errno.h
+ * @brief	ARMCC specific error definitions.
+ */
+
 #ifndef __METAL_ARMCC_ERRNO__H__
 #define __METAL_ARMCC_ERRNO__H__
 

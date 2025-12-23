@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+/**
+ * @file	softirq.c
+ * @brief	Libmetal soft interrupt primitives definition.
+ */
+
 #include <metal/atomic.h>
 #include <metal/errno.h>
 #include <metal/irq.h>

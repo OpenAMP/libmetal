@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+/**
+ * @file	io.c
+ * @brief	Libmetal I/O access primitives definition.
+ */
+
 #include <limits.h>
 #include <metal/errno.h>
 #include <metal/io.h>

@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+/**
+ * @file	device.c
+ * @brief	libmetal bus abstraction definitions.
+ */
+
 #include <string.h>
 #include <metal/assert.h>
 #include <metal/device.h>

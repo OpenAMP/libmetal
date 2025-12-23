@@ -4,6 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+/**
+ * @file	dma.c
+ * @brief	Libmetal DMA primitives definitions.
+ */
+
 #include <metal/errno.h>
 #include <string.h>
 #include <metal/device.h>

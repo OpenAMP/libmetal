@@ -8,6 +8,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+/**
+ * @file	iar/errno.h
+ * @brief	IAR specific error definitions.
+ */
+
 #ifndef __METAL_IAR_ERRNO__H__
 #define __METAL_IAR_ERRNO__H__
 
