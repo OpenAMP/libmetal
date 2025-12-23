@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	zephyr/shmem.c
  * @brief	Zephyr libmetal shared memory handling.
  */

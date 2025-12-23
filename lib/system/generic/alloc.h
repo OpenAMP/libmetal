@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file	generic/alloc.c
- * @brief	generic libmetal memory allocattion definitions.
+/**
+ * @file	generic/alloc.h
+ * @brief	Generic libmetal memory allocation definitions.
  */
 
 #ifndef __METAL_ALLOC__H__

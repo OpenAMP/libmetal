@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	nuttx/device.c
  * @brief	NuttX libmetal device definitions.
  */

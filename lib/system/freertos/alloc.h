@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file	freertos/alloc.c
- * @brief	FreeRTOS libmetal memory allocattion definitions.
+/**
+ * @file	freertos/alloc.h
+ * @brief	FreeRTOS libmetal memory allocation definitions.
  */
 
 #ifndef __METAL_ALLOC__H__

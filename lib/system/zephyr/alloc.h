@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	zephyr/alloc.h
- * @brief	zephyr libmetal memory allocattion definitions.
+ * @brief	Zephyr libmetal memory allocation definitions.
  */
 
 #ifndef __METAL_ALLOC__H__

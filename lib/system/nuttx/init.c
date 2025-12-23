@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	nuttx/init.c
  * @brief	NuttX libmetal initialization.
  */

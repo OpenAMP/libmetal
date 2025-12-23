@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	linux/sleep.h
- * @brief	linux sleep primitives for libmetal.
+ * @brief	Linux sleep primitives for libmetal.
  */
 
 #ifndef __METAL_SLEEP__H__

@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	generic/template/sys.c
- * @brief	machine specific system primitives implementation.
+ * @brief	Generic template system primitives implementation.
  */
 
 #include <metal/io.h>

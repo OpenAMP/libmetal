@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	nuttx/io.h
  * @brief	NuttX specific io definitions.
  */

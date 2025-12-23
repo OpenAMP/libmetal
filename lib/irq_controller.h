@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file	irq.h
+/**
+ * @file	irq_controller.h
  * @brief	Interrupt handling primitives for libmetal.
  */
 

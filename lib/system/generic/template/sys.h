@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	generic/template/sys.h
  * @brief	generic template system primitives for libmetal.
  */

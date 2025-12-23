@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file	generic/condition.c
- * @brief	Generic libmetal condition variable handling.
+/**
+ * @file	linux/condition.c
+ * @brief	Linux libmetal condition variable handling.
  */
 
 #include <metal/condition.h>

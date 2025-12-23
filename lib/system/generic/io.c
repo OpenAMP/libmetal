@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	generic/io.c
  * @brief	Generic libmetal io operations
  */

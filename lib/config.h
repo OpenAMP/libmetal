@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	config.h
  * @brief	Generated configuration settings for libmetal.
  */

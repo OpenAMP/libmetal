@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	zephyr/time.c
  * @brief	Zephyr libmetal time handling.
  */

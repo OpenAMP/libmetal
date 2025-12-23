@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	generic/cache.h
- * @brief	generic cache operation primitives for libmetal.
+ * @brief	Generic cache operation primitives for libmetal.
  */
 
 #ifndef __METAL_CACHE__H__

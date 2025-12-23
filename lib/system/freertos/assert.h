@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file	assert.h
+/**
+ * @file	freertos/assert.h
  * @brief	FreeRTOS assertion support.
  */
+
 #ifndef __METAL_ASSERT__H__
 #error "Include metal/assert.h instead of metal/freertos/assert.h"
 #endif

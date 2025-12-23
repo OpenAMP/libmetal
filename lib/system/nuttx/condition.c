@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	nuttx/condition.c
  * @brief	NuttX libmetal condition variable handling.
  */

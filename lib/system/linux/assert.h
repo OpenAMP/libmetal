@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file	assert.h
+/**
+ * @file	linux/assert.h
  * @brief	Linux assertion support.
  */
 

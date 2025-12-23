@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	zephyr/sys.h
  * @brief	Zephyr system primitives for libmetal.
  */

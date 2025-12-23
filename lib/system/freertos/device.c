@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	freertos/device.c
  * @brief	FreeRTOS device operations.
  */

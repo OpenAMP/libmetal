@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	nuttx/alloc.h
- * @brief	nuttx libmetal memory allocattion definitions.
+ * @brief	NuttX libmetal memory allocation definitions.
  */
 
 #ifndef __METAL_ALLOC__H__

@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file	generic/condition.h
- * @brief	Generic condition variable primitives for libmetal.
+/**
+ * @file	freertos/condition.h
+ * @brief	FreeRTOS condition variable primitives for libmetal.
  */
 
 #ifndef __METAL_CONDITION__H__

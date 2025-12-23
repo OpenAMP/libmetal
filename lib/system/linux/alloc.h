@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	linux/alloc.h
- * @brief	linux memory allocattion definitions.
+ * @brief	Linux memory allocation definitions.
  */
 
 #ifndef __METAL_ALLOC__H__

@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	utilities.h
  * @brief	Utility routines for libmetal.
  */

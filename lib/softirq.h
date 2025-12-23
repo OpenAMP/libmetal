@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	softirq.h
  * @brief	Soft Interrupt handling primitives for libmetal.
  */

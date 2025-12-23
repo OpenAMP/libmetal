@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	freertos/time.c
- * @brief	freertos libmetal time handling.
+ * @brief	FreeRTOS libmetal time handling.
  */
 
 #include <FreeRTOS.h>

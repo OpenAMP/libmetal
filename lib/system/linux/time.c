@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	linux/time.c
  * @brief	Linux libmetal time handling.
  */

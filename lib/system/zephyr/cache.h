@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	zephyr/cache.h
  * @brief	Zephyr cache operation primitives for libmetal.
  */

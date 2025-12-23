@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	nuttx/condition.h
  * @brief	NuttX condition variable primitives for libmetal.
  */

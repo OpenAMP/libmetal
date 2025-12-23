@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	metal-test.h
  * @brief	Top level include internal to libmetal tests.
  */

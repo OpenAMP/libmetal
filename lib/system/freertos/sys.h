@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	freertos/sys.h
  * @brief	FreeRTOS system primitives for libmetal.
  */

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	zephyr/condition.h
  * @brief	Zephyr condition variable primitives for libmetal.
  */

@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file	cpu.h
- * @brief	CPU specific primitives
+/**
+ * @file	ceva/cpu.h
+ * @brief	CEVA CPU specific primitives
  */
 
 #ifndef __METAL_CEVA_CPU__H__

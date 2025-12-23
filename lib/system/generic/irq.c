@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	generic/irq.c
- * @brief	generic libmetal irq definitions.
+ * @brief	Generic libmetal irq definitions.
  */
 
 #include <metal/errno.h>

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	linux/condition.h
  * @brief	Linux condition variable primitives for libmetal.
  */

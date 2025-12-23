@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	system/zephyr/metal-test-internal.h
  * @brief	Zephyr include internal to libmetal tests.
  */

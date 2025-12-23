@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	compiler.h
  * @brief	Compiler specific primitives for libmetal.
  */

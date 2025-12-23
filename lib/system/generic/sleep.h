@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	generic/sleep.h
  * @brief	Generic sleep primitives for libmetal.
  */

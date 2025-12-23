@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	zephyr/mutex.h
  * @brief	Zephyr mutex primitives for libmetal.
  */

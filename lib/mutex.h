@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	mutex.h
  * @brief	Mutex primitives for libmetal.
  */

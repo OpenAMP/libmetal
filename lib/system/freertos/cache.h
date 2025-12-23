@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	freertos/cache.h
  * @brief	FreeRTOS cache operation primitives for libmetal.
  */

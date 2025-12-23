@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	nuttx/cache.h
  * @brief	NuttX cache operation primitives for libmetal.
  */

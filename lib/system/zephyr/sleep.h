@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	zephyr/sleep.h
  * @brief	Zephyr sleep primitives for libmetal.
  */

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	freertos/io.h
  * @brief	FreeRTOS specific io definitions.
  */

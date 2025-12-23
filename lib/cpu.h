@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	cpu.h
  * @brief	CPU primitives for libmetal.
  */

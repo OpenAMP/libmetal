@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	sys.h
  * @brief	System primitives for libmetal.
  * @brief	Top level include internal to libmetal library code.

@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file	cpu.h
- * @brief	CPU specific primitives
+/**
+ * @file	x86_64/cpu.h
+ * @brief	X86 64-bits CPU specific primitives
  */
 
 #ifndef __METAL_X86_64_CPU__H__

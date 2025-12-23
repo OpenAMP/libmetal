@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	freertos/irq.c
  * @brief	FreeRTOS libmetal irq definitions.
  */

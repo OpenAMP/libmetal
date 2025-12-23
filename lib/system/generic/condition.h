@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	generic/condition.h
  * @brief	Generic condition variable primitives for libmetal.
  */

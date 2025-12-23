@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	freertos/template/sys.c
  * @brief	machine specific system primitives implementation.
  */

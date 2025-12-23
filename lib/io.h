@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	io.h
  * @brief	I/O access primitives for libmetal.
  */

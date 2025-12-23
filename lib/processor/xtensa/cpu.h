@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file	cpu.h
- * @brief	CPU specific primitives
+/**
+ * @file	xtensa/cpu.h
+ * @brief	Xtensa CPU specific primitives
  */
 
 #ifndef __METAL_XTENSA_CPU__H__

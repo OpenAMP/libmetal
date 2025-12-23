@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file      metal/errno.h
- * @brief     error specific primitives for libmetal.
+/**
+ * @file	errno.h
+ * @brief	Error specific primitives for libmetal.
  */
 
 #ifndef __METAL_ERRNO__H__

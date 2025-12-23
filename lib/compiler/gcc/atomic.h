@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	gcc/atomic.h
  * @brief	GCC specific atomic primitives for libmetal.
  */

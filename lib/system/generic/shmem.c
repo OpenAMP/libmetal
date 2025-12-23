@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	generic/shmem.c
  * @brief	Generic libmetal shared memory handling.
  */

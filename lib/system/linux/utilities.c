@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
- * @file	utils.c
+/**
+ * @file	linux/utilities.c
  * @brief	Linux libmetal utility functions.
  */
 

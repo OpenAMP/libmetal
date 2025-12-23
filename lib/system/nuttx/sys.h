@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	nuttx/sys.h
  * @brief	NuttX system primitives for libmetal.
  */

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	iar/compiler.h
  * @brief	IAR specific primitives for libmetal.
  */

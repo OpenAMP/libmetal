@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	zephyr/irq.c
  * @brief	Zephyr libmetal irq definitions.
  */

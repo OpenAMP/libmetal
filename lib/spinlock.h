@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	spinlock.h
  * @brief	Spinlock primitives for libmetal.
  */

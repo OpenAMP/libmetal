@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/*
+/**
  * @file	nuttx/irq.c
  * @brief	NuttX libmetal irq definitions.
  */
