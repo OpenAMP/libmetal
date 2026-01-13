@@ -106,7 +106,7 @@ build_zephyr(){
 	make VERBOSE=1  || exit 1
 	cd .. &&
 	echo  "###### Build for qemu_xtensa ######" &&
-	cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_xtensa -DWITH_TESTS=on -Bbuild-zephyr-xtensa &&
+	cmake . -DWITH_ZEPHYR=on -DBOARD=qemu_xtensa/dc233c -DWITH_TESTS=on -Bbuild-zephyr-xtensa &&
 	cd build-zephyr-xtensa &&
 	cd .. &&
 	echo  "###### Build for qemu_riscv64 ######" &&
