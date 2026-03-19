@@ -17,6 +17,8 @@ struct metal_state _metal;
 
 int metal_sys_init(const struct metal_init_params *params)
 {
+	(void)params;
+
 	metal_bus_register(&metal_generic_bus);
 	return 0;
 }
