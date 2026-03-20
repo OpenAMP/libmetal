@@ -28,7 +28,7 @@ extern void metal_test_add_mutex();
 
 extern void *metal_zephyr_allocate_memory(unsigned int size)
 {
-	int i;
+	unsigned int i;
 
 	for (i = 0; i < sizeof(block)/sizeof(block[0]); i++) {
 		if (!block[i]) {
@@ -45,7 +45,7 @@ extern void *metal_zephyr_allocate_memory(unsigned int size)
 
 extern void metal_zephyr_free_memory(void *ptr)
 {
-	int i;
+	unsigned int i;
 
 	for (i = 0; i < sizeof(block)/sizeof(block[0]); i++) {
 		if (block[i] == ptr) {
