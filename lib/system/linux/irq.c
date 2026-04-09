@@ -266,10 +266,48 @@ void metal_linux_irq_shutdown(void)
 
 void metal_linux_irq_register_dev(struct metal_device *dev, int irq)
 {
-	if (irq > MAX_IRQS) {
+	if (irq < 0 || irq >= MAX_IRQS) {
 		metal_log(METAL_LOG_ERROR,
 			  "Failed to register device to irq %d\n", irq);
 		return;
 	}
 	irqs_devs[irq] = dev;
+}
+
+void metal_linux_irq_unregister_dev(int irq)
+{
+	if (irq < linux_irq_cntr.irq_base ||
+	    irq >= linux_irq_cntr.irq_base + linux_irq_cntr.irq_num) {
+		metal_log(METAL_LOG_ERROR,
+			  "Failed to unregister device from irq %d\n", irq);
+		return;
+	}
+
+	metal_mutex_acquire(&irq_lock);
+	irqs_devs[irq] = NULL;
+	metal_bitmap_clear_bit(irqs_enabled, irq - linux_irq_cntr.irq_base);
+	irqs[irq].hd = NULL;
+	irqs[irq].arg = NULL;
+	metal_mutex_release(&irq_lock);
+
+	metal_linux_irq_notify();
+}
+
+struct metal_device *metal_linux_irq_get_dev(int irq)
+{
+	if (irq < linux_irq_cntr.irq_base ||
+	    irq >= linux_irq_cntr.irq_base + linux_irq_cntr.irq_num)
+		return NULL;
+
+	return irqs_devs[irq];
+}
+
+int metal_linux_irq_is_enabled(int irq)
+{
+	if (irq < linux_irq_cntr.irq_base ||
+	    irq >= linux_irq_cntr.irq_base + linux_irq_cntr.irq_num)
+		return 0;
+
+	return metal_bitmap_is_bit_set(irqs_enabled,
+				       irq - linux_irq_cntr.irq_base);
 }

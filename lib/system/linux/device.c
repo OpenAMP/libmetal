@@ -14,9 +14,13 @@
 #include <metal/utilities.h>
 #include <metal/irq.h>
 
+#include <stdbool.h>
+#include <dirent.h>
+
 #include "irq.h"
 
 #define MAX_DRIVERS	64
+#define METAL_UIO_CLASS_PATH "/sys/class/uio"
 
 struct linux_bus;
 struct linux_device;
@@ -55,10 +59,14 @@ struct linux_bus {
 
 struct linux_device {
 	struct metal_device		device;
+	char				bus_name[PATH_MAX];
 	char				dev_name[PATH_MAX];
 	char				dev_path[PATH_MAX];
 	char				cls_path[PATH_MAX];
+	char				uio_name[PATH_MAX];
 	metal_phys_addr_t		region_phys[METAL_MAX_DEVICE_REGIONS];
+	void				*region_map_raw[METAL_MAX_DEVICE_REGIONS];
+	size_t				region_map_len[METAL_MAX_DEVICE_REGIONS];
 	struct linux_driver		*ldrv;
 	struct sysfs_device		*sdev;
 	struct sysfs_attribute		*override;
@@ -73,6 +81,153 @@ static struct linux_bus *to_linux_bus(struct metal_bus *bus)
 static struct linux_device *to_linux_device(struct metal_device *device)
 {
 	return metal_container_of(device, struct linux_device, device);
+}
+
+static int metal_linux_read_first_line(const char *path, char *output,
+				       size_t output_len)
+{
+	FILE *fp;
+	char *newline;
+
+	if (!path || !output || output_len < 2)
+		return -EINVAL;
+
+	fp = fopen(path, "r");
+	if (!fp)
+		return -errno;
+
+	if (!fgets(output, output_len, fp)) {
+		int err = ferror(fp) ? -errno : -ENODATA;
+
+		fclose(fp);
+		return err;
+	}
+
+	fclose(fp);
+
+	newline = strchr(output, '\n');
+	if (newline)
+		*newline = '\0';
+
+	return 0;
+}
+
+static int metal_linux_path_basename(const char *path, char *output,
+				     size_t output_len)
+{
+	const char *base;
+	int result;
+
+	if (!path || !output || !output_len)
+		return -EINVAL;
+
+	base = strrchr(path, '/');
+	base = base ? base + 1 : path;
+	result = snprintf(output, output_len, "%s", base);
+	if (result < 0 || result >= (int)output_len)
+		return -EOVERFLOW;
+
+	return 0;
+}
+
+static int metal_linux_copy_string(char *output, size_t output_len,
+				   const char *input)
+{
+	int result;
+
+	if (!output || !output_len || !input)
+		return -EINVAL;
+
+	result = snprintf(output, output_len, "%s", input);
+	if (result < 0 || result >= (int)output_len)
+		return -EOVERFLOW;
+
+	return 0;
+}
+
+static int metal_linux_lookup_uio_device(const char *uio_name,
+					 const char *bus_name,
+					 char *dev_name, size_t dev_name_len)
+{
+	DIR *dir;
+	struct dirent *entry;
+	char path[PATH_MAX];
+	char value[PATH_MAX];
+	char found_bus[PATH_MAX];
+	char resolved[PATH_MAX];
+	int result;
+
+	if (!uio_name || !strlen(uio_name) || !bus_name || !strlen(bus_name) ||
+	    !dev_name || !dev_name_len)
+		return -EINVAL;
+
+	dir = opendir(METAL_UIO_CLASS_PATH);
+	if (!dir)
+		return -errno;
+
+	while ((entry = readdir(dir)) != NULL) {
+		if (strncmp(entry->d_name, "uio", 3) != 0)
+			continue;
+
+		result = snprintf(path, sizeof(path), "%s/%s/name",
+				  METAL_UIO_CLASS_PATH, entry->d_name);
+		if (result < 0 || result >= (int)sizeof(path)) {
+			result = -EOVERFLOW;
+			goto out;
+		}
+
+		result = metal_linux_read_first_line(path, value, sizeof(value));
+		if (result)
+			continue;
+
+		if (strcmp(value, uio_name) != 0)
+			continue;
+
+		result = snprintf(path, sizeof(path), "%s/%s/device",
+				  METAL_UIO_CLASS_PATH, entry->d_name);
+		if (result < 0 || result >= (int)sizeof(path)) {
+			result = -EOVERFLOW;
+			goto out;
+		}
+
+		if (!realpath(path, resolved)) {
+			result = -errno;
+			goto out;
+		}
+
+		result = metal_linux_path_basename(resolved, dev_name,
+						   dev_name_len);
+		if (result)
+			goto out;
+
+		result = snprintf(path, sizeof(path), "%s/%s/device/subsystem",
+				  METAL_UIO_CLASS_PATH, entry->d_name);
+		if (result < 0 || result >= (int)sizeof(path)) {
+			result = -EOVERFLOW;
+			goto out;
+		}
+
+		if (!realpath(path, resolved)) {
+			result = -errno;
+			goto out;
+		}
+
+		result = metal_linux_path_basename(resolved, found_bus,
+						   sizeof(found_bus));
+		if (result)
+			goto out;
+		if (strcmp(found_bus, bus_name))
+			continue;
+
+		result = 0;
+		goto out;
+	}
+
+	result = -ENODEV;
+
+out:
+	closedir(dir);
+	return result;
 }
 
 static int metal_uio_read_map_attr(struct linux_device *ldev,
@@ -97,6 +252,123 @@ static int metal_uio_read_map_attr(struct linux_device *ldev,
 	*value = strtoul(attr->value, NULL, 0);
 
 	sysfs_close_attribute(attr);
+	return 0;
+}
+
+int metal_linux_uio_validate_offset(const char *dev_name,
+				    unsigned int index,
+				    unsigned long offset)
+{
+	const unsigned long page_size = (unsigned long)getpagesize();
+
+	if (offset >= page_size) {
+		metal_log(METAL_LOG_ERROR,
+			  "%s: device %s map%u has invalid UIO offset 0x%lx (page size 0x%lx)\n",
+			  __func__, dev_name ? dev_name : "<unknown>", index,
+			  offset, page_size);
+		return -EINVAL;
+	}
+
+	return 0;
+}
+
+static int metal_uio_read_str_attr(const char *path, char *value, size_t len)
+{
+	struct sysfs_attribute *attr;
+
+	if (!value || !len)
+		return -EINVAL;
+
+	attr = sysfs_open_attribute(path);
+	if (!attr || sysfs_read_attribute(attr) != 0) {
+		sysfs_close_attribute(attr);
+		return -errno;
+	}
+
+	strncpy(value, attr->value, len - 1);
+	value[len - 1] = '\0';
+
+	sysfs_close_attribute(attr);
+	return 0;
+}
+
+static int metal_uio_populate(struct linux_bus *lbus, struct linux_device *ldev)
+{
+	unsigned long *phys, offset = 0, size = 0;
+	struct metal_io_region *io;
+	size_t map_len;
+	int result, i;
+	void *raw;
+	void *virt;
+	int irq_info;
+
+	i = 0;
+	do {
+		if (!access(ldev->dev_path, F_OK))
+			break;
+		usleep(10);
+		i++;
+	} while (i < 1000);
+	if (i >= 1000) {
+		metal_log(METAL_LOG_ERROR, "failed to open file %s, timeout.\n",
+			  ldev->dev_path);
+		return -ENODEV;
+	}
+
+	result = metal_open(ldev->dev_path, 0);
+	if (result < 0) {
+		metal_log(METAL_LOG_ERROR, "failed to open device %s\n",
+			  ldev->dev_path, strerror(-result));
+		return result;
+	}
+	ldev->fd = result;
+
+	metal_log(METAL_LOG_DEBUG, "opened %s:%s as %s\n",
+		  lbus->bus_name, ldev->dev_name, ldev->dev_path);
+
+	for (i = 0, result = 0; !result && i < METAL_MAX_DEVICE_REGIONS; i++) {
+		phys = &ldev->region_phys[ldev->device.num_regions];
+		result = (result ? result :
+			 metal_uio_read_map_attr(ldev, i, "offset", &offset));
+		result = (result ? result :
+			 metal_uio_read_map_attr(ldev, i, "addr", phys));
+		result = (result ? result :
+			 metal_uio_read_map_attr(ldev, i, "size", &size));
+		result = (result ? result :
+			 metal_linux_uio_validate_offset(ldev->dev_name,
+							 i, offset));
+		map_len = (size_t)size + (size_t)offset;
+		if (!result && map_len < size) {
+			metal_log(METAL_LOG_ERROR,
+				  "%s: device %s map%u size overflow (size=0x%lx offset=0x%lx)\n",
+				  __func__, ldev->dev_name, i, size, offset);
+			result = -EOVERFLOW;
+		}
+		result = (result ? result :
+			 metal_map(ldev->fd, i * getpagesize(), map_len, 0, 0, &raw));
+		if (!result) {
+			virt = (void *)((char *)raw + offset);
+			io = &ldev->device.regions[ldev->device.num_regions];
+			metal_io_init(io, virt, phys, size, -1, 0, NULL);
+			ldev->region_map_raw[ldev->device.num_regions] = raw;
+			ldev->region_map_len[ldev->device.num_regions] = map_len;
+			ldev->device.num_regions++;
+		}
+	}
+
+	irq_info = 1;
+	if (write(ldev->fd, &irq_info, sizeof(irq_info)) <= 0) {
+		metal_log(METAL_LOG_INFO,
+			  "%s: No IRQ for device %s.\n",
+			  __func__, ldev->dev_name);
+		ldev->device.irq_num =  0;
+		ldev->device.irq_info = (void *)-1;
+	} else {
+		ldev->device.irq_num =  1;
+		ldev->device.irq_info = (void *)(intptr_t)ldev->fd;
+		metal_linux_irq_register_dev(&ldev->device, ldev->fd);
+	}
+
 	return 0;
 }
 
@@ -155,12 +427,8 @@ static int metal_uio_dev_open(struct linux_bus *lbus, struct linux_device *ldev)
 {
 	char *instance, path[SYSFS_PATH_MAX];
 	struct linux_driver *ldrv = ldev->ldrv;
-	unsigned long *phys, offset = 0, size = 0;
-	struct metal_io_region *io;
 	struct dlist *dlist;
-	int result, i;
-	void *virt;
-	int irq_info;
+	int result;
 
 
 	ldev->fd = -1;
@@ -198,6 +466,12 @@ static int metal_uio_dev_open(struct linux_bus *lbus, struct linux_device *ldev)
 				  "/dev/%s", instance);
 		if (result >= (int)sizeof(ldev->dev_path))
 			return -EOVERFLOW;
+		result = snprintf(path, sizeof(path), "%s/name", ldev->cls_path);
+		if (result >= (int)sizeof(path))
+			return -EOVERFLOW;
+		ldev->uio_name[0] = '\0';
+		metal_uio_read_str_attr(path, ldev->uio_name,
+					sizeof(ldev->uio_name));
 		break;
 	}
 	sysfs_close_list(dlist);
@@ -208,60 +482,7 @@ static int metal_uio_dev_open(struct linux_bus *lbus, struct linux_device *ldev)
 		return -ENODEV;
 	}
 
-	i = 0;
-	do {
-		if (!access(ldev->dev_path, F_OK))
-			break;
-		usleep(10);
-		i++;
-	} while (i < 1000);
-	if (i >= 1000) {
-		metal_log(METAL_LOG_ERROR, "failed to open file %s, timeout.\n",
-			  ldev->dev_path);
-		return -ENODEV;
-	}
-	result = metal_open(ldev->dev_path, 0);
-	if (result < 0) {
-		metal_log(METAL_LOG_ERROR, "failed to open device %s\n",
-			  ldev->dev_path, strerror(-result));
-		return result;
-	}
-	ldev->fd = result;
-
-	metal_log(METAL_LOG_DEBUG, "opened %s:%s as %s\n",
-		  lbus->bus_name, ldev->dev_name, ldev->dev_path);
-
-	for (i = 0, result = 0; !result && i < METAL_MAX_DEVICE_REGIONS; i++) {
-		phys = &ldev->region_phys[ldev->device.num_regions];
-		result = (result ? result :
-			 metal_uio_read_map_attr(ldev, i, "offset", &offset));
-		result = (result ? result :
-			 metal_uio_read_map_attr(ldev, i, "addr", phys));
-		result = (result ? result :
-			 metal_uio_read_map_attr(ldev, i, "size", &size));
-		result = (result ? result :
-			 metal_map(ldev->fd, i * getpagesize(), size, 0, 0, &virt));
-		if (!result) {
-			io = &ldev->device.regions[ldev->device.num_regions];
-			metal_io_init(io, virt, phys, size, -1, 0, NULL);
-			ldev->device.num_regions++;
-		}
-	}
-
-	irq_info = 1;
-	if (write(ldev->fd, &irq_info, sizeof(irq_info)) <= 0) {
-		metal_log(METAL_LOG_INFO,
-			  "%s: No IRQ for device %s.\n",
-			  __func__, ldev->dev_name);
-		ldev->device.irq_num =  0;
-		ldev->device.irq_info = (void *)-1;
-	} else {
-		ldev->device.irq_num =  1;
-		ldev->device.irq_info = (void *)(intptr_t)ldev->fd;
-		metal_linux_irq_register_dev(&ldev->device, ldev->fd);
-	}
-
-	return 0;
+	return metal_uio_populate(lbus, ldev);
 }
 
 static void metal_uio_dev_close(struct linux_bus *lbus,
@@ -271,8 +492,10 @@ static void metal_uio_dev_close(struct linux_bus *lbus,
 	unsigned int i;
 
 	for (i = 0; i < ldev->device.num_regions; i++) {
-		metal_unmap(ldev->device.regions[i].virt,
-			    ldev->device.regions[i].size);
+		metal_unmap(ldev->region_map_raw[i],
+			    ldev->region_map_len[i]);
+		ldev->region_map_raw[i] = NULL;
+		ldev->region_map_len[i] = 0;
 	}
 	if (ldev->override) {
 		sysfs_write_attribute(ldev->override, "", 1);
@@ -283,7 +506,9 @@ static void metal_uio_dev_close(struct linux_bus *lbus,
 		ldev->sdev = NULL;
 	}
 	if (ldev->fd >= 0) {
+		metal_linux_irq_unregister_dev(ldev->fd);
 		close(ldev->fd);
+		ldev->fd = -1;
 	}
 }
 
@@ -428,11 +653,19 @@ static int metal_linux_dev_open(struct metal_bus *bus,
 	struct linux_bus *lbus = to_linux_bus(bus);
 	struct linux_device *ldev = NULL;
 	struct linux_driver *ldrv;
+	char resolved_dev_name[PATH_MAX];
+	bool have_resolved_dev;
 	int error;
 
 	ldev = malloc(sizeof(*ldev));
 	if (!ldev)
 		return -ENOMEM;
+
+	error = metal_linux_lookup_uio_device(dev_name, lbus->bus_name,
+					      resolved_dev_name,
+					      sizeof(resolved_dev_name));
+	have_resolved_dev = (error == 0 &&
+			     strcmp(resolved_dev_name, dev_name) != 0);
 
 	for_each_linux_driver(lbus, ldrv) {
 
@@ -442,13 +675,40 @@ static int metal_linux_dev_open(struct metal_bus *bus,
 
 		/* Reset device data. */
 		memset(ldev, 0, sizeof(*ldev));
-		strncpy(ldev->dev_name, dev_name, sizeof(ldev->dev_name) - 1);
+		error = metal_linux_copy_string(ldev->bus_name,
+						sizeof(ldev->bus_name),
+						lbus->bus_name);
+		if (error)
+			break;
+		error = metal_linux_copy_string(ldev->dev_name,
+						sizeof(ldev->dev_name),
+						have_resolved_dev ?
+						resolved_dev_name : dev_name);
+		if (error)
+			break;
 		ldev->fd = -1;
 		ldev->ldrv = ldrv;
 		ldev->device.bus = bus;
 
 		/* Try and open the device. */
 		error = ldrv->dev_open(lbus, ldev);
+		if (error == -ENODEV && have_resolved_dev) {
+			memset(ldev, 0, sizeof(*ldev));
+			error = metal_linux_copy_string(ldev->bus_name,
+							sizeof(ldev->bus_name),
+							lbus->bus_name);
+			if (error)
+				break;
+			error = metal_linux_copy_string(ldev->dev_name,
+							sizeof(ldev->dev_name),
+							dev_name);
+			if (error)
+				break;
+			ldev->fd = -1;
+			ldev->ldrv = ldrv;
+			ldev->device.bus = bus;
+			error = ldrv->dev_open(lbus, ldev);
+		}
 		if (error) {
 			ldrv->dev_close(lbus, ldev);
 			continue;
@@ -642,30 +902,3 @@ int metal_generic_dev_sys_open(struct metal_device *dev)
 	(void)dev;
 	return 0;
 }
-
-int metal_linux_get_device_property(struct metal_device *device,
-				    const char *property_name,
-				    void *output, int len)
-{
-	int fd = 0;
-	int status = 0;
-	const int flags = O_RDONLY;
-	const int mode = S_IRUSR | S_IRGRP | S_IROTH;
-	struct linux_device *ldev = to_linux_device(device);
-	char path[PATH_MAX];
-
-	snprintf(path, sizeof(path), "%s/of_node/%s",
-			 ldev->sdev->path, property_name);
-	fd = open(path, flags, mode);
-	if (fd < 0)
-		return -errno;
-	if (read(fd, output, len) < 0) {
-		status = -errno;
-		close(fd);
-		return status;
-	}
-
-	status = close(fd);
-	return status < 0 ? -errno : 0;
-}
-
