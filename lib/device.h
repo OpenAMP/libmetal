@@ -121,11 +121,24 @@ int metal_bus_find(const char *name, struct metal_bus **bus);
 int metal_register_generic_device(struct metal_device *device);
 
 /**
+ * @brief	Open a libmetal device by bus/device identity.
+ * @param[in]	bus_name	Bus name.
+ * @param[in]	dev_name	Device name.
+ * @param[out]	device		Returned device handle.
+ * @return 0 on success, or -errno on failure.
+ */
+int metal_device_open_from_bus(const char *bus_name, const char *dev_name,
+			       struct metal_device **device);
+
+/**
  * @brief	Open a libmetal device by name.
  * @param[in]	bus_name	Bus name.
  * @param[in]	dev_name	Device name.
  * @param[out]	device		Returned device handle.
  * @return 0 on success, or -errno on failure.
+ *
+ * This preserves the longstanding bus/device contract and forwards to
+ * metal_device_open_from_bus().
  */
 int metal_device_open(const char *bus_name, const char *dev_name,
 		      struct metal_device **device);

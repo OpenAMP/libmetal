@@ -56,8 +56,8 @@ int metal_bus_find(const char *name, struct metal_bus **result)
 	return -ENOENT;
 }
 
-int metal_device_open(const char *bus_name, const char *dev_name,
-		      struct metal_device **device)
+int metal_device_open_from_bus(const char *bus_name, const char *dev_name,
+			       struct metal_device **device)
 {
 	struct metal_bus *bus;
 	int error;
@@ -79,6 +79,12 @@ int metal_device_open(const char *bus_name, const char *dev_name,
 		return error;
 
 	return 0;
+}
+
+int metal_device_open(const char *bus_name, const char *dev_name,
+		      struct metal_device **device)
+{
+	return metal_device_open_from_bus(bus_name, dev_name, device);
 }
 
 void metal_device_close(struct metal_device *device)
