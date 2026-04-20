@@ -28,17 +28,17 @@ static const struct metal_io_ops metal_shmem_io_ops = {
 	NULL, NULL, NULL, NULL, NULL, metal_shmem_io_close, NULL, NULL
 };
 
-static int metal_virt2phys(void *addr, unsigned long *phys)
+static int metal_virt2phys(void *addr, unsigned long *phys, int pagemap_fd)
 {
 	off_t offset;
 	uint64_t entry;
 	int error;
 
-	if (_metal.pagemap_fd < 0)
+	if (pagemap_fd < 0)
 		return -EINVAL;
 
 	offset = ((uintptr_t)addr >> _metal.page_shift) * sizeof(entry);
-	error = pread(_metal.pagemap_fd, &entry, sizeof(entry), offset);
+	error = pread(pagemap_fd, &entry, sizeof(entry), offset);
 	if (error < 0) {
 		metal_log(METAL_LOG_ERROR, "failed pagemap pread (offset %llx) - %s\n",
 			  (unsigned long long)offset, strerror(errno));
@@ -62,6 +62,7 @@ static int metal_shmem_try_map(struct metal_page_size *ps, int fd, size_t size,
 	size_t pages, page, phys_size;
 	struct metal_io_region *io;
 	metal_phys_addr_t *phys;
+	int pagemap_fd;
 	uint8_t *virt;
 	void *mem;
 	int error;
@@ -97,21 +98,25 @@ static int metal_shmem_try_map(struct metal_page_size *ps, int fd, size_t size,
 		return -ENOMEM;
 	}
 
-	if (_metal.pagemap_fd < 0) {
+	pagemap_fd = open("/proc/self/pagemap", O_RDONLY | O_CLOEXEC);
+	if (pagemap_fd < 0) {
 		phys[0] = 0;
 		metal_log(METAL_LOG_WARNING,
-		"shmem - failed to get va2pa mapping. use offset as pa.\n");
+			  "shmem - failed to get pagemap for va2pa mapping (%s). Using offset as pa.\n",
+			  strerror(errno));
 		metal_io_init(io, mem, phys, size, -1, 0, &metal_shmem_io_ops);
 	} else {
 		for (virt = mem, page = 0; page < pages; page++) {
 			size_t offset = page * ps->page_size;
 
-			error = metal_virt2phys(virt + offset, &phys[page]);
+			error = metal_virt2phys(virt + offset, &phys[page],
+						pagemap_fd);
 			if (error < 0)
 				phys[page] = METAL_BAD_OFFSET;
 		}
 		metal_io_init(io, mem, phys, size, ps->page_shift, 0,
 			&metal_shmem_io_ops);
+		close(pagemap_fd);
 	}
 	*result = io;
 

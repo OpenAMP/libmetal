@@ -83,9 +83,6 @@ struct metal_state {
 
 	/** number of available page sizes. */
 	int			num_page_sizes;
-
-	/** File descriptor for /proc/self/pagemap (or -1). */
-	int			pagemap_fd;
 };
 
 #ifdef METAL_INTERNAL

@@ -116,13 +116,6 @@ int metal_sys_init(const struct metal_init_params *params)
 	if (result < 0)
 		return result;
 
-	result = open("/proc/self/pagemap", O_RDONLY | O_CLOEXEC);
-	if (result < 0) {
-		metal_log(METAL_LOG_DEBUG, "Failed pagemap open - %s\n",
-			  strerror(errno));
-	}
-	_metal.pagemap_fd = result;
-
 	metal_unused(params);
 
 	/* Initialize IRQ handling */
@@ -132,10 +125,7 @@ int metal_sys_init(const struct metal_init_params *params)
 
 void metal_sys_finish(void)
 {
-
 	/* Shutdown IRQ handling */
 	metal_linux_irq_shutdown();
 	metal_linux_bus_finish();
-	close(_metal.pagemap_fd);
-
 }
