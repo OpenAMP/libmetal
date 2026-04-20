@@ -110,8 +110,6 @@ static int metal_init_page_sizes(void)
 int metal_sys_init(const struct metal_init_params *params)
 {
 	const char *tmp_path;
-	unsigned int seed;
-	FILE *urandom;
 	int result;
 
 	/* Find the temporary directory location. */
@@ -119,19 +117,6 @@ int metal_sys_init(const struct metal_init_params *params)
 	if (!tmp_path)
 		tmp_path = "/tmp";
 	_metal.tmp_path = tmp_path;
-
-	/* Initialize the pseudo-random number generator. */
-	urandom = fopen("/dev/urandom", "r");
-	if (!urandom) {
-		metal_log(METAL_LOG_ERROR, "failed to open /dev/urandom (%s)\n",
-			  strerror(errno));
-		return -errno;
-	}
-	if (fread(&seed, 1, sizeof(seed), urandom) <= 0) {
-		metal_log(METAL_LOG_DEBUG, "Failed fread /dev/urandom\n");
-	}
-	fclose(urandom);
-	srand(seed);
 
 	result = metal_init_page_sizes();
 	if (result < 0)
