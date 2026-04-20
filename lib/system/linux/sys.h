@@ -59,9 +59,6 @@ struct metal_page_size {
 	/** Page shift. */
 	unsigned long page_shift;
 
-	/** Path to hugetlbfs (or tmpfs) mount point. */
-	char path[PATH_MAX];
-
 	/** Flags to use for mmap. */
 	int mmap_flags;
 };
@@ -80,9 +77,6 @@ struct metal_state {
 
 	/** system page shift. */
 	unsigned long		page_shift;
-
-	/** sysfs mount point. */
-	const char		*tmp_path;
 
 	/** available page sizes. */
 	struct metal_page_size	page_sizes[MAX_PAGE_SIZES];
