@@ -106,6 +106,31 @@ of Zephyr CMake project. Here is how to build libmetal for Zephyr:
     $ make VERBOSE=1 run
 ```
 
+### Building for QNX
+
+To build libmetal for QNX, QNX SDP as well as configuration files from [ports/libmetal](https://github.com/qnx-ports/build-files/tree/main/ports/libmetal) are required. Here is how to build:
+
+```
+# Create QNX workspace and install source code
+mkdir -p ~/qnx_workspace && cd ~/qnx_workspace
+git clone https://github.com/qnx-ports/build-files
+git clone https://github.com/OpenAMP/libmetal
+
+# Source the environment
+source ~/qnx800/qnxsdp-env.sh
+
+#Build libmetal
+make -C build-files/ports/libmetal install -j4
+```
+
+`x86_64` and `aarch64` specific `libmetal.so*` files will be created under `build-files/ports/libmetal/<arch>/build` as well as be installed in SDP under `<qnx-sdp>/target/qnx/<arch>/usr/local/lib`
+
+**Note**: Custom build options or installation paths can be added to QNX build. For example
+
+```
+WITH_STATIC_LIB=ON WITH_TESTS=ON make -C build-files/ports/libmetal install -j4 USE_INSTALL_ROOT=true INSTALL_ROOT_nto=<staging-install-folder>
+```
+
 ## Interfaces
 
 The following subsections give an overview of interfaces provided by libmetal.
