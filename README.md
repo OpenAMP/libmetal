@@ -19,8 +19,6 @@ are available to help user to customize the libmetal to their own project.
 
 * **WITH_DOC** (default ON): Build with documentation. Add -DWITH_DOC=OFF in
 cmake command line to disable.
-* **WITH_EXAMPLES** (default ON): Build with application examples. Add
--DWITH_DOC=OFF in cmake command line to disable the option.
 * **WITH_TESTS** (default ON): Build with application tests. Add -DWITH_DOC=OFF
 in cmake command line to disable the option.
 * **WITH_DEFAULT_LOGGER** (default ON): Build with default trace logger. Add
