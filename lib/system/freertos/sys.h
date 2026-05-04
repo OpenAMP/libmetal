@@ -11,7 +11,7 @@
  */
 
 #ifndef __METAL_SYS__H__
-#error "Include metal/sys.h instead of metal/freertos/sys.h"
+#error "Do not include this file directly, include <metal/sys.h> instead"
 #endif
 
 #ifndef __METAL_FREERTOS_SYS__H__

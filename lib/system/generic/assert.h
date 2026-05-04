@@ -10,7 +10,7 @@
  */
 
 #ifndef __METAL_ASSERT__H__
-#error "Include metal/assert.h instead of metal/generic/assert.h"
+#error "Do not include this file directly, include <metal/assert.h> instead"
 #endif
 
 #ifndef __METAL_GENERIC_ASSERT__H__

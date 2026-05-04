@@ -10,7 +10,7 @@
  */
 
 #ifndef __METAL_ASSERT__H__
-#error "Include metal/assert.h instead of metal/zephyr/assert.h"
+#error "Do not include this file directly, include <metal/assert.h> instead"
 #endif
 
 #ifndef __METAL_ZEPHYR_ASSERT__H__

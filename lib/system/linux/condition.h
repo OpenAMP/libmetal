@@ -10,7 +10,7 @@
  */
 
 #ifndef __METAL_CONDITION__H__
-#error "Include metal/condition.h instead of metal/linux/condition.h"
+#error "Do not include this file directly, include <metal/condition.h> instead"
 #endif
 
 #ifndef __METAL_LINUX_CONDITION__H__

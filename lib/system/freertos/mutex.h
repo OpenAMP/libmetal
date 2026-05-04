@@ -10,7 +10,7 @@
  */
 
 #ifndef __METAL_MUTEX__H__
-#error "Include metal/mutex.h instead of metal/freertos/mutex.h"
+#error "Do not include this file directly, include <metal/mutex.h> instead"
 #endif
 
 #ifndef __METAL_FREERTOS_MUTEX__H__
