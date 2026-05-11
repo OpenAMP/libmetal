@@ -138,8 +138,11 @@ int metal_sys_init(const struct metal_init_params *params)
 		return result;
 
 	result = metal_linux_bus_init();
-	if (result < 0)
-		return result;
+	if (result < 0) {
+		metal_log(METAL_LOG_ERROR,
+			  "Linux bus probing failed (%d); bus-based device open may be unavailable.\n",
+			  result);
+	}
 
 	result = open("/proc/self/pagemap", O_RDONLY | O_CLOEXEC);
 	if (result < 0) {

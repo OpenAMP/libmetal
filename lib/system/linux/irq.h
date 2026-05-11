@@ -28,6 +28,9 @@
  * @param[in]	irq interrupt id
  */
 void metal_linux_irq_register_dev(struct metal_device *dev, int irq);
+void metal_linux_irq_unregister_dev(int irq);
+struct metal_device *metal_linux_irq_get_dev(int irq);
+int metal_linux_irq_is_enabled(int irq);
 
 #endif /* METAL_INTERNAL */
 #define __METAL_LINUX_IRQ__H__
