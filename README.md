@@ -33,12 +33,12 @@ in cmake command line to disable the option.
 ## Build Steps
 
 ### Building for Linux Host
-```
- $ git clone https://github.com/OpenAMP/libmetal.git
- $ mkdir -p libmetal/<build directory>
- $ cd libmetal/<build directory>
- $ cmake ..
- $ make VERBOSE=1 DESTDIR=<libmetal install location> install
+```shell
+git clone https://github.com/OpenAMP/libmetal.git
+mkdir -p libmetal/<build directory>
+cd libmetal/<build directory>
+cmake ..
+make VERBOSE=1 DESTDIR=<libmetal install location> install
 ```
 
 ### Cross Compiling for Linux Target
@@ -69,11 +69,11 @@ example toolchain file:
 ```
 * Note: other toolchain files can be found in the  `cmake/platforms/` directory.
 * Compile with your toolchain file.
-```
-    $ mkdir -p build-libmetal
-    $ cd build-libmetal
-    $ cmake <libmetal_source> -DCMAKE_TOOLCHAIN_FILE=<toolchain_file>
-    $ make VERBOSE=1 DESTDIR=<libmetal_install> install
+```shell
+mkdir -p build-libmetal
+cd build-libmetal
+cmake <libmetal_source> -DCMAKE_TOOLCHAIN_FILE=<toolchain_file>
+make VERBOSE=1 DESTDIR=<libmetal_install> install
 ```
 * Note: When building baremetal for Xilinx 2018.3 or earlier environments,
 add -DXILINX_PRE_V2019 to your CMake invocation. This will include the
@@ -91,17 +91,17 @@ running a Zephyr environment.
 
 As Zephyr uses CMake, we build libmetal library and test application as targets
 of Zephyr CMake project. Here is how to build libmetal for Zephyr:
-```
-    $ export ZEPHYR_TOOLCHAIN_VARIANT=zephyr
-    $ export ZEPHYR_SDK_INSTALL_DIR=<where Zephyr SDK is installed>
-    $ source <git_clone_zephyr_project_source_root>/zephyr-env.sh
+```shell
+export ZEPHYR_TOOLCHAIN_VARIANT=zephyr
+export ZEPHYR_SDK_INSTALL_DIR=<where Zephyr SDK is installed>
+source <git_clone_zephyr_project_source_root>/zephyr-env.sh
 
-    $ cmake <libmetal_source_root> -DWITH_ZEPHYR=on -DBOARD=qemu_cortex_m3 \
+cmake <libmetal_source_root> -DWITH_ZEPHYR=on -DBOARD=qemu_cortex_m3 \
       [-DWITH_TESTS=on]
-    $ make VERBOSE=1 all
+make VERBOSE=1 all
     # If we have turned on tests with "-DWITH_TESTS=on" when we run cmake,
     # we launch libmetal test on Zephyr QEMU platform as follows:
-    $ make VERBOSE=1 run
+make VERBOSE=1 run
 ```
 
 ## Interfaces
@@ -288,10 +288,10 @@ the following tag instead of the full license text in the individual files:
 Commit messages must contain Signed-off-by: line and your email must match the
 change authorship information. Make sure your .gitconfig is set up correctly:
 
-    ```
-    git config --global user.name "first-name Last-Namer"
-    git config --global user.email "yourmail@company.com"
-    ```
+```shell
+git config --global user.name "first-name Last-Namer"
+git config --global user.email "yourmail@company.com"
+```
 
 ### Assisted-by
 When AI tools are used to contribute to the OpenAMP project, proper attribution helps
@@ -319,7 +319,9 @@ command.
 Run gitlint locally in your tree and branch where your patches have been
 committed:
 
-      ```gitlint```
+```shell
+gitlint
+```
 
 Note, gitlint only checks HEAD (the most recent commit), so you should run it
 after each commit, or use the --commits option to specify a commit range
@@ -336,10 +338,9 @@ conformity. Checkpatch is available in the scripts directory.
 
 To check your \<n\> commits in your git branch:
 
-   ```
-   ./scripts/checkpatch.pl --strict  -g HEAD-<n>
-
-   ```
+```shell
+./scripts/checkpatch.pl --strict  -g HEAD-<n>
+```
 ### Send a pull request
 
 We use standard GitHub mechanism for pull request. Please refer to GitHub
