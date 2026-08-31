@@ -280,9 +280,9 @@ compatible with version the
 is the license covering the OpenAMP distribution as a whole. In practice, use
 the following tag instead of the full license text in the individual files:
 
-    ```
-    SPDX-License-Identifier:    BSD-3-Clause
-    ```
+```
+SPDX-License-Identifier:    BSD-3-Clause
+```
 ### Signed-off-by
 
 Commit messages must contain Signed-off-by: line and your email must match the
