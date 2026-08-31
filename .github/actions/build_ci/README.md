@@ -7,15 +7,20 @@ This action test builds for a specified target.
 ### `target`
 
 **Required** the build target. Default `"linux"`.
+
 The supported targets are:
+```
   linux
   generic arm
   freertos
   zephyr
+```
 
 
 ## Example usage
 
+```
 uses: ./.github/actions/build_ci
 with:
   target: freertos
+```
