@@ -68,6 +68,7 @@ jobs:
         make
     - name: execute test
       run: |
+        sudo modprobe uio uio_pdrv_genirq uio_dmem_genirq
         cd build
         make test
     - name: test logs
