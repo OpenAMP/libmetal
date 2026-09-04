@@ -1113,21 +1113,6 @@ static int metal_linux_probe_driver(struct linux_bus *lbus,
 		ldrv->sdrv = sysfs_open_driver(lbus->bus_name, ldrv->drv_name);
 	}
 
-	/* Try sudo probing the module and then open the driver. */
-	if (!ldrv->sdrv) {
-		ret = snprintf(command, sizeof(command),
-			       "sudo modprobe %s > /dev/null 2>&1", ldrv->mod_name);
-		if (ret >= (int)sizeof(command))
-			return -EOVERFLOW;
-		ret = system(command);
-		if (ret < 0) {
-			metal_log(METAL_LOG_WARNING,
-				  "%s: executing system command '%s' failed.\n",
-				  __func__, command);
-		}
-		ldrv->sdrv = sysfs_open_driver(lbus->bus_name, ldrv->drv_name);
-	}
-
 	/* If all else fails... */
 	return ldrv->sdrv ? 0 : -ENODEV;
 }
