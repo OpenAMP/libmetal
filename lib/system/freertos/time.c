@@ -15,6 +15,7 @@
 
 unsigned long long metal_get_timestamp(void)
 {
-	return (unsigned long long)(1000 * portTICK_PERIOD_MS * xTaskGetTickCount());
-}
+	unsigned long long ticks = (unsigned long long)xTaskGetTickCount();
 
+	return (ticks * 1000000ULL) / configTICK_RATE_HZ;
+}
