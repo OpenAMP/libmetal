@@ -30,7 +30,8 @@ extern "C" {
  *  @{
  */
 
-#ifdef __MICROBLAZE__
+#if defined(__MICROBLAZE__) || \
+(defined(__GNUC__) && !defined(__GCC_HAVE_SYNC_COMPARE_AND_SWAP_8))
 #define NO_ATOMIC_64_SUPPORT
 #endif
 
