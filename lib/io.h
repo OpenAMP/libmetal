@@ -30,7 +30,12 @@ extern "C" {
  *  @{
  */
 
-#ifdef __MICROBLAZE__
+/*
+ * MicroBlaze and RV32 have no native 64-bit atomic load or store; RV32A
+ * provides only word-sized atomics. Do not support 64-bit wide I/O region
+ * accesses on these targets, so no libatomic helpers are required.
+ */
+#if defined(__MICROBLAZE__) || (defined(__riscv) && __riscv_xlen == 32)
 #define NO_ATOMIC_64_SUPPORT
 #endif
 
