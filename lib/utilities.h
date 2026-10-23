@@ -58,11 +58,15 @@ extern "C" {
 
 /** Divide (and round down). */
 #define metal_div_round_down(num, den)			\
-	((num) / (den))
+	(((num) / (den)) -				\
+	 (((((num) % (den)) != 0) &&			\
+	   (((num) < 0) != ((den) < 0))) ? 1 : 0))
 
 /** Divide (and round up). */
 #define metal_div_round_up(num, den)			\
-	metal_div_round_down((num) + (den) - 1, (den))
+	(((num) / (den)) +				\
+	 (((((num) % (den)) != 0) &&			\
+	   (((num) < 0) == ((den) < 0))) ? 1 : 0))
 
 /** Align 'ptr' down to a multiple of 'align' (must be a power of two). */
 #define metal_ptr_align_down(ptr, align)		\
