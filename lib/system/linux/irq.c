@@ -99,9 +99,9 @@ static void metal_linux_irq_set_enable(struct metal_irq_controller *irq_cntr,
 	offset = irq - linux_irq_cntr.irq_base;
 	metal_mutex_acquire(&irq_lock);
 	if (state == METAL_IRQ_ENABLE)
-		metal_bitmap_set_bit(irqs_enabled, offset);
+		(void)metal_bitmap_set(irqs_enabled, (unsigned int)offset, MAX_IRQS);
 	else
-		metal_bitmap_clear_bit(irqs_enabled, offset);
+		(void)metal_bitmap_clear(irqs_enabled, (unsigned int)offset, MAX_IRQS);
 	metal_mutex_release(&irq_lock);
 	/* Notify IRQ thread that IRQ state has changed */
 	ret = metal_linux_irq_notify();
@@ -293,7 +293,7 @@ int metal_linux_irq_unregister_dev(int irq)
 	 * Unregister only detaches the device association. The IRQ handler and
 	 * enabled state remain owned by metal_irq_disable()/unregister().
 	 */
-	if (metal_bitmap_is_bit_set(irqs_enabled, offset)) {
+	if (metal_bitmap_is_set(irqs_enabled, (unsigned int)offset, MAX_IRQS) == 1) {
 		metal_mutex_release(&irq_lock);
 		return -EINVAL;
 	}
@@ -324,6 +324,7 @@ int metal_linux_irq_is_enabled(int irq)
 	    irq >= linux_irq_cntr.irq_base + linux_irq_cntr.irq_num)
 		return 0;
 
-	return metal_bitmap_is_bit_set(irqs_enabled,
-				       irq - linux_irq_cntr.irq_base);
+	return metal_bitmap_is_set(irqs_enabled,
+				   (unsigned int)(irq - linux_irq_cntr.irq_base),
+				   MAX_IRQS) == 1;
 }
