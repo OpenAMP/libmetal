@@ -98,7 +98,7 @@ int metal_bus_unregister(struct metal_bus *bus);
 /**
  * @brief	Find a libmetal bus by name.
  * @param[in]	name	Bus name.
- * @param[out]	bus	Returned bus handle.
+ * @param[out]	bus	Returned bus handle, or NULL for an existence check.
  * @return 0 on success, or -errno on failure.
  */
 int metal_bus_find(const char *name, struct metal_bus **bus);

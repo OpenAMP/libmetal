@@ -48,8 +48,9 @@ int metal_bus_find(const char *name, struct metal_bus **result)
 
 	metal_list_for_each(&_metal.common.bus_list, node) {
 		bus = metal_container_of(node, struct metal_bus, node);
-		if (strcmp(bus->name, name) == 0 && result) {
-			*result = bus;
+		if (strcmp(bus->name, name) == 0) {
+			if (result)
+				*result = bus;
 			return 0;
 		}
 	}
