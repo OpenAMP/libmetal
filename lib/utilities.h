@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include <limits.h>
 #include <metal/assert.h>
+#include <metal/compiler.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -158,27 +159,32 @@ static inline bool metal_bitmap_is_clear(const unsigned long *bitmap,
 		metal_bit(bit & (METAL_BITS_PER_ULONG - 1))) == 0;
 }
 
-static inline void metal_bitmap_set_bit(unsigned long *bitmap, int bit)
+/** @deprecated Unbounded. Use metal_bitmap_set(). */
+__deprecated static inline void metal_bitmap_set_bit(unsigned long *bitmap, int bit)
 {
 	bitmap[bit / METAL_BITS_PER_ULONG] |=
 		metal_bit(bit & (METAL_BITS_PER_ULONG - 1));
 }
 
-static inline int metal_bitmap_is_bit_set(unsigned long *bitmap, int bit)
+/** @deprecated Unbounded. Use metal_bitmap_is_set(). */
+__deprecated static inline int metal_bitmap_is_bit_set(unsigned long *bitmap, int bit)
 {
 	return ((bitmap[bit / METAL_BITS_PER_ULONG] &
 		metal_bit(bit & (METAL_BITS_PER_ULONG - 1))) == 0) ? 0 : 1;
 }
 
-static inline void metal_bitmap_clear_bit(unsigned long *bitmap, int bit)
+/** @deprecated Unbounded. Use metal_bitmap_clear(). */
+__deprecated static inline void metal_bitmap_clear_bit(unsigned long *bitmap, int bit)
 {
 	bitmap[bit / METAL_BITS_PER_ULONG] &=
 		~metal_bit(bit & (METAL_BITS_PER_ULONG - 1));
 }
 
-static inline int metal_bitmap_is_bit_clear(unsigned long *bitmap, int bit)
+/** @deprecated Unbounded. Use metal_bitmap_is_clear(). */
+__deprecated static inline int metal_bitmap_is_bit_clear(unsigned long *bitmap, int bit)
 {
-	return !metal_bitmap_is_bit_set(bitmap, bit);
+	return ((bitmap[bit / METAL_BITS_PER_ULONG] &
+		metal_bit(bit & (METAL_BITS_PER_ULONG - 1))) == 0) ? 1 : 0;
 }
 
 static inline unsigned int
