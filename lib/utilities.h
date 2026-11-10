@@ -13,9 +13,12 @@
 #ifndef __METAL_UTILITIES__H__
 #define __METAL_UTILITIES__H__
 
+#include <errno.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <limits.h>
 #include <metal/assert.h>
+#include <metal/compiler.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -86,27 +89,102 @@ extern "C" {
 
 #define metal_bitmap_longs(x)	metal_div_round_up((x), METAL_BITS_PER_ULONG)
 
-static inline void metal_bitmap_set_bit(unsigned long *bitmap, int bit)
+/**
+ * @brief Set a bit in a bitmap containing max bits.
+ * @param bitmap Bitmap storage, with capacity for at least max bits.
+ * @param bit Unsigned bit index.
+ * @param max Bitmap size in bits.
+ * @return 0 on success, or -EINVAL for an out-of-range bit without access.
+ */
+static inline int metal_bitmap_set(unsigned long *bitmap, unsigned int bit,
+				   unsigned int max)
+{
+	if (bit >= max)
+		return -EINVAL;
+
+	bitmap[bit / METAL_BITS_PER_ULONG] |=
+		metal_bit(bit & (METAL_BITS_PER_ULONG - 1));
+	return 0;
+}
+
+/**
+ * @brief Clear a bit in a bitmap containing max bits.
+ * @param bitmap Bitmap storage, with capacity for at least max bits.
+ * @param bit Unsigned bit index.
+ * @param max Bitmap size in bits.
+ * @return 0 on success, or -EINVAL for an out-of-range bit without access.
+ */
+static inline int metal_bitmap_clear(unsigned long *bitmap, unsigned int bit,
+				     unsigned int max)
+{
+	if (bit >= max)
+		return -EINVAL;
+
+	bitmap[bit / METAL_BITS_PER_ULONG] &=
+		~metal_bit(bit & (METAL_BITS_PER_ULONG - 1));
+	return 0;
+}
+
+/**
+ * @brief Test whether a bit is set in a bitmap containing max bits.
+ * @param bitmap Bitmap storage, with capacity for at least max bits.
+ * @param bit Unsigned bit index.
+ * @param max Bitmap size in bits.
+ * @return true if set, false if clear or out of range without access.
+ */
+static inline bool metal_bitmap_is_set(const unsigned long *bitmap,
+				       unsigned int bit, unsigned int max)
+{
+	if (bit >= max)
+		return false;
+
+	return (bitmap[bit / METAL_BITS_PER_ULONG] &
+		metal_bit(bit & (METAL_BITS_PER_ULONG - 1))) != 0;
+}
+
+/**
+ * @brief Test whether a bit is clear in a bitmap containing max bits.
+ * @param bitmap Bitmap storage, with capacity for at least max bits.
+ * @param bit Unsigned bit index.
+ * @param max Bitmap size in bits.
+ * @return true if clear, false if set or out of range without access.
+ */
+static inline bool metal_bitmap_is_clear(const unsigned long *bitmap,
+					 unsigned int bit, unsigned int max)
+{
+	if (bit >= max)
+		return false;
+
+	return (bitmap[bit / METAL_BITS_PER_ULONG] &
+		metal_bit(bit & (METAL_BITS_PER_ULONG - 1))) == 0;
+}
+
+/** @deprecated Unbounded. Use metal_bitmap_set(). */
+__deprecated static inline void metal_bitmap_set_bit(unsigned long *bitmap, int bit)
 {
 	bitmap[bit / METAL_BITS_PER_ULONG] |=
 		metal_bit(bit & (METAL_BITS_PER_ULONG - 1));
 }
 
-static inline int metal_bitmap_is_bit_set(unsigned long *bitmap, int bit)
+/** @deprecated Unbounded. Use metal_bitmap_is_set(). */
+__deprecated static inline int metal_bitmap_is_bit_set(unsigned long *bitmap, int bit)
 {
 	return ((bitmap[bit / METAL_BITS_PER_ULONG] &
 		metal_bit(bit & (METAL_BITS_PER_ULONG - 1))) == 0) ? 0 : 1;
 }
 
-static inline void metal_bitmap_clear_bit(unsigned long *bitmap, int bit)
+/** @deprecated Unbounded. Use metal_bitmap_clear(). */
+__deprecated static inline void metal_bitmap_clear_bit(unsigned long *bitmap, int bit)
 {
 	bitmap[bit / METAL_BITS_PER_ULONG] &=
 		~metal_bit(bit & (METAL_BITS_PER_ULONG - 1));
 }
 
-static inline int metal_bitmap_is_bit_clear(unsigned long *bitmap, int bit)
+/** @deprecated Unbounded. Use metal_bitmap_is_clear(). */
+__deprecated static inline int metal_bitmap_is_bit_clear(unsigned long *bitmap, int bit)
 {
-	return !metal_bitmap_is_bit_set(bitmap, bit);
+	return ((bitmap[bit / METAL_BITS_PER_ULONG] &
+		metal_bit(bit & (METAL_BITS_PER_ULONG - 1))) == 0) ? 1 : 0;
 }
 
 static inline unsigned int
@@ -116,7 +194,7 @@ metal_bitmap_next_set_bit(unsigned long *bitmap, unsigned int start,
 	unsigned int bit;
 
 	for (bit = start;
-	     bit < max && !metal_bitmap_is_bit_set(bitmap, bit);
+	     bit < max && !metal_bitmap_is_set(bitmap, bit, max);
 	     bit++)
 		;
 	return bit;
@@ -134,7 +212,7 @@ metal_bitmap_next_clear_bit(unsigned long *bitmap, unsigned int start,
 	unsigned int bit;
 
 	for (bit = start;
-	     bit < max + start && !metal_bitmap_is_bit_clear(bitmap, bit % max);
+	     bit < max + start && !metal_bitmap_is_clear(bitmap, bit % max, max);
 	     bit++)
 		;
 	return bit % max;

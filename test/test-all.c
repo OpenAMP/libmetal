@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 
+extern int test_bitmap(void);
 extern int test_alloc(void);
 extern int test_assert(void);
 extern int test_cache(void);
@@ -31,6 +32,7 @@ struct test_entry {
 };
 
 struct test_entry tests[] = {
+	{"bitmap.c",    test_bitmap, 0},
 	{"alloc.c",     test_alloc, 0},
 	{"assert.c",    test_assert, 0},
 	{"cache.c",     test_cache, 0},
