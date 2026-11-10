@@ -32,6 +32,7 @@ static int metal_irq_allocate(int irq_base, int irq_num)
 	}
 	irq_end_tocheck = irq_tocheck + irq_num;
 
+rescan:
 	metal_list_for_each(&irq_cntrs, node) {
 		int cntr_irq_base, cntr_irq_end;
 
@@ -47,6 +48,8 @@ static int metal_irq_allocate(int irq_base, int irq_num)
 			}
 			irq_tocheck = cntr_irq_end;
 			irq_end_tocheck = irq_tocheck + irq_num;
+			/* The new range may overlap an earlier controller. */
+			goto rescan;
 		}
 	}
 	return irq_tocheck;
