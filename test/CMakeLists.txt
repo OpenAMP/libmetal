@@ -74,6 +74,7 @@ else (WITH_ZEPHYR)
   collector_list(_src_all PROJECT_LIB_API_TEST)
 
   set (_tests_all
+      ${PROJECT_SOURCE_DIR}/test/bitmap.c
       ${PROJECT_SOURCE_DIR}/test/alloc.c
       ${PROJECT_SOURCE_DIR}/test/assert.c
       ${PROJECT_SOURCE_DIR}/test/cache.c
