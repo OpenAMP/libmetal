@@ -1,10 +1,10 @@
-# Libmetal build check docker action
+# Libmetal Build Check Docker Action
 
 This action test builds for a specified target.
 
 ## Inputs
 
-### `target`
+### `Target`
 
 **Required** the build target. Default `"linux"`.
 
@@ -16,7 +16,7 @@ The supported targets are:
 * zephyr
 
 
-## Example usage
+## Example Usage
 
 ```
 uses: ./.github/actions/build_ci

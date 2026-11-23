@@ -1,4 +1,4 @@
-# libmetal
+# Libmetal
 
 ## Overview
 
@@ -14,7 +14,7 @@ For more details on the framework please refer to the
 For details on the libmetal interfaces refer to
 [Libmetal Interfaces](./doc/libmetal_interfaces.md).
 
-## Building libmetal
+## Building Libmetal
 
 libmetal uses a [CMake](https://cmake.org/) based build setup.
 
@@ -26,7 +26,7 @@ Refer to [Zephyr OpenAMP](https://docs.zephyrproject.org/latest/samples/subsys/i
 
 For more detailed build information refer to [Building libmetal](./doc/building_libmetal.md).
 
-## Deprecated platforms
+## Deprecated Platforms
   - AMD-Xilinx Zynq7000. Last known stable release - v2023.04
 
 ## Contributing
