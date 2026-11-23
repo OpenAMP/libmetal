@@ -1,8 +1,8 @@
-# Building libmetal
+# Building Libmetal
 
 libmetal uses a CMake based build setup.
 
-## Project configuration
+## Project Configuration
 
 The configuration phase begins when the user invokes CMake. CMake begins by
 processing the CMakeLists.txt file and the cmake directory. Some cmake options

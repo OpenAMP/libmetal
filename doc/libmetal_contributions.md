@@ -1,4 +1,4 @@
-# How to contribute
+# How to Contribute
 
 As an open-source project, we welcome and encourage the community to submit
 patches directly to the project. As a contributor you should be familiar with
@@ -17,7 +17,7 @@ the following tag instead of the full license text in the individual files:
 ```
 SPDX-License-Identifier:    BSD-3-Clause
 ```
-## Signed-off-by
+## Signed-Off-By
 
 Commit messages must contain Signed-off-by: line and your email must match the
 change authorship information. Make sure your .gitconfig is set up correctly:
@@ -27,7 +27,7 @@ git config --global user.name "first-name Last-Namer"
 git config --global user.email "yourmail@company.com"
 ```
 
-## Assisted-by
+## Assisted-By
 When AI tools are used to contribute to the OpenAMP project, proper attribution helps
 track the evolving role of AI in the development process. Contributions should include
 an Assisted-by tag in the following format:
@@ -44,7 +44,7 @@ Basic development tools (git, gcc, make, editors) should not be listed.
 
 Example: Assisted-by: Claude:claude-3-opus coccinelle sparse
 
-## gitlint
+## Gitlint
 
 Before you submit a pull request to the project, verify your commit messages
 meet the requirements. The check can be performed locally using the the gitlint
@@ -61,7 +61,7 @@ Note, gitlint only checks HEAD (the most recent commit), so you should run it
 after each commit, or use the --commits option to specify a commit range
 covering all the development patches to be submitted.
 
-## Code style
+## Code Style
 
 In general, follow the Linux kernel coding style, with the following exceptions:
 
@@ -75,7 +75,7 @@ To check your \<n\> commits in your git branch:
 ```shell
 ./scripts/checkpatch.pl --strict  -g HEAD-<n>
 ```
-## Send a pull request
+## Send a Pull Request
 
 We use standard GitHub mechanism for pull request. Please refer to GitHub
 documentation for help.
