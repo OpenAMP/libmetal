@@ -22,15 +22,3 @@ int metal_generic_dev_sys_open(struct metal_device *dev)
 	 */
 	return 0;
 }
-
-struct metal_bus metal_generic_bus = {
-	.name = "generic",
-	.ops  = {
-		.bus_close = NULL,
-		.dev_open  = metal_generic_dev_open,
-		.dev_close = NULL,
-		.dev_irq_ack = NULL,
-		.dev_dma_map = NULL,
-		.dev_dma_unmap = NULL,
-	},
-};
